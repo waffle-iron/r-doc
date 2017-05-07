@@ -75,7 +75,14 @@
   export default {
     props: ['stepData'],
     data() {
-      return {}
+      return {
+
+      }
+    },
+    computed: {
+      currentlyActiveImage() {
+        return;
+      }
     },
     methods: {
       getStepId(stepid) {
@@ -180,8 +187,21 @@
     transition: transform 0.2s;
   }
 
-  .step-thumbnail .active {
+  .step-thumbnails .active {
     transform: translateY(-4px);
+  }
+
+  .step-thumbnails .active img {
+    opacity: 1;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+
+  .step-thumbnail img {
+    display: block;
+    width: 100%;
+    max-height: 90px;
+    border-radius: 3px;
+    transition: box-shadow 0.2s, border-color 0.2s, opacity 0.2s;
   }
 
   .step-thumbnail-inner {
