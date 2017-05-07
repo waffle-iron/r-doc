@@ -26,15 +26,17 @@
       <div class="row">
         <div class="col-md-7">
           <div class="step-media step-main-media" v-for="(media, index) in step.media.data">
-            <img :src="media.medium" alt="" :class="{'step-image': true, 'img-responsive': true, visible: index+1 === 1, hidden: index+1 !== 1}">
+            <img :src="media.medium" alt=""
+                 :class="{'step-image': true, 'img-responsive': true, visible: shouldBeVisible(media)}">
           </div>
         </div>
         <div class="col-md-5 step-content">
           <div class="row step-thumbnails">
             <div class="col-md-4" v-for="(media, index) in step.media.data">
-              <div :class="{'step-thumbnail': true, active: index+1 === 1}">
+              <div :class="{'step-thumbnail-container': true, active: shouldBeVisible(media)}">
                 <div class="step-thumbnail-inner">
-                  <img :src="media.medium" class="img-responsive">
+                  <img :src="media.medium" class="img-responsive step-thumbnail"
+                       @mouseover="makeVisible(media, index, step.media.data)">
                 </div>
               </div>
             </div>
@@ -74,15 +76,16 @@
 <script>
   export default {
     props: ['stepData'],
+    created() {
+      this.createImageObject();
+    },
     data() {
       return {
-
+        visibleObject: []
       }
     },
     computed: {
-      currentlyActiveImage() {
-        return;
-      }
+//      currentlyActiveImage() {}
     },
     methods: {
       getStepId(stepid) {
@@ -109,6 +112,25 @@
             'bullet-blue': bullet === 'blue'
           }
         }
+      },
+      createImageObject() {
+        let steps = this.stepData.steps;
+        let media = [];
+        steps.forEach(step => {
+          media.push(step.media.data);
+        });
+        this.visibleObject = media;
+      },
+      shouldBeVisible(obj) {
+        return obj.visible;
+      },
+      makeVisible(obj, index, arr) {
+        arr.forEach(image => {
+          if(image.id !== obj.id && image.visible) {
+            image.visible = false;
+            obj.visible = true;
+          }
+        });
       }
     }
   }
@@ -165,7 +187,7 @@
     visibility: visible;
   }
 
-  .step-main-media > .hidden {
+  .step-main-media > img {
     position: absolute;
     visibility: hidden;
     top: 0;
