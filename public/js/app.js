@@ -17667,12 +17667,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['navData']
@@ -17831,18 +17825,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['stepData'],
-  created: function created() {
-    this.createImageObject();
-  },
   data: function data() {
     return {
       visibleObject: []
     };
   },
 
-  computed: {
-    //      currentlyActiveImage() {}
-  },
   methods: {
     getStepId: function getStepId(stepid) {
       return '#s' + stepid;
@@ -17880,7 +17868,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     shouldBeVisible: function shouldBeVisible(obj) {
       return obj.visible;
     },
-    makeVisible: function makeVisible(obj, index, arr) {
+    makeVisible: function makeVisible(obj, arr) {
       arr.forEach(function (image) {
         if (image.id !== obj.id && image.visible) {
           image.visible = false;
@@ -21070,7 +21058,7 @@ exports.push([module.i, "\n.completion-container {\n  margin: 60px 0;\n  positio
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.guide__navigation-in-header {\n  padding: 0 10px;\n}\n.page-navigation-bar {\n  margin-top: -22px;\n  margin-left: 0;\n  margin-right: 0;\n  padding: 0;\n  height: 50px;\n  background-color: rgba(33, 36, 38, 0.05);\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px;\n  list-style-type: none;\n  text-align: left;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n}\n.page-navigation-bar .back-link {\n  margin-right: auto;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.page-navigation-link a {\n  display: inline-block;\n  padding-right: 20px;\n  line-height: 50px;\n  color: #4e5052;\n  white-space: nowrap;\n  cursor: pointer;\n  transition: background-color 0.1s, color 0.1s;\n}\n.page-navigation-link:first-child a {\n  padding-left: 5px;\n  border-bottom-left-radius: 4px;\n}\n.page-navigation-link a:hover {\n  background-color: rgba(0, 0, 0, 0.05);\n  text-decoration: none;\n  color: #24272a;\n}\n.page-navigation-link .icon {\n  margin: 0 10px;\n  color: #24272a;\n  opacity: 0.3;\n  transition: opacity 0.1s;\n}\n.nav-link {\n  padding-left: 20px;\n}\n", ""]);
+exports.push([module.i, "\n.guide__navigation-in-header {\n  padding: 0 10px;\n}\n.page-navigation-bar {\n  margin-top: -22px;\n  margin-left: 0;\n  margin-right: 0;\n  padding: 0;\n  height: 50px;\n  background-color: rgba(33, 36, 38, 0.05);\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px;\n  list-style-type: none;\n  text-align: left;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n}\n.page-navigation-bar .back-link {\n  margin-right: auto;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.page-navigation-link a {\n  display: inline-block;\n  padding-right: 20px;\n  line-height: 50px;\n  color: #4e5052;\n  white-space: nowrap;\n  cursor: pointer;\n  transition: background-color 0.1s, color 0.1s;\n}\n.page-navigation-link:first-child a {\n  padding-left: 5px;\n  border-bottom-left-radius: 4px;\n}\n.page-navigation-link a:hover {\n  background-color: rgba(0, 0, 0, 0.05);\n  text-decoration: none;\n  color: #24272a;\n}\n.page-navigation-link .icon {\n  margin: 0 10px;\n  color: #24272a;\n  opacity: 0.3;\n  transition: opacity 0.1s;\n}\n.nav-link {\n  padding-left: 20px;\n}\n.nav-link:focus {\n  text-decoration: none;\n}\n", ""]);
 
 /***/ }),
 /* 162 */
@@ -49167,7 +49155,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         },
         on: {
           "mouseover": function($event) {
-            _vm.makeVisible(media, index, step.media.data)
+            _vm.makeVisible(media, step.media.data)
           }
         }
       })])])])
@@ -49353,12 +49341,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('li', {
     staticClass: "page-navigation-link back-link"
   }, [_c('a', {
+    staticClass: "nav-link",
     attrs: {
       "href": "#"
     }
   }, [_c('i', {
     staticClass: "glyphicon glyphicon-chevron-left icon"
-  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.navData.title))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2)])])])
+  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.navData.title))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
     staticClass: "page-navigation-link"
@@ -49369,17 +49358,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', [_vm._v("Edit ")]), _vm._v(" "), _c('i', {
     staticClass: "glyphicon glyphicon-edit"
-  })])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('li', {
-    staticClass: "page-navigation-link"
-  }, [_c('a', {
-    staticClass: "nav-link fullscreen-nav-link",
-    attrs: {
-      "href": "#"
-    }
-  }, [_c('span', [_vm._v("Full Screen ")]), _vm._v(" "), _c('i', {
-    staticClass: "glyphicon glyphicon-resize-fullscreen"
   })])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {

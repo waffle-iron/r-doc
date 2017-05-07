@@ -3,7 +3,7 @@
     <div class="column">
       <ul class="row page-navigation-bar">
         <li class="page-navigation-link back-link">
-          <a href="#">
+          <a href="#" class="nav-link">
             <i class="glyphicon glyphicon-chevron-left icon"></i>
             <span>{{navData.title}}</span>
           </a>
@@ -12,12 +12,6 @@
           <a href="#" class="nav-link">
             <span>Edit&nbsp;</span>
             <i class="glyphicon glyphicon-edit"></i>
-          </a>
-        </li>
-        <li class="page-navigation-link">
-          <a href="#" class="nav-link fullscreen-nav-link">
-            <span>Full Screen&nbsp;</span>
-            <i class="glyphicon glyphicon-resize-fullscreen"></i>
           </a>
         </li>
         <li class="page-navigation-link">
@@ -104,5 +98,9 @@ export default {
 
   .nav-link {
     padding-left: 20px;
+  }
+
+  .nav-link:focus {
+    text-decoration: none;
   }
 </style>

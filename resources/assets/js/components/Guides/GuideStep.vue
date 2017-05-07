@@ -36,7 +36,7 @@
               <div :class="{'step-thumbnail-container': true, active: shouldBeVisible(media)}">
                 <div class="step-thumbnail-inner">
                   <img :src="media.medium" class="img-responsive step-thumbnail"
-                       @mouseover="makeVisible(media, index, step.media.data)">
+                       @mouseover="makeVisible(media, step.media.data)">
                 </div>
               </div>
             </div>
@@ -76,16 +76,10 @@
 <script>
   export default {
     props: ['stepData'],
-    created() {
-      this.createImageObject();
-    },
     data() {
       return {
         visibleObject: []
       }
-    },
-    computed: {
-//      currentlyActiveImage() {}
     },
     methods: {
       getStepId(stepid) {
@@ -124,7 +118,7 @@
       shouldBeVisible(obj) {
         return obj.visible;
       },
-      makeVisible(obj, index, arr) {
+      makeVisible(obj, arr) {
         arr.forEach(image => {
           if(image.id !== obj.id && image.visible) {
             image.visible = false;
