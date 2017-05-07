@@ -15,6 +15,7 @@
     },
     data() {
       return {
+        GuideData,
         imageData: {
           title: GuideData.title,
           type: GuideData.type,

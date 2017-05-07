@@ -42,15 +42,20 @@
           <div class="row step-lines-container">
             <ul class="step-lines">
               <li v-for="line in step.lines">
-                <div :class="getBulletColor(line.bullet)" v-if="bulletIsBlack(line.bullet)"></div>
-                <p v-html="line.text_rendered" v-if="bulletIsBlack(line.bullet)"></p>
-                <div class="clearer" v-if="bulletIsBlack(line.bullet)"></div>
-                <ul v-else>
-                  <li>
+                <div :class="getBulletColor(line.bullet)" v-if="line.level === 0"></div>
+                <p v-html="line.text_rendered" v-if="line.level === 0"></p>
+                <div class="clearer" v-if="line.level === 0"></div>
+                <ul v-if="line.level === 1 || line.level === 2">
+                  <li v-if="line.level === 1">
+                    <div :class="getBulletColor(line.bullet)" v-if="line.level===1"></div>
+                    <p v-html="line.text_rendered" v-if="line.level===1"></p>
+                  </li>
+                  <div class="clearer" v-if="line.level===1"></div>
+                  <ul v-if="line.level === 2">
                     <div :class="getBulletColor(line.bullet)"></div>
                     <p v-html="line.text_rendered"></p>
-                  </li>
-                  <div class="clearer"></div>
+                    <li class="clearer"></li>
+                  </ul>
                 </ul>
               </li>
             </ul>
@@ -97,12 +102,6 @@
             'bullet-blue': bullet === 'blue'
           }
         }
-      },
-      bulletIsNotBlack(bullet) {
-        return bullet !== 'black';
-      },
-      bulletIsBlack(bullet) {
-        return bullet === 'black';
       }
     }
   }
@@ -205,7 +204,6 @@
   .step-lines .bullet {
     position: absolute;
     top: 7px;
-    left: 3px;
     font-size: 10px;
   }
 
