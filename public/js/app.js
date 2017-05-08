@@ -16680,7 +16680,6 @@ module.exports = function(module) {
 /* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -16705,6 +16704,8 @@ Vue.component('guide-introduction', __webpack_require__(171));
 Vue.component('guide-step', __webpack_require__(172));
 Vue.component('guide-completed', __webpack_require__(168));
 Vue.component('edit-guide', __webpack_require__(202));
+Vue.component('steps-guide-index', __webpack_require__(208));
+Vue.component('guide-edit-introduction', __webpack_require__(212));
 
 var app = new Vue({
   el: '#app'
@@ -58418,7 +58419,7 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "container"
+    staticClass: "container edit-container"
   }, [_c('div', {
     attrs: {
       "id": "main-body"
@@ -58438,7 +58439,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', {
     staticClass: "arrow fa fa-arrow-left"
-  }), _vm._v("  Back to " + _vm._s(_vm.guideData.previous_text) + "\n            ")])]), _vm._v(" "), _c('div', {
+  }), _vm._v("  Back to " + _vm._s(_vm.guideData.previous_text) + "\n          ")])]), _vm._v(" "), _c('div', {
     staticClass: "clearer"
   })])]), _vm._v(" "), _c('div', {
     staticClass: "row"
@@ -58461,111 +58462,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "tabpanel",
       "id": "home"
     }
-  }, [_c('div', {
+  }, [_c('guide-edit-introduction', {
     attrs: {
-      "id": "guide-intro-form"
+      "introData": _vm.editIntroData
     }
-  }, [_c('div', {
-    staticClass: "form-body",
-    attrs: {
-      "id": "form-inputs"
-    }
-  }, [_c('div', {
-    staticClass: "form-field form-field-top",
-    attrs: {
-      "id": "type-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-type"
-    }
-  }, [_vm._v("What type of guide is this?")]), _vm._v(" "), _c('select', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "",
-      "id": "intro-type"
-    }
-  }, _vm._l((_vm.guideData.types), function(type) {
-    return _c('option', {
-      domProps: {
-        "value": type,
-        "selected": _vm.isGuideType(type)
-      }
-    }, [_vm._v(_vm._s(type))])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "form-field text-field",
-    attrs: {
-      "id": "device-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-device"
-    }
-  }, [_vm._v("Device")]), _vm._v(" "), _c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "name": "intro[device]",
-      "id": "intro-device"
-    },
-    domProps: {
-      "value": _vm.guideData.category
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-field text-field",
-    attrs: {
-      "id": "title-div"
-    }
-  }, [_c('label', {
-    staticClass: "tip",
-    attrs: {
-      "for": "intro-title"
-    }
-  }, [_vm._v("Title")]), _vm._v(" "), _c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "name": "intro[title]",
-      "id": "intro-title"
-    },
-    domProps: {
-      "value": _vm.guideData.title
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "summary form-field",
-    attrs: {
-      "id": "summary-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-summary"
-    }
-  }, [_vm._v("Search Summary")]), _vm._v(" "), _c('textarea', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "intro[summary]",
-      "id": "intro-summary",
-      "rows": "3",
-      "placeholder": "Summarize in a sentence or two what this guide will accomplish."
-    }
-  }, [_vm._v(_vm._s(_vm.guideData.summary))])]), _vm._v(" "), _c('div', {
-    staticClass: "introduction form-field",
-    attrs: {
-      "id": "introduction-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-introduction"
-    }
-  }, [_vm._v("Introduction")]), _vm._v(" "), _c('textarea', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "intro[introduction]",
-      "id": "intro-introduction",
-      "rows": "7",
-      "placeholder": ""
-    }
-  }, [_vm._v(_vm._s(_vm.guideData.introduction))])])]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _vm._m(3)]), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), _c('div', {
     staticClass: "tab-pane",
     attrs: {
       "role": "tabpanel",
@@ -58597,44 +58498,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "src": _vm.guideData.image.standard,
       "alt": ""
     }
-  }), _vm._v(" "), _vm._m(4)])]), _vm._v(" "), _c('div', {
-    staticClass: "form-body locked",
+  }), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c('steps-guide-index', {
     attrs: {
-      "id": "guide-step-index"
+      "indexData": _vm.guideData.steps
     }
-  }, [_c('h3', {
-    staticClass: "toggle-bar subhead"
-  }, [_vm._v("Steps")]), _vm._v(" "), _c('div', {
-    staticClass: "toggle-div"
-  }, [_c('div', {
-    attrs: {
-      "id": "thumbs-container"
-    }
-  }, _vm._l((_vm.guideData.steps), function(image, index) {
-    return _c('div', {
-      class: {
-        'guide-sidebar-thumb': true, 'active': _vm.active(index)
-      },
-      style: (_vm.imageThumb(index)),
-      on: {
-        "mouseover": function($event) {
-          _vm.shouldBeActive(index, _vm.guideData.steps)
-        },
-        "mouseout": function($event) {
-          _vm.shouldBeActive(index, _vm.guideData.steps)
-        }
-      }
-    }, [_c('a', {
-      staticClass: "thumb-overlay",
-      attrs: {
-        "href": "#"
-      }
-    }), _vm._v(" "), _c('p', {
-      staticClass: "step-number"
-    }, [_vm._v(_vm._s(index + 1))])])
-  }))]), _vm._v(" "), _vm._m(5), _vm._v(" "), _c('div', {
-    staticClass: "clearer"
-  })])])])])])])])
+  })], 1)])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('ul', {
     staticClass: "edit-navbar"
@@ -58686,44 +58554,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Guide Steps")])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "submit"
-  }, [_c('div', {
-    staticClass: "guide-action-buttons"
-  }, [_c('button', {
-    staticClass: "btn btn-primary"
-  }, [_vm._v("Save")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "pagination pagination-bottom"
-  }, [_c('p', {
-    staticClass: "left"
-  }), _vm._v(" "), _c('p', {
-    staticClass: "middle"
-  }, [_vm._v("Editing Introduction")]), _vm._v(" "), _c('p', {
-    staticClass: "right"
-  }, [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Guide Steps")]), _vm._v(" \n                      "), _c('i', {
-    staticClass: "fa fa-arrow-right"
-  })])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
     staticClass: "alter-target standard replace-image"
   }, [_c('div', {
     staticClass: "icon"
   })])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "guide-sidebar-add-step"
-  }, [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-plus"
-  })])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -59713,6 +59547,136 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  ready: function ready() {
+    var _this = this;
+
+    $('#myTabs a').click(function (e) {
+      e.preventDefault();
+      $(_this).tab(show);
+    });
+  },
+  data: function data() {
+    return {
+      guideData: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */],
+      editIntroData: {
+        category: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].category,
+        type: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].type,
+        types: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].types,
+        title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].title,
+        summary: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].summary,
+        introduction: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction
+      }
+    };
+  }
+});
+
+/***/ }),
+/* 206 */,
+/* 207 */,
+/* 208 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(3)(
+  /* script */
+  __webpack_require__(210),
+  /* template */
+  __webpack_require__(209),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/StepsGuideIndex.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] StepsGuideIndex.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-9737689a", Component.options)
+  } else {
+    hotAPI.reload("data-v-9737689a", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 209 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "form-body locked",
+    attrs: {
+      "id": "guide-step-index"
+    }
+  }, [_c('h3', {
+    staticClass: "toggle-bar subhead"
+  }, [_vm._v("Steps")]), _vm._v(" "), _c('div', {
+    staticClass: "toggle-div"
+  }, [_c('div', {
+    attrs: {
+      "id": "thumbs-container"
+    }
+  }, _vm._l((_vm.indexData), function(image, index) {
+    return _c('div', {
+      class: {
+        'guide-sidebar-thumb': true, 'active': _vm.active(index)
+      },
+      style: (_vm.imageThumb(index)),
+      on: {
+        "mouseover": function($event) {
+          _vm.shouldBeActive(index, _vm.indexData)
+        },
+        "mouseout": function($event) {
+          _vm.shouldBeActive(index, _vm.indexData)
+        }
+      }
+    }, [_c('a', {
+      staticClass: "thumb-overlay",
+      attrs: {
+        "href": "#"
+      }
+    }), _vm._v(" "), _c('p', {
+      staticClass: "step-number"
+    }, [_vm._v(_vm._s(index + 1))])])
+  }))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "clearer"
+  })])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "guide-sidebar-add-step"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-plus"
+  })])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-9737689a", module.exports)
+  }
+}
+
+/***/ }),
+/* 210 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
@@ -59728,6 +59692,77 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['indexData'],
+  beforeMount: function beforeMount() {
+    this.gatherThumbnails();
+  },
+  data: function data() {
+    return {
+      isActive: [],
+      imageThumbs: []
+    };
+  },
+
+  computed: {
+    active: function active() {
+      return function (index) {
+        return this.isActive[index];
+      };
+    }
+  },
+  methods: {
+    getActiveState: function getActiveState(index) {
+      return this.isActive[index];
+    },
+    shouldBeActive: function shouldBeActive(index, arr) {
+      var _this = this;
+
+      arr.forEach(function (active, idx) {
+        if (idx === index) {
+          _this.isActive[index] = !_this.isActive[index];
+        }
+      });
+    },
+    setNotActive: function setNotActive() {
+      var _this2 = this;
+
+      this.indexData.forEach(function (data, index) {
+        _this2.isActive[index] = false;
+      });
+    },
+    imageThumb: function imageThumb(index) {
+      return {
+        backgroundImage: 'url(\'' + this.imageThumbs[index] + '\')'
+      };
+    },
+    gatherThumbnails: function gatherThumbnails() {
+      var _this3 = this;
+
+      this.indexData.forEach(function (image, index) {
+        _this3.imageThumbs[index] = image.media.data[0].mini;
+        _this3.isActive[index] = false;
+      });
+    }
+  }
+});
+
+/***/ }),
+/* 211 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
@@ -59780,71 +59815,194 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  beforeMount: function beforeMount() {
-    this.gatherThumbnails();
-  },
-  ready: function ready() {
-    var _this = this;
-
-    $('#myTabs a').click(function (e) {
-      e.preventDefault();
-      $(_this).tab(show);
-    });
-  },
+  props: ['introData'],
   data: function data() {
-    return {
-      guideData: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */],
-      imageThumbs: [],
-      isActive: []
-    };
+    return {};
   },
 
-  computed: {
-    active: function active() {
-      return function (index) {
-        return this.isActive[index];
-      };
-    }
-  },
   methods: {
-    imageThumb: function imageThumb(index) {
-      return {
-        backgroundImage: 'url(\'' + this.imageThumbs[index] + '\')'
-      };
-    },
-    gatherThumbnails: function gatherThumbnails() {
-      var _this2 = this;
-
-      this.guideData.steps.forEach(function (image, index) {
-        _this2.imageThumbs[index] = image.media.data[0].mini;
-        _this2.isActive[index] = false;
-      });
-    },
-    getActiveState: function getActiveState(index) {
-      return this.isActive[index];
-    },
-    shouldBeActive: function shouldBeActive(index, arr) {
-      var _this3 = this;
-
-      arr.forEach(function (active, idx) {
-        if (idx === index) {
-          _this3.isActive[index] = !_this3.isActive[index];
-        }
-      });
-    },
-    shouldNotBeActive: function shouldNotBeActive(index, arr) {},
-    setNotActive: function setNotActive() {
-      var _this4 = this;
-
-      this.guideData.steps.forEach(function (data, index) {
-        _this4.isActive[index] = false;
-      });
-    },
     isGuideType: function isGuideType(type) {
-      return type.toLowerCase() === this.guideData.type;
+      return type.toLowerCase() === this.introData.type;
     }
   }
 });
+
+/***/ }),
+/* 212 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(3)(
+  /* script */
+  __webpack_require__(211),
+  /* template */
+  __webpack_require__(213),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/GuideEditIntroduction.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] GuideEditIntroduction.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1169a056", Component.options)
+  } else {
+    hotAPI.reload("data-v-1169a056", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    attrs: {
+      "id": "guide-intro-form"
+    }
+  }, [_c('div', {
+    staticClass: "form-body",
+    attrs: {
+      "id": "form-inputs"
+    }
+  }, [_c('div', {
+    staticClass: "form-field form-field-top",
+    attrs: {
+      "id": "type-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-type"
+    }
+  }, [_vm._v("What type of guide is this?")]), _vm._v(" "), _c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "",
+      "id": "intro-type"
+    }
+  }, _vm._l((_vm.introData.types), function(type) {
+    return _c('option', {
+      domProps: {
+        "value": type,
+        "selected": _vm.isGuideType(type)
+      }
+    }, [_vm._v("\n          " + _vm._s(_vm.introData.type) + "\n        ")])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "device-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-device"
+    }
+  }, [_vm._v("Device")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[device]",
+      "id": "intro-device"
+    },
+    domProps: {
+      "value": _vm.introData.category
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "title-div"
+    }
+  }, [_c('label', {
+    staticClass: "tip",
+    attrs: {
+      "for": "intro-title"
+    }
+  }, [_vm._v("Title")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[title]",
+      "id": "intro-title"
+    },
+    domProps: {
+      "value": _vm.introData.title
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "summary form-field",
+    attrs: {
+      "id": "summary-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-summary"
+    }
+  }, [_vm._v("Search Summary")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[summary]",
+      "id": "intro-summary",
+      "rows": "3",
+      "placeholder": "Summarize in a sentence or two what this guide will accomplish."
+    }
+  }, [_vm._v(_vm._s(_vm.introData.summary))])]), _vm._v(" "), _c('div', {
+    staticClass: "introduction form-field",
+    attrs: {
+      "id": "introduction-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-introduction"
+    }
+  }, [_vm._v("Introduction")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[introduction]",
+      "id": "intro-introduction",
+      "rows": "7",
+      "placeholder": ""
+    }
+  }, [_vm._v(_vm._s(_vm.introData.introduction))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "submit"
+  }, [_c('div', {
+    staticClass: "guide-action-buttons"
+  }, [_c('button', {
+    staticClass: "btn btn-primary"
+  }, [_vm._v("Save")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "pagination pagination-bottom"
+  }, [_c('p', {
+    staticClass: "left"
+  }), _vm._v(" "), _c('p', {
+    staticClass: "middle"
+  }, [_vm._v("Editing Introduction")]), _vm._v(" "), _c('p', {
+    staticClass: "right"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Guide Steps")]), _vm._v(" \n      "), _c('i', {
+    staticClass: "fa fa-arrow-right"
+  })])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-1169a056", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

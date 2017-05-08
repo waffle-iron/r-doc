@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -23,7 +22,9 @@ Vue.component('guide-introduction', require('./components/Guides/GuideIntroducti
 Vue.component('guide-step', require('./components/Guides/GuideStep.vue'));
 Vue.component('guide-completed', require('./components/Guides/GuideCompleted.vue'));
 Vue.component('edit-guide', require('./components/EditGuide.vue'));
+Vue.component('steps-guide-index', require('./components/Guides/StepsGuideIndex.vue'));
+Vue.component('guide-edit-introduction', require('./components/Guides/GuideEditIntroduction.vue'));
 
 const app = new Vue({
-    el: '#app'
+  el: '#app'
 });
