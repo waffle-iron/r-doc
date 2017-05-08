@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-  <h3>/mockups/guide/steps</h3>
+  <edit-guide-steps></edit-guide-steps>
 @endsection

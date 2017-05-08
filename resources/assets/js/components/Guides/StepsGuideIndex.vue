@@ -1,6 +1,9 @@
 <template>
   <div id="guide-step-index" class="form-body locked">
-    <h3 class="toggle-bar subhead">Steps</h3>
+    <div class="row">
+      <div class="col-md-3"><h3 class="toggle-bar subhead">Steps</h3></div>
+      <div class="col-md-9"><div v-if="edit">[Rearrange placeholder]</div></div>
+    </div>
     <div class="toggle-div">
       <div id="thumbs-container">
         <div :class="{'guide-sidebar-thumb': true, 'active': active(index)}"
@@ -24,7 +27,7 @@
 
 <script>
   export default {
-    props: ['data'],
+    props: ['data', 'edit'],
     beforeMount() {
       this.gatherThumbnails();
     },

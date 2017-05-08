@@ -1,52 +1,28 @@
 <template>
-  <div class="container edit-container">
-    <div id="main-body">
-      <edit-navbar :data="editNavbarData"></edit-navbar>
-      <div class="row">
-        <div id="content-float">
-          <div id="content" class="col-md-8">
-            <div class="tab-wrap">
-              <ul class="nav nav-tabs tab-list" role="tablist" id="content-tabs">
-                <li role="presentation" class="active">
-                  <a href="#introduction" aria-controls="home" role="tab" data-toggle="tab">Introduction</a>
-                </li>
-                <li role="presentation">
-                  <a :href="guideStepsUrl()">Guide Steps</a>
-                </li>
-              </ul>
-              <div class="tab-content">
-                <guide-edit-introduction :data="editIntroData"></guide-edit-introduction>
-                <div role="tabpanel" class="tab-pane" id="guide-steps">
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="sidebar-float">
-          <div id="sidebar" class="col-md-4">
-            <div id="sidebar-guide-edit">
-              <div id="main-guide-image" class="media-target">
-                <div class="media-item media-image contents">
-                  <img :src="mainImage" alt="" class="standard">
-                  <div class="alter-target standard replace-image">
-                    <div class="icon"></div>
-                  </div>
-                </div>
-              </div>
-              <steps-guide-index :data="stepsData"></steps-guide-index>
-            </div>
-          </div>
-        </div>
-      </div>
+  <edit-container v-if="type ==='introduction'">
+    <edit-navbar :data="editNavbarData"></edit-navbar>
+    <div class="row">
+      <edit-left :data="editIntroData" :tab="'introduction'"></edit-left>
+      <edit-right :imageData="imageData" :stepsData="stepsData" :tab="type"></edit-right>
     </div>
-  </div>
+  </edit-container>
 </template>
 
 <script>
-  import GuideData from './../data'
+  import GuideData from './../data';
+  import EditContainer from './Guides/EditContainer.vue';
+  import EditNavbar from './Guides/EditNavbar.vue';
+  import EditLeft from './Guides/EditLeft.vue';
+  import EditRight from './Guides/EditRight.vue';
 
   export default {
+    props: ['type'],
+    components: {
+      EditContainer,
+      EditNavbar,
+      EditLeft,
+      EditRight
+    },
     data() {
       return {
         editIntroData: {
@@ -59,22 +35,17 @@
           stepsid: GuideData.steps[0].stepid,
           guideid: GuideData.guideid
         },
-        mainImage: GuideData.image.standard,
         editNavbarData: {
           previousText: GuideData.previous_text,
           guideid: GuideData.guideid
         },
+        imageData: GuideData.image.standard,
         stepsData: {
           steps: GuideData.steps,
           guideid: GuideData.guideid
         },
-        baseUrl: '/mockups/guide/steps'
       }
     },
-    methods: {
-      guideStepsUrl() {
-        return `${this.baseUrl}/${GuideData.guideid}/${GuideData.steps[0].stepid}`;
-      }
-    }
+    methods: {}
   }
 </script>

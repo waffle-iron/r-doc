@@ -17329,16 +17329,18 @@ window.moment = __webpack_require__(0);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+// Root level components
 Vue.component('guide', __webpack_require__(166));
+Vue.component('edit-guide', __webpack_require__(165));
+
+// Nested components
 Vue.component('guide-header-navigation', __webpack_require__(170));
 Vue.component('guide-image', __webpack_require__(171));
 Vue.component('guide-introduction', __webpack_require__(172));
 Vue.component('guide-step', __webpack_require__(173));
 Vue.component('guide-completed', __webpack_require__(168));
-Vue.component('edit-guide', __webpack_require__(165));
-Vue.component('steps-guide-index', __webpack_require__(174));
-Vue.component('guide-edit-introduction', __webpack_require__(169));
-Vue.component('edit-navbar', __webpack_require__(167));
+Vue.component('edit-guide-steps', __webpack_require__(203));
+Vue.component('guide-edit-steps', __webpack_require__(206));
 
 var app = new Vue({
   el: '#app'
@@ -18198,6 +18200,14 @@ module.exports = function spread(callback) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Guides_EditContainer_vue__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Guides_EditContainer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Guides_EditContainer_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Guides_EditNavbar_vue__ = __webpack_require__(167);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Guides_EditNavbar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Guides_EditNavbar_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Guides_EditLeft_vue__ = __webpack_require__(223);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Guides_EditLeft_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Guides_EditLeft_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Guides_EditRight_vue__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Guides_EditRight_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Guides_EditRight_vue__);
 //
 //
 //
@@ -18208,45 +18218,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['type'],
+  components: {
+    EditContainer: __WEBPACK_IMPORTED_MODULE_1__Guides_EditContainer_vue___default.a,
+    EditNavbar: __WEBPACK_IMPORTED_MODULE_2__Guides_EditNavbar_vue___default.a,
+    EditLeft: __WEBPACK_IMPORTED_MODULE_3__Guides_EditLeft_vue___default.a,
+    EditRight: __WEBPACK_IMPORTED_MODULE_4__Guides_EditRight_vue___default.a
+  },
   data: function data() {
     return {
       editIntroData: {
@@ -18259,24 +18245,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         stepsid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps[0].stepid,
         guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
       },
-      mainImage: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.standard,
       editNavbarData: {
         previousText: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].previous_text,
         guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
       },
+      imageData: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.standard,
       stepsData: {
         steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps,
         guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
-      },
-      baseUrl: '/mockups/guide/steps'
+      }
     };
   },
 
-  methods: {
-    guideStepsUrl: function guideStepsUrl() {
-      return this.baseUrl + '/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid + '/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps[0].stepid;
-    }
-  }
+  methods: {}
 });
 
 /***/ }),
@@ -18769,9 +18750,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data'],
+  props: ['data', 'edit'],
   beforeMount: function beforeMount() {
     this.gatherThumbnails();
   },
@@ -49883,107 +49867,25 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "container edit-container"
-  }, [_c('div', {
-    attrs: {
-      "id": "main-body"
-    }
-  }, [_c('edit-navbar', {
+  return (_vm.type === 'introduction') ? _c('edit-container', [_c('edit-navbar', {
     attrs: {
       "data": _vm.editNavbarData
     }
   }), _vm._v(" "), _c('div', {
     staticClass: "row"
-  }, [_c('div', {
+  }, [_c('edit-left', {
     attrs: {
-      "id": "content-float"
+      "data": _vm.editIntroData,
+      "tab": 'introduction'
     }
-  }, [_c('div', {
-    staticClass: "col-md-8",
+  }), _vm._v(" "), _c('edit-right', {
     attrs: {
-      "id": "content"
+      "imageData": _vm.imageData,
+      "stepsData": _vm.stepsData,
+      "tab": _vm.type
     }
-  }, [_c('div', {
-    staticClass: "tab-wrap"
-  }, [_c('ul', {
-    staticClass: "nav nav-tabs tab-list",
-    attrs: {
-      "role": "tablist",
-      "id": "content-tabs"
-    }
-  }, [_vm._m(0), _vm._v(" "), _c('li', {
-    attrs: {
-      "role": "presentation"
-    }
-  }, [_c('a', {
-    attrs: {
-      "href": _vm.guideStepsUrl()
-    }
-  }, [_vm._v("Guide Steps")])])]), _vm._v(" "), _c('div', {
-    staticClass: "tab-content"
-  }, [_c('guide-edit-introduction', {
-    attrs: {
-      "data": _vm.editIntroData
-    }
-  }), _vm._v(" "), _c('div', {
-    staticClass: "tab-pane",
-    attrs: {
-      "role": "tabpanel",
-      "id": "guide-steps"
-    }
-  })], 1)])])]), _vm._v(" "), _c('div', {
-    attrs: {
-      "id": "sidebar-float"
-    }
-  }, [_c('div', {
-    staticClass: "col-md-4",
-    attrs: {
-      "id": "sidebar"
-    }
-  }, [_c('div', {
-    attrs: {
-      "id": "sidebar-guide-edit"
-    }
-  }, [_c('div', {
-    staticClass: "media-target",
-    attrs: {
-      "id": "main-guide-image"
-    }
-  }, [_c('div', {
-    staticClass: "media-item media-image contents"
-  }, [_c('img', {
-    staticClass: "standard",
-    attrs: {
-      "src": _vm.mainImage,
-      "alt": ""
-    }
-  }), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('steps-guide-index', {
-    attrs: {
-      "data": _vm.stepsData
-    }
-  })], 1)])])])], 1)])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('li', {
-    staticClass: "active",
-    attrs: {
-      "role": "presentation"
-    }
-  }, [_c('a', {
-    attrs: {
-      "href": "#introduction",
-      "aria-controls": "home",
-      "role": "tab",
-      "data-toggle": "tab"
-    }
-  }, [_vm._v("Introduction")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "alter-target standard replace-image"
-  }, [_c('div', {
-    staticClass: "icon"
-  })])
-}]}
+  })], 1)], 1) : _vm._e()
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -50071,9 +49973,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "guide-step-index"
     }
-  }, [_c('h3', {
-    staticClass: "toggle-bar subhead"
-  }, [_vm._v("Steps")]), _vm._v(" "), _c('div', {
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "col-md-9"
+  }, [(_vm.edit) ? _c('div', [_vm._v("[Rearrange placeholder]")]) : _vm._e()])]), _vm._v(" "), _c('div', {
     staticClass: "toggle-div"
   }, [_c('div', {
     attrs: {
@@ -50101,10 +50005,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('p', {
       staticClass: "step-number"
     }, [_vm._v(_vm._s(index + 1))])])
-  }))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
+  }))]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('div', {
     staticClass: "clearer"
   })])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "col-md-3"
+  }, [_c('h3', {
+    staticClass: "toggle-bar subhead"
+  }, [_vm._v("Steps")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "guide-sidebar-add-step"
   }, [_c('a', {
@@ -60069,6 +59979,709 @@ module.exports = Vue$3;
 __webpack_require__(127);
 module.exports = __webpack_require__(128);
 
+
+/***/ }),
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data_js__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      baseUrl: '/mockups/guide/intro',
+      editNavbarData: {
+        previousText: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].previous_text,
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].guideid
+      },
+      stepsData: {
+        steps: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].steps,
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].guideid
+      }
+    };
+  },
+
+  methods: {
+    guideIntroductionUrl: function guideIntroductionUrl() {
+      return this.baseUrl + '/' + __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].guideid;
+    }
+  }
+});
+
+/***/ }),
+/* 203 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(202),
+  /* template */
+  __webpack_require__(204),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/EditGuideStep.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditGuideStep.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2b445680", Component.options)
+  } else {
+    hotAPI.reload("data-v-2b445680", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 204 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "container edit-container"
+  }, [_c('div', {
+    staticClass: "main-body"
+  }, [_c('edit-navbar', {
+    attrs: {
+      "data": _vm.editNavbarData
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    attrs: {
+      "id": "content-float"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-8",
+    attrs: {
+      "id": "content"
+    }
+  }, [_c('div', {
+    staticClass: "tab-wrap"
+  }, [_c('ul', {
+    staticClass: "nav nav-tabs tab-list",
+    attrs: {
+      "role": "tablist",
+      "id": "content-tabs"
+    }
+  }, [_c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": _vm.guideIntroductionUrl()
+    }
+  }, [_vm._v("Introduction")])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c('div', {
+    staticClass: "tab-content"
+  }, [_c('guide-edit-steps')], 1)])]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "sidebar-float"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-4",
+    attrs: {
+      "id": "sidebar"
+    }
+  }, [_c('div', {
+    attrs: {
+      "id": "sidebar-guide-edit"
+    }
+  }, [_c('steps-guide-index', {
+    attrs: {
+      "data": _vm.stepsData,
+      "edit": true
+    }
+  })], 1)])])])])], 1)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    staticClass: "active",
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#guide-steps",
+      "aria-controls": "guide-steps",
+      "role": "tab",
+      "data-toggle": "tab"
+    }
+  }, [_vm._v("Guide Steps")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-2b445680", module.exports)
+  }
+}
+
+/***/ }),
+/* 205 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  data: function data() {
+    return {
+      stepsData: {
+        steps: this.data.steps,
+        guideid: this.data.guideid
+      }
+    };
+  }
+});
+
+/***/ }),
+/* 206 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(205),
+  /* template */
+  __webpack_require__(207),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/GuideEditSteps.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] GuideEditSteps.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6add581b", Component.options)
+  } else {
+    hotAPI.reload("data-v-6add581b", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 207 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "tab-pane active",
+    attrs: {
+      "role": "tabpanel",
+      "id": "guide-steps"
+    }
+  }, [_c('guide-step', {
+    attrs: {
+      "data": _vm.stepsData
+    }
+  })], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6add581b", module.exports)
+  }
+}
+
+/***/ }),
+/* 208 */
+/***/ (function(module, exports) {
+
+//
+//
+//
+//
+//
+//
+//
+//
+
+/***/ }),
+/* 209 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(208),
+  /* template */
+  __webpack_require__(210),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/EditContainer.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditContainer.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-712b9be6", Component.options)
+  } else {
+    hotAPI.reload("data-v-712b9be6", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 210 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "container edit-container"
+  }, [_c('div', {
+    attrs: {
+      "id": "main-body"
+    }
+  }, [_vm._t("default")], 2)])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-712b9be6", module.exports)
+  }
+}
+
+/***/ }),
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue__ = __webpack_require__(169);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data', 'tab'],
+  components: {
+    GuideEditIntroduction: __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue___default.a
+  },
+  created: function created() {},
+  data: function data() {
+    return {
+      baseUrl: '/mockups/guide/steps'
+    };
+  },
+
+  methods: {
+    guideStepsUrl: function guideStepsUrl() {
+      return this.baseUrl + '/' + this.data.guideid + '/' + this.data.stepid;
+    }
+  }
+});
+
+/***/ }),
+/* 222 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(160)();
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+/***/ }),
+/* 223 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(225)
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(221),
+  /* template */
+  __webpack_require__(224),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/EditLeft.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditLeft.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-f87179aa", Component.options)
+  } else {
+    hotAPI.reload("data-v-f87179aa", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 224 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    attrs: {
+      "id": "content-float"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-8",
+    attrs: {
+      "id": "content"
+    }
+  }, [_c('div', {
+    staticClass: "tab-wrap"
+  }, [(_vm.tab === 'introduction') ? _c('ul', {
+    staticClass: "nav nav-tabs tab-list",
+    attrs: {
+      "role": "tablist",
+      "id": "content-tabs"
+    }
+  }, [_vm._m(0), _vm._v(" "), _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": _vm.guideStepsUrl()
+    }
+  }, [_vm._v("Guide Steps")])])]) : _vm._e(), _vm._v(" "), (_vm.tab === 'introduction') ? _c('div', {
+    staticClass: "tab-content"
+  }, [_c('guide-edit-introduction', {
+    attrs: {
+      "data": _vm.data
+    }
+  })], 1) : _vm._e()])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    staticClass: "active",
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#introduction",
+      "aria-controls": "introduction",
+      "role": "tab",
+      "data-toggle": "tab"
+    }
+  }, [_vm._v("Introduction")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-f87179aa", module.exports)
+  }
+}
+
+/***/ }),
+/* 225 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(222);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(186)("6b1986ea", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-f87179aa\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditLeft.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-f87179aa\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditLeft.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 226 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['imageData', 'stepsData', 'tab'],
+  components: {
+    StepsGuideIndex: __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue___default.a
+  },
+  created: function created() {},
+  data: function data() {
+    return {};
+  },
+
+  methods: {}
+});
+
+/***/ }),
+/* 227 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(160)();
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+/***/ }),
+/* 228 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(230)
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(226),
+  /* template */
+  __webpack_require__(229),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/EditRight.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditRight.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-32663c28", Component.options)
+  } else {
+    hotAPI.reload("data-v-32663c28", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    attrs: {
+      "id": "sidebar-float"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-4",
+    attrs: {
+      "id": "sidebar"
+    }
+  }, [_c('div', {
+    attrs: {
+      "id": "sidebar-guide-edit"
+    }
+  }, [_c('div', {
+    staticClass: "media-target",
+    attrs: {
+      "id": "main-guide-image"
+    }
+  }, [_c('div', {
+    staticClass: "media-item media-image contents"
+  }, [_c('img', {
+    staticClass: "standard",
+    attrs: {
+      "src": _vm.imageData,
+      "alt": ""
+    }
+  }), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _c('steps-guide-index', {
+    attrs: {
+      "data": _vm.stepsData,
+      "edit": false
+    }
+  })], 1)])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "alter-target standard replace-image"
+  }, [_c('div', {
+    staticClass: "icon"
+  })])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-32663c28", module.exports)
+  }
+}
+
+/***/ }),
+/* 230 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(227);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(186)("15231760", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-32663c28\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditRight.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-32663c28\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditRight.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);

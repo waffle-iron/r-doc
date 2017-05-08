@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-  <edit-guide></edit-guide>
+  <edit-guide :type="'introduction'"></edit-guide>
 @endsection
