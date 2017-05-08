@@ -1038,9 +1038,9 @@ export default
   },
   "featured_documentid": null,
   "types": [
-      "replacement",
-      "disassembly",
-      "teardown",
-      "technique"
+      "Replacement",
+      "Disassembly",
+      "Teardown",
+      "Technique"
   ]
 }

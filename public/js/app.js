@@ -58382,10 +58382,6 @@ module.exports = __webpack_require__(129);
 /* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
-/* styles */
-__webpack_require__(207)
-
 var Component = __webpack_require__(3)(
   /* script */
   __webpack_require__(205),
@@ -58442,13 +58438,145 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', {
     staticClass: "arrow fa fa-arrow-left"
-  }), _vm._v("  Back to " + _vm._s(_vm.guideData.previous_text) + "\n          ")])]), _vm._v(" "), _c('div', {
+  }), _vm._v("  Back to " + _vm._s(_vm.guideData.previous_text) + "\n            ")])]), _vm._v(" "), _c('div', {
     staticClass: "clearer"
   })])]), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    attrs: {
+      "id": "content-float"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-8",
+    attrs: {
+      "id": "content"
+    }
+  }, [_c('div', {
+    staticClass: "tab-wrap"
+  }, [_vm._m(1), _vm._v(" "), _c('div', {
+    staticClass: "tab-content"
+  }, [_c('div', {
+    staticClass: "tab-pane active",
+    attrs: {
+      "role": "tabpanel",
+      "id": "home"
+    }
+  }, [_c('div', {
+    attrs: {
+      "id": "guide-intro-form"
+    }
+  }, [_c('div', {
+    staticClass: "form-body",
+    attrs: {
+      "id": "form-inputs"
+    }
+  }, [_c('div', {
+    staticClass: "form-field form-field-top",
+    attrs: {
+      "id": "type-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-type"
+    }
+  }, [_vm._v("What type of guide is this?")]), _vm._v(" "), _c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "",
+      "id": "intro-type"
+    }
+  }, _vm._l((_vm.guideData.types), function(type) {
+    return _c('option', {
+      domProps: {
+        "value": type,
+        "selected": _vm.isGuideType(type)
+      }
+    }, [_vm._v(_vm._s(type))])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "device-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-device"
+    }
+  }, [_vm._v("Device")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[device]",
+      "id": "intro-device"
+    },
+    domProps: {
+      "value": _vm.guideData.category
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "title-div"
+    }
+  }, [_c('label', {
+    staticClass: "tip",
+    attrs: {
+      "for": "intro-title"
+    }
+  }, [_vm._v("Title")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[title]",
+      "id": "intro-title"
+    },
+    domProps: {
+      "value": _vm.guideData.title
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "summary form-field",
+    attrs: {
+      "id": "summary-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-summary"
+    }
+  }, [_vm._v("Search Summary")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[summary]",
+      "id": "intro-summary",
+      "rows": "3",
+      "placeholder": "Summarize in a sentence or two what this guide will accomplish."
+    }
+  }, [_vm._v(_vm._s(_vm.guideData.summary))])]), _vm._v(" "), _c('div', {
+    staticClass: "introduction form-field",
+    attrs: {
+      "id": "introduction-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-introduction"
+    }
+  }, [_vm._v("Introduction")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[introduction]",
+      "id": "intro-introduction",
+      "rows": "7",
+      "placeholder": ""
+    }
+  }, [_vm._v(_vm._s(_vm.guideData.introduction))])])]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _vm._m(3)]), _vm._v(" "), _c('div', {
+    staticClass: "tab-pane",
+    attrs: {
+      "role": "tabpanel",
+      "id": "messages"
+    }
+  }, [_vm._v("Guide Steps")])])])])]), _vm._v(" "), _c('div', {
     attrs: {
       "id": "sidebar-float"
     }
   }, [_c('div', {
+    staticClass: "col-md-4",
     attrs: {
       "id": "sidebar"
     }
@@ -58469,7 +58597,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "src": _vm.guideData.image.standard,
       "alt": ""
     }
-  }), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('div', {
+  }), _vm._v(" "), _vm._m(4)])]), _vm._v(" "), _c('div', {
     staticClass: "form-body locked",
     attrs: {
       "id": "guide-step-index"
@@ -58504,7 +58632,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('p', {
       staticClass: "step-number"
     }, [_vm._v(_vm._s(index + 1))])])
-  })), _vm._v(" "), _vm._m(2), _vm._v(" "), _c('div', {
+  }))]), _vm._v(" "), _vm._m(5), _vm._v(" "), _c('div', {
     staticClass: "clearer"
   })])])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -58512,7 +58640,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "edit-navbar"
   }, [_c('li', [_c('a', {
     attrs: {
-      "href": "#"
+      "href": "/mockups/guide"
     }
   }, [_vm._v("View")])]), _vm._v(" "), _c('li', {
     staticClass: "active-nav"
@@ -58525,6 +58653,61 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "href": "#"
     }
   }, [_vm._v("History")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('ul', {
+    staticClass: "nav nav-tabs tab-list",
+    attrs: {
+      "role": "tablist",
+      "id": "content-tabs"
+    }
+  }, [_c('li', {
+    staticClass: "active",
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#home",
+      "aria-controls": "home",
+      "role": "tab",
+      "data-toggle": "tab"
+    }
+  }, [_vm._v("Introduction")])]), _vm._v(" "), _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#messages",
+      "aria-controls": "messages",
+      "role": "tab",
+      "data-toggle": "tab"
+    }
+  }, [_vm._v("Guide Steps")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "submit"
+  }, [_c('div', {
+    staticClass: "guide-action-buttons"
+  }, [_c('button', {
+    staticClass: "btn btn-primary"
+  }, [_vm._v("Save")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "pagination pagination-bottom"
+  }, [_c('p', {
+    staticClass: "left"
+  }), _vm._v(" "), _c('p', {
+    staticClass: "middle"
+  }, [_vm._v("Editing Introduction")]), _vm._v(" "), _c('p', {
+    staticClass: "right"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Guide Steps")]), _vm._v(" \n                      "), _c('i', {
+    staticClass: "fa fa-arrow-right"
+  })])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "alter-target standard replace-image"
@@ -59455,7 +59638,7 @@ if (false) {
     "privileges": ["Admin"]
   },
   "featured_documentid": null,
-  "types": ["replacement", "disassembly", "teardown", "technique"]
+  "types": ["Replacement", "Disassembly", "Teardown", "Technique"]
 });
 
 /***/ }),
@@ -59531,11 +59714,82 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeMount: function beforeMount() {
     this.gatherThumbnails();
+  },
+  ready: function ready() {
+    var _this = this;
+
+    $('#myTabs a').click(function (e) {
+      e.preventDefault();
+      $(_this).tab(show);
+    });
   },
   data: function data() {
     return {
@@ -59559,68 +59813,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       };
     },
     gatherThumbnails: function gatherThumbnails() {
-      var _this = this;
+      var _this2 = this;
 
       this.guideData.steps.forEach(function (image, index) {
-        _this.imageThumbs[index] = image.media.data[0].mini;
-        _this.isActive[index] = false;
+        _this2.imageThumbs[index] = image.media.data[0].mini;
+        _this2.isActive[index] = false;
       });
     },
     getActiveState: function getActiveState(index) {
       return this.isActive[index];
     },
     shouldBeActive: function shouldBeActive(index, arr) {
-      var _this2 = this;
+      var _this3 = this;
 
       arr.forEach(function (active, idx) {
         if (idx === index) {
-          _this2.isActive[index] = !_this2.isActive[index];
+          _this3.isActive[index] = !_this3.isActive[index];
         }
       });
     },
     shouldNotBeActive: function shouldNotBeActive(index, arr) {},
     setNotActive: function setNotActive() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.guideData.steps.forEach(function (data, index) {
-        _this3.isActive[index] = false;
+        _this4.isActive[index] = false;
       });
+    },
+    isGuideType: function isGuideType(type) {
+      return type.toLowerCase() === this.guideData.type;
     }
   }
 });
-
-/***/ }),
-/* 206 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-/***/ }),
-/* 207 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(206);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("3e515402", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8fa4a458\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditGuide.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8fa4a458\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditGuide.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
 
 /***/ })
 /******/ ]);
