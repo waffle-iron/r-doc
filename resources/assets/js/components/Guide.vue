@@ -26,7 +26,8 @@
           guideid: GuideData.guideid
         },
         stepsData: {
-          steps: GuideData.steps
+          steps: GuideData.steps,
+          guideid: GuideData.guideid
         },
         completedData: GuideData.conclusion
       }

@@ -38,11 +38,12 @@ export default {
   props: ['data'],
   data() {
     return {
+      baseUrl: '/mockups/guide/intro'
     }
   },
   methods: {
     editUrl() {
-      return `/mockups/guide/intro/${this.data.guideid}`
+      return `${this.baseUrl}/${this.data.guideid}`
     }
   }
 }

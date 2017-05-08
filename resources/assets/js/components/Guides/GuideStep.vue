@@ -15,7 +15,7 @@
           </div>
           <div class="col-md-2">
             <div class="step-edit-link">
-              <a href="#" class="btn btn-default">
+              <a :href="editStepUrl(index)" class="btn btn-default">
                 <span>Edit&nbsp;</span>
                 <i class="glyphicon glyphicon-edit"></i>
               </a>
@@ -78,7 +78,8 @@
     props: ['data'],
     data() {
       return {
-        visibleObject: []
+        visibleObject: [],
+        baseUrl: '/mockups/guide/steps'
       }
     },
     methods: {
@@ -125,6 +126,9 @@
             obj.visible = true;
           }
         });
+      },
+      editStepUrl(index) {
+        return `${this.baseUrl}/${this.data.guideid}/${this.data.steps[index].stepid}`;
       }
     }
   }

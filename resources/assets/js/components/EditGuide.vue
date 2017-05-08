@@ -55,22 +55,25 @@
           types: GuideData.types,
           title: GuideData.title,
           summary: GuideData.summary,
-          introduction: GuideData.introduction
+          introduction: GuideData.introduction,
+          stepsid: GuideData.steps[0].stepid,
+          guideid: GuideData.guideid
         },
         mainImage: GuideData.image.standard,
         editNavbarData: {
           previousText: GuideData.previous_text,
-          backUrl: GuideData.guideid
+          guideid: GuideData.guideid
         },
         stepsData: {
           steps: GuideData.steps,
           guideid: GuideData.guideid
-        }
+        },
+        baseUrl: '/mockups/guide/steps'
       }
     },
     methods: {
       guideStepsUrl() {
-        return `/mockups/guide/steps/${GuideData.guideid}/${GuideData.steps[0].stepid}`;
+        return `${this.baseUrl}/${GuideData.guideid}/${GuideData.steps[0].stepid}`;
       }
     }
   }

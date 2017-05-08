@@ -18255,23 +18255,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         types: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].types,
         title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].title,
         summary: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].summary,
-        introduction: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction
+        introduction: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction,
+        stepsid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps[0].stepid,
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
       },
       mainImage: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.standard,
       editNavbarData: {
         previousText: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].previous_text,
-        backUrl: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
       },
       stepsData: {
         steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps,
         guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
-      }
+      },
+      baseUrl: '/mockups/guide/steps'
     };
   },
 
   methods: {
     guideStepsUrl: function guideStepsUrl() {
-      return '/mockups/guide/steps/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid + '/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps[0].stepid;
+      return this.baseUrl + '/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid + '/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps[0].stepid;
     }
   }
 });
@@ -18311,7 +18314,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         guideid: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].guideid
       },
       stepsData: {
-        steps: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].steps
+        steps: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].steps,
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].guideid
       },
       completedData: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].conclusion
     };
@@ -18352,9 +18356,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data'],
+  data: function data() {
+    return {
+      baseUrl: '/mockups/guide'
+    };
+  },
+
   methods: {
     viewUrl: function viewUrl() {
-      return '/mockups/guide/' + this.data.guideid;
+      return this.baseUrl + '/' + this.data.guideid;
     }
   }
 });
@@ -18446,12 +18456,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data'],
   data: function data() {
-    return {};
+    return {
+      baseUrl: '/mockups/guide/steps'
+    };
   },
 
   methods: {
     isGuideType: function isGuideType(doctype) {
       return doctype.toLowerCase() === this.data.type;
+    },
+    editStepsUrl: function editStepsUrl() {
+      return this.baseUrl + '/' + this.data.guideid + '/' + this.data.stepsid;
     }
   }
 });
@@ -18501,12 +18516,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data'],
   data: function data() {
-    return {};
+    return {
+      baseUrl: '/mockups/guide/intro'
+    };
   },
 
   methods: {
     editUrl: function editUrl() {
-      return '/mockups/guide/intro/' + this.data.guideid;
+      return this.baseUrl + '/' + this.data.guideid;
     }
   }
 });
@@ -18666,7 +18683,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   props: ['data'],
   data: function data() {
     return {
-      visibleObject: []
+      visibleObject: [],
+      baseUrl: '/mockups/guide/steps'
     };
   },
 
@@ -18714,6 +18732,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           obj.visible = true;
         }
       });
+    },
+    editStepUrl: function editStepUrl(index) {
+      return this.baseUrl + '/' + this.data.guideid + '/' + this.data.steps[index].stepid;
     }
   }
 });
@@ -18836,21 +18857,6 @@ window.axios = __webpack_require__(129);
 
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
-// import Echo from 'laravel-echo'
-
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key'
-// });
 
 /***/ }),
 /* 158 */
@@ -49466,7 +49472,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "step-value"
     }, [_vm._v("Step " + _vm._s(index + 1))]), _vm._v(" "), (index + 1 === 1) ? _c('span', {
       staticClass: "step-title-title"
-    }, [_vm._v("iMac Intel 27\" Retina 5K Display Teardown")]) : _vm._e()])])]), _vm._v(" "), _vm._m(0, true)])]), _vm._v(" "), _c('div', {
+    }, [_vm._v("iMac Intel 27\" Retina 5K Display Teardown")]) : _vm._e()])])]), _vm._v(" "), _c('div', {
+      staticClass: "col-md-2"
+    }, [_c('div', {
+      staticClass: "step-edit-link"
+    }, [_c('a', {
+      staticClass: "btn btn-default",
+      attrs: {
+        "href": _vm.editStepUrl(index)
+      }
+    }, [_c('span', [_vm._v("Edit ")]), _vm._v(" "), _c('i', {
+      staticClass: "glyphicon glyphicon-edit"
+    })])])])])]), _vm._v(" "), _c('div', {
       staticClass: "row"
     }, [_c('div', {
       staticClass: "col-md-7"
@@ -49536,22 +49553,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }), _vm._v(" "), _c('li', {
         staticClass: "clearer"
       })]) : _vm._e()]) : _vm._e()])
-    }))])])]), _vm._v(" "), _vm._m(1, true)])
+    }))])])]), _vm._v(" "), _vm._m(0, true)])
   }))
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "col-md-2"
-  }, [_c('div', {
-    staticClass: "step-edit-link"
-  }, [_c('a', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "href": "#"
-    }
-  }, [_c('span', [_vm._v("Edit ")]), _vm._v(" "), _c('i', {
-    staticClass: "glyphicon glyphicon-edit"
-  })])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "divider-container"
   }, [_c('div', {
@@ -49683,17 +49687,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "rows": "7",
       "placeholder": ""
     }
-  }, [_vm._v(_vm._s(_vm.data.introduction))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "submit"
-  }, [_c('div', {
-    staticClass: "guide-action-buttons"
-  }, [_c('button', {
-    staticClass: "btn btn-primary"
-  }, [_vm._v("Save")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
+  }, [_vm._v(_vm._s(_vm.data.introduction))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "pagination pagination-bottom"
   }, [_c('p', {
     staticClass: "left"
@@ -49703,12 +49697,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "right"
   }, [_c('a', {
     attrs: {
-      "href": "#",
+      "href": _vm.editStepsUrl(),
       "id": "next-arrow"
     }
   }, [_vm._v("Guide Steps")]), _vm._v(" \n        "), _c('i', {
     staticClass: "fa fa-arrow-right"
-  })])])
+  })])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "submit"
+  }, [_c('div', {
+    staticClass: "guide-action-buttons"
+  }, [_c('button', {
+    staticClass: "btn btn-primary"
+  }, [_vm._v("Save")])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {

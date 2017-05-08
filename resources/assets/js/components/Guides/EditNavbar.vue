@@ -26,9 +26,14 @@
 <script>
   export default {
     props: ['data'],
+    data() {
+      return {
+        baseUrl: '/mockups/guide'
+      }
+    },
     methods: {
       viewUrl() {
-        return `/mockups/guide/${this.data.guideid}`;
+        return `${this.baseUrl}/${this.data.guideid}`;
       }
     }
   }

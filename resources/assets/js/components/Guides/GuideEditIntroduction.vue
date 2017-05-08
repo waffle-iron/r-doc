@@ -40,7 +40,7 @@
         <p class="middle">Editing Introduction</p>
         <p class="right">
           <!-- TODO: Can I move to the next tab with this link? -->
-          <a href="#" id="next-arrow">Guide Steps</a>&nbsp;
+          <a :href="editStepsUrl()" id="next-arrow">Guide Steps</a>&nbsp;
           <i class="fa fa-arrow-right"></i>
         </p>
       </div>
@@ -53,11 +53,16 @@
   export default {
     props: ['data'],
     data() {
-      return {}
+      return {
+        baseUrl: '/mockups/guide/steps'
+      }
     },
     methods: {
       isGuideType(doctype) {
         return doctype.toLowerCase() === this.data.type;
+      },
+      editStepsUrl() {
+        return `${this.baseUrl}/${this.data.guideid}/${this.data.stepsid}`;
       }
     }
   }
