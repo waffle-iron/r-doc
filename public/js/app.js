@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 187);
+/******/ 	return __webpack_require__(__webpack_require__.s = 189);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1899,7 +1899,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(165)("./" + name);
+            __webpack_require__(163)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -4534,7 +4534,7 @@ return hooks;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(127)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(126)(module)))
 
 /***/ }),
 /* 1 */
@@ -4543,7 +4543,7 @@ return hooks;
 "use strict";
 
 
-var bind = __webpack_require__(10);
+var bind = __webpack_require__(8);
 
 /*global toString:true*/
 
@@ -4846,62 +4846,6 @@ module.exports = {
 /* 2 */
 /***/ (function(module, exports) {
 
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
 // this module is a runtime utility for cleaner component module output and will
 // be included in the final webpack user bundle
 
@@ -4956,235 +4900,14 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-var listToStyles = __webpack_require__(185)
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-module.exports = function (parentId, list, _isProduction) {
-  isProduction = _isProduction
-
-  var styles = listToStyles(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = listToStyles(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[data-vue-ssr-id~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(1);
-var normalizeHeaderName = __webpack_require__(145);
+var normalizeHeaderName = __webpack_require__(144);
 
 var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 var DEFAULT_CONTENT_TYPE = {
@@ -5201,10 +4924,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(6);
+    adapter = __webpack_require__(4);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(6);
+    adapter = __webpack_require__(4);
   }
   return adapter;
 }
@@ -5275,22 +4998,22 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(166)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(164)))
 
 /***/ }),
-/* 6 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var settle = __webpack_require__(137);
-var buildURL = __webpack_require__(140);
-var parseHeaders = __webpack_require__(146);
-var isURLSameOrigin = __webpack_require__(144);
-var createError = __webpack_require__(9);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(139);
+var settle = __webpack_require__(136);
+var buildURL = __webpack_require__(139);
+var parseHeaders = __webpack_require__(145);
+var isURLSameOrigin = __webpack_require__(143);
+var createError = __webpack_require__(7);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(138);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -5386,7 +5109,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(142);
+      var cookies = __webpack_require__(141);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -5462,7 +5185,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5488,7 +5211,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5500,13 +5223,13 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(136);
+var enhanceError = __webpack_require__(135);
 
 /**
  * Create an Error with the specified message, config, error code, and response.
@@ -5524,7 +5247,7 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5542,7 +5265,915 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 11 */
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+  "previous_text": "iMac Intel 27\" Retina 5K Repair",
+  "conclusion": "<p>I hope you have enjoyed reading this document</p>",
+  "difficulty": "Moderate",
+  "documents": [],
+  "flags": [{
+    "title": "Featured Guide",
+    "flagid": "GUIDE_STARRED",
+    "text": "This guide has been found to be exceptionally cool by the iFixit staff."
+  }],
+  "guideid": 30260,
+  "revision": "F",
+  "image": {
+    "id": 895976,
+    "guid": "lRKYbGnjXT2jatbx",
+    "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.mini",
+    "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.thumbnail",
+    "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.standard",
+    "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.medium",
+    "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.large",
+    "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.huge",
+    "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx"
+  },
+  "introduction": "<p>Think of the most colorful and radiant display you’ve ever seen. Now, discard that memory and stare at Apple’s newest iMac Intel 27” with Retina 5K Display. We're not talking 1080p or 4K, we're talking about 5K—millions and millions of pixels on a 27-inch display. Will the addition of a high-resolution display affect the repairability of the newest iMac Intel 27”? Let’s find out!</p>\n\n<p>Follow us on <a href=\"https://www.facebook.com/iFixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Facebook</a>, <a href=\"http://instagram.com/ifixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Instagram</a>, or <a href=\"https://twitter.com/ifixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Twitter</a> for the latest teardown news.</p>",
+  "parts": [],
+  "prerequisites": [],
+  "steps": [{
+    "title": "",
+    "lines": [{
+      "text_raw": "How do you herd together 14.7 million pixels? You can ask nicely, or you can brandish some heavy-duty hardware. Inside the Retina 5K iMac:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "How do you herd together 14.7 million pixels? You can ask nicely, or you can brandish some heavy-duty hardware. Inside the Retina 5K iMac:"
+    }, {
+      "text_raw": "3.5 GHz quad-core Intel Core i5 processor, with Turbo Boost up to 3.9 GHz",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "3.5 GHz quad-core Intel Core i5 processor, with Turbo Boost up to 3.9 GHz"
+    }, {
+      "text_raw": "8 GB (2x4 GB) of 1600 MHz DDR3 RAM",
+      "bullet": "orange",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "8 GB (2x4 GB) of 1600 MHz DDR3 RAM"
+    }, {
+      "text_raw": "AMD Radeon R9 M290X graphics processor with 2 GB of GDDR5 video memory",
+      "bullet": "yellow",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "AMD Radeon R9 M290X graphics processor with 2 GB of GDDR5 video memory"
+    }, {
+      "text_raw": "802.11ac Wi-Fi + Bluetooth 4.0",
+      "bullet": "green",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "802.11ac Wi-Fi + Bluetooth 4.0"
+    }, {
+      "text_raw": "PCIe-based SSD storage and SATA hard drive",
+      "bullet": "blue",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "PCIe-based SSD storage and SATA hard drive"
+    }],
+    "guideid": 30260,
+    "stepid": 70934,
+    "orderby": 1,
+    "revisionid": 1256883,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401858,
+        "guid": "GrgDucWOP1QGxb1P",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P",
+        "visible": true
+      }, {
+        "id": 401878,
+        "guid": "HKi6IJeupf5cFvaM",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "Not one to waste a good model number on just a single device, Apple [[Topic:iMac Intel 27\" EMC 2546|again]] [[Topic:iMac Intel 27\" EMC 2639|recycles]] A1419.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Not one to waste a good model number on just a single device, Apple <a href=\"https://www.ifixit.com/Topic/iMac_Intel_27%22_EMC_2546\">again</a> <a href=\"https://www.ifixit.com/Topic/iMac_Intel_27%22_EMC_2639\">recycles</a> A1419."
+    }, {
+      "text_raw": "For a unique identifier, this is EMC 2806.",
+      "bullet": "icon_note",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "For a unique identifier, this is EMC 2806."
+    }, {
+      "text_raw": "At the rear of the iMac, we find a plethora of I/O ports and a lone SDXC card slot:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "At the rear of the iMac, we find a plethora of I/O ports and a lone SDXC card slot:"
+    }, {
+      "text_raw": "Headphone jack / Optical digital audio output",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Headphone jack / Optical digital audio output"
+    }, {
+      "text_raw": "SDXC card slot",
+      "bullet": "orange",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "SDXC card slot"
+    }, {
+      "text_raw": "Four USB 3.0 ports",
+      "bullet": "yellow",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Four USB 3.0 ports"
+    }, {
+      "text_raw": "Two Thunderbolt 2.0 ports",
+      "bullet": "green",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Two Thunderbolt 2.0 ports"
+    }, {
+      "text_raw": "Gigabit ethernet port",
+      "bullet": "blue",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Gigabit ethernet port"
+    }],
+    "guideid": 30260,
+    "stepid": 70935,
+    "orderby": 2,
+    "revisionid": 1059688,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401864,
+        "guid": "t3aKREOF2KbIZFsM",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM",
+        "visible": true
+      }, {
+        "id": 401943,
+        "guid": "XaBorQfLDBAYDnWH",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "Fixers rejoice! The iMac Intel 27\" Retina 5K Display retains the familiar, easily accessible RAM upgrade slot from iMacs of yore.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Fixers rejoice! The iMac Intel 27&quot; Retina 5K Display retains the familiar, easily accessible RAM upgrade slot from iMacs of yore."
+    }, {
+      "text_raw": "For those who require assistance replacing their RAM modules, Apple has attempted to provide some direction—that you get to see after you're halfway through the process.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "For those who require assistance replacing their RAM modules, Apple has attempted to provide some direction—that you get to see after you're halfway through the process."
+    }, {
+      "text_raw": "For anyone who would rather be guided by glorious high-resolution images and lovingly crafted text, that's [guide|20249|also available|new_window=true].",
+      "bullet": "icon_note",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "For anyone who would rather be guided by glorious high-resolution images and lovingly crafted text, that's <a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+RAM+Replacement/20249\" target=\"_blank\">also available</a>."
+    }],
+    "guideid": 30260,
+    "stepid": 70939,
+    "orderby": 3,
+    "revisionid": 1059422,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401892,
+        "guid": "eIGbhGOaYP46J3DU",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU",
+        "visible": true
+      }, {
+        "id": 401893,
+        "guid": "pSJgr2AHAgjjQ33B",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "We're pretty adept at slicing open iMacs with our ever-so-fancy [product|IF145-219|iMac Opening Tool|new_window=true] and our noble [product|IF145-101|Plastic Card|new_window=true].",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "We're pretty adept at slicing open iMacs with our ever-so-fancy <a href=\"https://www.ifixit.com/Store/Tools/iMac-Opening-Wheel/IF145-219\" target=\"_blank\">iMac Opening Tool</a> and our noble <a href=\"https://www.ifixit.com/Store/Tools/Plastic-Cards/IF145-101\" target=\"_blank\">Plastic Card</a>."
+    }, {
+      "text_raw": "While the procedure still requires a steady hand and a willingness to replace the custom-cut, two-sided adhesive tape when you're done, it's otherwise pretty straightforward, and unchanged from previous models.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "While the procedure still requires a steady hand and a willingness to replace the custom-cut, two-sided adhesive tape when you're done, it's otherwise pretty straightforward, and unchanged from previous models."
+    }, {
+      "text_raw": "With the adhesive tape gone, we get our first peek at the hardware inside the Retina 5K iMac.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "With the adhesive tape gone, we get our first peek at the hardware inside the Retina 5K iMac."
+    }],
+    "guideid": 30260,
+    "stepid": 70952,
+    "orderby": 4,
+    "revisionid": 1059456,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401921,
+        "guid": "q6KQZ3rNdrhyNl2P",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P",
+        "visible": true
+      }, {
+        "id": 401919,
+        "guid": "JOy2VVh1nRctxKNj",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj",
+        "visible": false
+      }, {
+        "id": 401920,
+        "guid": "dwJTWHXE3FuqBRLe",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "The first order of business is finding out whether this 5K display runs on actual magic, or something more susceptible to dissection.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "The first order of business is finding out whether this 5K display runs on actual magic, or something more susceptible to dissection."
+    }, {
+      "text_raw": "This particular display was manufactured by LG Display. (So, magic is looking less likely.)",
+      "bullet": "icon_note",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "This particular display was manufactured by LG Display. (So, magic is looking less likely.)"
+    }, {
+      "text_raw": "With a few twists of our screwdriver, a very long, very thin display board is revealed.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "With a few twists of our screwdriver, a very long, very thin display board is revealed."
+    }],
+    "guideid": 30260,
+    "stepid": 70955,
+    "orderby": 5,
+    "revisionid": 1059500,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401949,
+        "guid": "nDnWVSfRGSMMCtdP",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP",
+        "visible": true
+      }, {
+        "id": 401967,
+        "guid": "LBUJZi11Hu2rEWbi",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi",
+        "visible": false
+      }, {
+        "id": 401948,
+        "guid": "4SFV2Aj1msQnS5qc",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "Let's take a look at the hardware that allows  14.7 million pixels with a resolution of 5120 x 2880 on a 27-inch display:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Let's take a look at the hardware that allows  14.7 million pixels with a resolution of 5120 x 2880 on a 27-inch display:"
+    }, {
+      "text_raw": "Texas Instruments [link|http://www.ti.com/product/sn74lvc8t245|NH245|new_window=true] 8-Bit Dual-Supply Bus Transceiver",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/sn74lvc8t245\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">NH245</a> 8-Bit Dual-Supply Bus Transceiver"
+    }, {
+      "text_raw": "Texas Instruments [link|http://www.ti.com/product/buf16821|BUF16821|new_window=true] Programmable Gamma-Voltage Generator and Vcom Calibrator",
+      "bullet": "orange",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/buf16821\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">BUF16821</a> Programmable Gamma-Voltage Generator and Vcom Calibrator"
+    }, {
+      "text_raw": "Parade Technologies DP665 LCD [http://www.anandtech.com/show/8623/hands-on-apples-imac-with-retina-display|Timing Controller|new_window=true]",
+      "bullet": "yellow",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Parade Technologies DP665 LCD <a href=\"http://www.anandtech.com/show/8623/hands-on-apples-imac-with-retina-display\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Timing Controller</a>"
+    }, {
+      "text_raw": "We assume this is an Apple modified version of the [link|http://www.paradetech.com/products/displayport-lcd-timing-controller-products/dp663/|DP663|new_window=true] LCD Timing Controller",
+      "bullet": "icon_note",
+      "level": 2,
+      "lineid": null,
+      "text_rendered": "We assume this is an Apple modified version of the <a href=\"http://www.paradetech.com/products/displayport-lcd-timing-controller-products/dp663/\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">DP663</a> LCD Timing Controller"
+    }, {
+      "text_raw": "Texas Instruments [link|http://www.ti.com/product/tps65270|TPS65270|new_window=true] Monolithic Dual Synchronous Buck Regulator",
+      "bullet": "green",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/tps65270\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">TPS65270</a> Monolithic Dual Synchronous Buck Regulator"
+    }, {
+      "text_raw": "Texas Instruments [link|http://www.ti.com/product/tps65168|TPS65168|new_window=true] High Resolution Fully Programmable LCD Bias IC for TV",
+      "bullet": "blue",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/tps65168\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">TPS65168</a> High Resolution Fully Programmable LCD Bias IC for TV"
+    }],
+    "guideid": 30260,
+    "stepid": 70940,
+    "orderby": 6,
+    "revisionid": 1092722,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401938,
+        "guid": "gymJxgdZPPNgPyPp",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp",
+        "visible": true
+      }, {
+        "id": 401944,
+        "guid": "GRYRXBZjbTWKKBeW",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW",
+        "visible": false
+      }, {
+        "id": 401946,
+        "guid": "txaCARMSLWBAiaao",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "Barring the new display, the hardware inside the iMac Intel 27\" Retina 5K Display looks much the same as [guide|17828|last year's 27\" iMac|stepid=52531].",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Barring the new display, the hardware inside the iMac Intel 27&quot; Retina 5K Display looks much the same as <a href=\"https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+EMC+2639+Teardown/17828#s52531\">last year's 27&quot; iMac</a>."
+    }, {
+      "text_raw": "In fact, as we dive in deeper, we realize it is very nearly ''[guide|24341|exactly|stepid=49670]'' the same.",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "In fact, as we dive in deeper, we realize it is very nearly <em><a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+Adhesive+Strips+Replacement/24341#s49670\">exactly</a></em> the same."
+    }, {
+      "text_raw": "We would have documented the logic board removal, but we already have! We'll be following [guide|19650|last year's logic board guide|new_window=true]—check it out and head back here while we skip ahead.",
+      "bullet": "icon_note",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "We would have documented the logic board removal, but we already have! We'll be following <a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+Logic+Board+Replacement/19650\" target=\"_blank\">last year's logic board guide</a>—check it out and head back here while we skip ahead."
+    }, {
+      "text_raw": "And after following the guide to the letter, we've got our findings on the differences inside:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "And after following the guide to the letter, we've got our findings on the differences inside:"
+    }, {
+      "text_raw": "The Retina 5K's display data cable is slightly wider—to support those extra pixels.",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "The Retina 5K's display data cable is slightly wider—to support those extra pixels."
+    }],
+    "guideid": 30260,
+    "stepid": 70956,
+    "orderby": 7,
+    "revisionid": 1059629,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401956,
+        "guid": "pYHRZpMG6v3p6uIL",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL",
+        "visible": true
+      }, {
+        "id": 401955,
+        "guid": "rXpKqypfgnes1VhW",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW",
+        "visible": false
+      }, {
+        "id": 401975,
+        "guid": "EgscnBEfIAGEIX6Q",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "Let's see what ICs this unsurprisingly familiar logic board is packing:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Let's see what ICs this unsurprisingly familiar logic board is packing:"
+    }, {
+      "text_raw": "AMD Radeon [http://www.amd.com/en-us/products/graphics/notebook/r9-m200#|R9 M290X|new_window=true] GPU",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "AMD Radeon <a href=\"http://www.amd.com/en-us/products/graphics/notebook/r9-m200#\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">R9 M290X</a> GPU"
+    }, {
+      "text_raw": "Intel Core [link|http://ark.intel.com/products/80810/Intel-Core-i5-4690-Processor-6M-Cache-up-to-3_90-GHz|i5-4690|new_window=true] Processor",
+      "bullet": "orange",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Intel Core <a href=\"http://ark.intel.com/products/80810/Intel-Core-i5-4690-Processor-6M-Cache-up-to-3_90-GHz\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">i5-4690</a> Processor"
+    }, {
+      "text_raw": "Just like last year, the CPU is not soldered to the logic board, and can be easily [guide|19630|replaced] (we just left it in the socket for the picture).",
+      "bullet": "icon_note",
+      "level": 2,
+      "lineid": null,
+      "text_rendered": "Just like last year, the CPU is not soldered to the logic board, and can be easily <a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+CPU+Replacement/19630\">replaced</a> (we just left it in the socket for the picture)."
+    }, {
+      "text_raw": "SK Hynix [https://www.skhynix.com/products/graphics/view.jsp?info.ramKind=26&info.serialNo=H5GC(Q)2H24BFR|H5GC2H24BFR|new_window=true] 256 MB GDDR5 SGRAM (256 MB x 8 modules = 2 GB total)",
+      "bullet": "yellow",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "SK Hynix <a href=\"https://www.skhynix.com/products/graphics/view.jsp?info.ramKind=26&amp;info.serialNo=H5GC(Q)2H24BFR\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">H5GC2H24BFR</a> 256 MB GDDR5 SGRAM (256 MB x 8 modules = 2 GB total)"
+    }, {
+      "text_raw": "Delta Electronics 8904CF 143003",
+      "bullet": "green",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Delta Electronics 8904CF 143003"
+    }, {
+      "text_raw": "Intel DH82Z87 (Z87) Platform Controller Hub",
+      "bullet": "blue",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Intel DH82Z87 (Z87) Platform Controller Hub"
+    }, {
+      "text_raw": "Fairchild Semiconductor DE32GV",
+      "bullet": "violet",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Fairchild Semiconductor DE32GV"
+    }],
+    "guideid": 30260,
+    "stepid": 70954,
+    "orderby": 8,
+    "revisionid": 1430643,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 402020,
+        "guid": "EWttSGR4I3l6eCMt",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt",
+        "visible": true
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "Front side of logic board:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Front side of logic board:"
+    }, {
+      "text_raw": "Broadcom BCM5776 Gigabit Ethernet Controller",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Broadcom BCM5776 Gigabit Ethernet Controller"
+    }, {
+      "text_raw": "Cirrus Logic 4206BCNZ Audio Controller",
+      "bullet": "orange",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Cirrus Logic 4206BCNZ Audio Controller"
+    }, {
+      "text_raw": "Intel [link|http://ark.intel.com/products/76721/Intel-DSL5520-Thunderbolt-2-Controller|DSL5520|new_window=true] Thunderbolt 2 Controller",
+      "bullet": "yellow",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Intel <a href=\"http://ark.intel.com/products/76721/Intel-DSL5520-Thunderbolt-2-Controller\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">DSL5520</a> Thunderbolt 2 Controller"
+    }, {
+      "text_raw": "LMF4S1EH 5BBCIG 47A6HPW",
+      "bullet": "green",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "LMF4S1EH 5BBCIG 47A6HPW"
+    }, {
+      "text_raw": "Microchip Technology [link|http://www.microchip.com/wwwproducts/Devices.aspx?product=EMC1428|1428-7 420BE5A BMY|new_window=true] System Management Bus (SMBus) Temperature Sensor",
+      "bullet": "blue",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Microchip Technology <a href=\"http://www.microchip.com/wwwproducts/Devices.aspx?product=EMC1428\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">1428-7 420BE5A BMY</a> System Management Bus (SMBus) Temperature Sensor"
+    }, {
+      "text_raw": "Intersil [http://www.intersil.com/content/dam/Intersil/documents/isl6/isl6327.pdf|ISL6327|new_window=true] Enhanced 6-Phase PWM Controller",
+      "bullet": "violet",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Intersil <a href=\"http://www.intersil.com/content/dam/Intersil/documents/isl6/isl6327.pdf\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">ISL6327</a> Enhanced 6-Phase PWM Controller"
+    }],
+    "guideid": 30260,
+    "stepid": 70961,
+    "orderby": 9,
+    "revisionid": 1366729,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 402012,
+        "guid": "r5nmCfZAVAQfZr4M",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M",
+        "visible": true
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "This looks to be the exact same SanDisk PCIe SSD as the one found in the [guide|18695|MacBook Pro 13\" Retina Display Late 2013|stepid=53226|new_window=true].",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "This looks to be the exact same SanDisk PCIe SSD as the one found in the <a href=\"https://www.ifixit.com/Teardown/MacBook+Pro+13-Inch+Retina+Display+Late+2013+Teardown/18695#s53226\" target=\"_blank\">MacBook Pro 13&quot; Retina Display Late 2013</a>."
+    }, {
+      "text_raw": "Unsurprisingly, we find the exact same ICs:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Unsurprisingly, we find the exact same ICs:"
+    }, {
+      "text_raw": "SanDisk 05131 016G 16 GB NAND Flash (four on each side, total of 8 x 16 GB = 128 GB)",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "SanDisk 05131 016G 16 GB NAND Flash (four on each side, total of 8 x 16 GB = 128 GB)"
+    }, {
+      "text_raw": "SK Hynix [https://www.skhynix.com/products/consumer/view.jsp?info.ramKind=19&info.serialNo=H5TQ2G63DFR|H5TQ2G63DFR|new_window=true] 2 GB DDR3 SDRAM",
+      "bullet": "orange",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "SK Hynix <a href=\"https://www.skhynix.com/products/consumer/view.jsp?info.ramKind=19&amp;info.serialNo=H5TQ2G63DFR\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">H5TQ2G63DFR</a> 2 GB DDR3 SDRAM"
+    }, {
+      "text_raw": "Marvell [http://investor.marvell.com/phoenix.zhtml?c=120802&p=irol-newsArticle_print&ID=1933063|88SS91383|new_window=true] PCIe SSD Controller",
+      "bullet": "yellow",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Marvell <a href=\"http://investor.marvell.com/phoenix.zhtml?c=120802&amp;p=irol-newsArticle_print&amp;ID=1933063\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">88SS91383</a> PCIe SSD Controller"
+    }],
+    "guideid": 30260,
+    "stepid": 70957,
+    "orderby": 10,
+    "revisionid": 1059587,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401969,
+        "guid": "PbQAPKwGOYbMTIqh",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh",
+        "visible": true
+      }, {
+        "id": 401970,
+        "guid": "dujVvncDt2YihR31",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "The AirPort/Bluetooth card, identified by its model number BCM94360CD, is [guide|17828|exactly the same|stepid=52536] as the one we encountered in last years iMac Intel 27 inch:",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "The AirPort/Bluetooth card, identified by its model number BCM94360CD, is <a href=\"https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+EMC+2639+Teardown/17828#s52536\">exactly the same</a> as the one we encountered in last years iMac Intel 27 inch:"
+    }, {
+      "text_raw": "Broadcom [http://www.broadcom.com/products/Wireless-LAN/802.11-Wireless-LAN-Solutions/BCM4360|BCM4360KML1G] 5G WiFi 3-Stream 802.11ac Gigabit Transceiver",
+      "bullet": "red",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Broadcom <a href=\"http://www.broadcom.com/products/Wireless-LAN/802.11-Wireless-LAN-Solutions/BCM4360\" rel=\"nofollow noopener noreferrer\">BCM4360KML1G</a> 5G WiFi 3-Stream 802.11ac Gigabit Transceiver"
+    }, {
+      "text_raw": "Skyworks [link|http://www.skyworksinc.com/uploads/documents/SE5516A_202396H.pdf|SE5516|new_window=true] Dual-Band 802.11a/b/g/n/ac WLAN Front-End Module",
+      "bullet": "orange",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Skyworks <a href=\"http://www.skyworksinc.com/uploads/documents/SE5516A_202396H.pdf\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">SE5516</a> Dual-Band 802.11a/b/g/n/ac WLAN Front-End Module"
+    }, {
+      "text_raw": "Broadcom [http://www.broadcom.com/products/Bluetooth/Bluetooth-RF-Silicon-and-Software-Solutions/BCM20702|BCM20702|new_window=true] Single-Chip Bluetooth 4.0 HCI Solution with Bluetooth Low Energy (BLE) Support",
+      "bullet": "yellow",
+      "level": 1,
+      "lineid": null,
+      "text_rendered": "Broadcom <a href=\"http://www.broadcom.com/products/Bluetooth/Bluetooth-RF-Silicon-and-Software-Solutions/BCM20702\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">BCM20702</a> Single-Chip Bluetooth 4.0 HCI Solution with Bluetooth Low Energy (BLE) Support"
+    }],
+    "guideid": 30260,
+    "stepid": 70958,
+    "orderby": 11,
+    "revisionid": 1059661,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401972,
+        "guid": "m63oETaZVww4wCNV",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV",
+        "visible": true
+      }, {
+        "id": 402023,
+        "guid": "sATJFV4Xcb2Gheq2",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2",
+        "visible": false
+      }, {
+        "id": 401971,
+        "guid": "DLFARdBBlIt3KnQA",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA",
+        "visible": false
+      }]
+    }
+  }, {
+    "title": "",
+    "lines": [{
+      "text_raw": "iMac 27\" Retina 5K Display Repairability Score: '''5 out of 10''' (10 is easiest to repair)",
+      "bullet": "black",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "iMac 27&quot; Retina 5K Display Repairability Score: <strong>5 out of 10</strong> (10 is easiest to repair)"
+    }, {
+      "text_raw": "RAM is user-replaceable without opening the case, thanks to the rear access door.",
+      "bullet": "green",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "RAM is user-replaceable without opening the case, thanks to the rear access door."
+    }, {
+      "text_raw": "You can still replace the hard drive and CPU inside this machine, albeit with some adhesive cutting.",
+      "bullet": "green",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "You can still replace the hard drive and CPU inside this machine, albeit with some adhesive cutting."
+    }, {
+      "text_raw": "Components are modular and fairly easy to remove.",
+      "bullet": "green",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "Components are modular and fairly easy to remove."
+    }, {
+      "text_raw": "The glass and LCD are fused together, and there are no more magnets holding the glass in place.",
+      "bullet": "red",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "The glass and LCD are fused together, and there are no more magnets holding the glass in place."
+    }, {
+      "text_raw": "You'll have to masterfully peel off the old double-sided sticky tape and apply new tape in order to reseal this iMac into original condition.",
+      "bullet": "red",
+      "level": 0,
+      "lineid": null,
+      "text_rendered": "You'll have to masterfully peel off the old double-sided sticky tape and apply new tape in order to reseal this iMac into original condition."
+    }],
+    "guideid": 30260,
+    "stepid": 70959,
+    "orderby": 12,
+    "revisionid": 1059531,
+    "media": {
+      "type": "image",
+      "data": [{
+        "id": 401978,
+        "guid": "KtF5YuVRiVqBUgTj",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj",
+        "visible": true
+      }, {
+        "id": 401979,
+        "guid": "JLbAAcjqmqKYuYLG",
+        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.mini",
+        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.thumbnail",
+        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.standard",
+        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.medium",
+        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.large",
+        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.huge",
+        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG",
+        "visible": false
+      }]
+    }
+  }],
+  "subject": "",
+  "summary": "iMac Intel 27\" Retina 5K Display on October 17, 2014.",
+  "time_required": "No estimate",
+  "time_required_min": 0,
+  "time_required_max": 0,
+  "title": "iMac Intel 27\" Retina 5K Display Teardown",
+  "tools": [{
+    "type": "",
+    "quantity": 1,
+    "text": "iMac Intel 27\" (EMC 2546, 2639, 2806) Adhesive Strips",
+    "notes": null,
+    "url": "http://www.ifixit.com/Apple-Parts/iMac-Intel-27-Inch-EMC-2546-Adhesive-Strips/IF174-005",
+    "thumbnail": "https://da2lh5cs8ikqj.cloudfront.net/cart-products/KhZJIqGtxrq3OlUf.mini"
+  }, {
+    "type": "",
+    "quantity": 1,
+    "text": "Spudger",
+    "notes": null,
+    "url": "http://www.ifixit.com/Tools/Spudger/IF145-002",
+    "thumbnail": "https://da2lh5cs8ikqj.cloudfront.net/cart-products/fIQ3oZSjd1yLgqpX.mini"
+  }],
+  "type": "teardown",
+  "revisionid": 753275,
+  "created_date": 1413563912,
+  "published_date": 1413588480,
+  "modified_date": 1493330183,
+  "prereq_modified_date": 0,
+  "public": true,
+  "category": "iMac Intel 27\" Retina 5K Display",
+  "url": "https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+Retina+5K+Display+Teardown/30260",
+  "can_edit": true,
+  "favorited": false,
+  "completed": false,
+  "author": {
+    "userid": 524640,
+    "username": "Sam Lionheart",
+    "unique_username": "sam",
+    "join_date": 1350625879,
+    "image": {
+      "id": 277243,
+      "guid": "goWW1KSXtt5RIr4A",
+      "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.mini",
+      "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.thumbnail",
+      "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.standard",
+      "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.medium",
+      "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.large",
+      "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A"
+    },
+    "reputation": 246141,
+    "url": "https://www.ifixit.com/User/524640/Sam+Lionheart",
+    "teams": [1],
+    "privileges": ["Admin"]
+  },
+  "featured_documentid": null,
+  "types": ["Replacement", "Disassembly", "Teardown", "Technique"]
+});
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5620,7 +6251,7 @@ return af;
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5684,7 +6315,7 @@ return arDz;
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5748,7 +6379,7 @@ return arKw;
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5879,7 +6510,7 @@ return arLy;
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5944,7 +6575,7 @@ return arMa;
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6054,7 +6685,7 @@ return arSa;
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6118,7 +6749,7 @@ return arTn;
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6265,7 +6896,7 @@ return ar;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6375,7 +7006,7 @@ return az;
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6514,7 +7145,7 @@ return be;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6609,7 +7240,7 @@ return bg;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6733,7 +7364,7 @@ return bn;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6857,7 +7488,7 @@ return bo;
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6970,7 +7601,7 @@ return br;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7118,7 +7749,7 @@ return bs;
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7211,7 +7842,7 @@ return ca;
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7388,7 +8019,7 @@ return cs;
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7456,7 +8087,7 @@ return cv;
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7542,7 +8173,7 @@ return cy;
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7607,7 +8238,7 @@ return da;
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7691,7 +8322,7 @@ return deAt;
 
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7774,7 +8405,7 @@ return deCh;
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7857,7 +8488,7 @@ return de;
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7962,7 +8593,7 @@ return dv;
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8067,7 +8698,7 @@ return el;
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8139,7 +8770,7 @@ return enAu;
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8207,7 +8838,7 @@ return enCa;
 
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8279,7 +8910,7 @@ return enGb;
 
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8351,7 +8982,7 @@ return enIe;
 
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8423,7 +9054,7 @@ return enNz;
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8501,7 +9132,7 @@ return eo;
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8588,7 +9219,7 @@ return esDo;
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8676,7 +9307,7 @@ return es;
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8761,7 +9392,7 @@ return et;
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8832,7 +9463,7 @@ return eu;
 
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8944,7 +9575,7 @@ return fa;
 
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9056,7 +9687,7 @@ return fi;
 
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9121,7 +9752,7 @@ return fo;
 
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9200,7 +9831,7 @@ return frCa;
 
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9283,7 +9914,7 @@ return frCh;
 
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9371,7 +10002,7 @@ return fr;
 
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9451,7 +10082,7 @@ return fy;
 
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9532,7 +10163,7 @@ return gd;
 
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9614,7 +10245,7 @@ return gl;
 
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9741,7 +10372,7 @@ return gomLatn;
 
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9845,7 +10476,7 @@ return he;
 
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9974,7 +10605,7 @@ return hi;
 
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10124,7 +10755,7 @@ return hr;
 
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10238,7 +10869,7 @@ return hu;
 
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10338,7 +10969,7 @@ return hyAm;
 
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10426,7 +11057,7 @@ return id;
 
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10558,7 +11189,7 @@ return is;
 
 
 /***/ }),
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10633,7 +11264,7 @@ return it;
 
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10718,7 +11349,7 @@ return ja;
 
 
 /***/ }),
-/* 65 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10806,7 +11437,7 @@ return jv;
 
 
 /***/ }),
-/* 66 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10900,7 +11531,7 @@ return ka;
 
 
 /***/ }),
-/* 67 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10992,7 +11623,7 @@ return kk;
 
 
 /***/ }),
-/* 68 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11055,7 +11686,7 @@ return km;
 
 
 /***/ }),
-/* 69 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11186,7 +11817,7 @@ return kn;
 
 
 /***/ }),
-/* 70 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11260,7 +11891,7 @@ return ko;
 
 
 /***/ }),
-/* 71 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11353,7 +11984,7 @@ return ky;
 
 
 /***/ }),
-/* 72 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11495,7 +12126,7 @@ return lb;
 
 
 /***/ }),
-/* 73 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11570,7 +12201,7 @@ return lo;
 
 
 /***/ }),
-/* 74 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11692,7 +12323,7 @@ return lt;
 
 
 /***/ }),
-/* 75 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11794,7 +12425,7 @@ return lv;
 
 
 /***/ }),
-/* 76 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11910,7 +12541,7 @@ return me;
 
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11979,7 +12610,7 @@ return mi;
 
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12074,7 +12705,7 @@ return mk;
 
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12160,7 +12791,7 @@ return ml;
 
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12324,7 +12955,7 @@ return mr;
 
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12412,7 +13043,7 @@ return msMy;
 
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12499,7 +13130,7 @@ return ms;
 
 
 /***/ }),
-/* 83 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12600,7 +13231,7 @@ return my;
 
 
 /***/ }),
-/* 84 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12668,7 +13299,7 @@ return nb;
 
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12796,7 +13427,7 @@ return ne;
 
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12889,7 +13520,7 @@ return nlBe;
 
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12982,7 +13613,7 @@ return nl;
 
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13047,7 +13678,7 @@ return nn;
 
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13176,7 +13807,7 @@ return paIn;
 
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13288,7 +13919,7 @@ return pl;
 
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13354,7 +13985,7 @@ return ptBr;
 
 
 /***/ }),
-/* 92 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13424,7 +14055,7 @@ return pt;
 
 
 /***/ }),
-/* 93 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13504,7 +14135,7 @@ return ro;
 
 
 /***/ }),
-/* 94 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13692,7 +14323,7 @@ return ru;
 
 
 /***/ }),
-/* 95 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13795,7 +14426,7 @@ return sd;
 
 
 /***/ }),
-/* 96 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13861,7 +14492,7 @@ return se;
 
 
 /***/ }),
-/* 97 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13937,7 +14568,7 @@ return si;
 
 
 /***/ }),
-/* 98 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14092,7 +14723,7 @@ return sk;
 
 
 /***/ }),
-/* 99 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14259,7 +14890,7 @@ return sl;
 
 
 /***/ }),
-/* 100 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14334,7 +14965,7 @@ return sq;
 
 
 /***/ }),
-/* 101 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14449,7 +15080,7 @@ return srCyrl;
 
 
 /***/ }),
-/* 102 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14564,7 +15195,7 @@ return sr;
 
 
 /***/ }),
-/* 103 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14658,7 +15289,7 @@ return ss;
 
 
 /***/ }),
-/* 104 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14732,7 +15363,7 @@ return sv;
 
 
 /***/ }),
-/* 105 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14796,7 +15427,7 @@ return sw;
 
 
 /***/ }),
-/* 106 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14931,7 +15562,7 @@ return ta;
 
 
 /***/ }),
-/* 107 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15025,7 +15656,7 @@ return te;
 
 
 /***/ }),
-/* 108 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15098,7 +15729,7 @@ return tet;
 
 
 /***/ }),
-/* 109 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15170,7 +15801,7 @@ return th;
 
 
 /***/ }),
-/* 110 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15237,7 +15868,7 @@ return tlPh;
 
 
 /***/ }),
-/* 111 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15362,7 +15993,7 @@ return tlh;
 
 
 /***/ }),
-/* 112 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15457,7 +16088,7 @@ return tr;
 
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15553,7 +16184,7 @@ return tzl;
 
 
 /***/ }),
-/* 114 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15616,7 +16247,7 @@ return tzmLatn;
 
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15679,7 +16310,7 @@ return tzm;
 
 
 /***/ }),
-/* 116 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15835,7 +16466,7 @@ return uk;
 
 
 /***/ }),
-/* 117 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15939,7 +16570,7 @@ return ur;
 
 
 /***/ }),
-/* 118 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16002,7 +16633,7 @@ return uzLatn;
 
 
 /***/ }),
-/* 119 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16065,7 +16696,7 @@ return uz;
 
 
 /***/ }),
-/* 120 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16149,7 +16780,7 @@ return vi;
 
 
 /***/ }),
-/* 121 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16222,7 +16853,7 @@ return xPseudo;
 
 
 /***/ }),
-/* 122 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16287,7 +16918,7 @@ return yo;
 
 
 /***/ }),
-/* 123 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16403,7 +17034,7 @@ return zhCn;
 
 
 /***/ }),
-/* 124 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16513,7 +17144,7 @@ return zhHk;
 
 
 /***/ }),
-/* 125 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16622,7 +17253,7 @@ return zhTw;
 
 
 /***/ }),
-/* 126 */
+/* 125 */
 /***/ (function(module, exports) {
 
 var g;
@@ -16649,7 +17280,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 127 */
+/* 126 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -16677,7 +17308,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 128 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16686,9 +17317,9 @@ module.exports = function(module) {
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(154);
+__webpack_require__(157);
 
-window.Vue = __webpack_require__(186);
+window.Vue = __webpack_require__(188);
 window.moment = __webpack_require__(0);
 // window.GuideData = require('./data.js');
 
@@ -16698,44 +17329,44 @@ window.moment = __webpack_require__(0);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('guide', __webpack_require__(167));
-Vue.component('guide-header-navigation', __webpack_require__(169));
-Vue.component('guide-image', __webpack_require__(170));
-Vue.component('guide-introduction', __webpack_require__(171));
-Vue.component('guide-step', __webpack_require__(172));
+Vue.component('guide', __webpack_require__(166));
+Vue.component('guide-header-navigation', __webpack_require__(170));
+Vue.component('guide-image', __webpack_require__(171));
+Vue.component('guide-introduction', __webpack_require__(172));
+Vue.component('guide-step', __webpack_require__(173));
 Vue.component('guide-completed', __webpack_require__(168));
-Vue.component('edit-guide', __webpack_require__(202));
-Vue.component('steps-guide-index', __webpack_require__(208));
-Vue.component('guide-edit-introduction', __webpack_require__(212));
-Vue.component('edit-navbar', __webpack_require__(220));
+Vue.component('edit-guide', __webpack_require__(165));
+Vue.component('steps-guide-index', __webpack_require__(174));
+Vue.component('guide-edit-introduction', __webpack_require__(169));
+Vue.component('edit-navbar', __webpack_require__(167));
 
 var app = new Vue({
   el: '#app'
 });
 
 /***/ }),
-/* 129 */
+/* 128 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 130 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(131);
+module.exports = __webpack_require__(130);
 
 /***/ }),
-/* 131 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var bind = __webpack_require__(10);
-var Axios = __webpack_require__(133);
-var defaults = __webpack_require__(5);
+var bind = __webpack_require__(8);
+var Axios = __webpack_require__(132);
+var defaults = __webpack_require__(3);
 
 /**
  * Create an instance of Axios
@@ -16768,15 +17399,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(7);
-axios.CancelToken = __webpack_require__(132);
-axios.isCancel = __webpack_require__(8);
+axios.Cancel = __webpack_require__(5);
+axios.CancelToken = __webpack_require__(131);
+axios.isCancel = __webpack_require__(6);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(147);
+axios.spread = __webpack_require__(146);
 
 module.exports = axios;
 
@@ -16785,13 +17416,13 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 132 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(7);
+var Cancel = __webpack_require__(5);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -16849,18 +17480,18 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 133 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(5);
+var defaults = __webpack_require__(3);
 var utils = __webpack_require__(1);
-var InterceptorManager = __webpack_require__(134);
-var dispatchRequest = __webpack_require__(135);
-var isAbsoluteURL = __webpack_require__(143);
-var combineURLs = __webpack_require__(141);
+var InterceptorManager = __webpack_require__(133);
+var dispatchRequest = __webpack_require__(134);
+var isAbsoluteURL = __webpack_require__(142);
+var combineURLs = __webpack_require__(140);
 
 /**
  * Create a new instance of Axios
@@ -16941,7 +17572,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 134 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17000,16 +17631,16 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 135 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var transformData = __webpack_require__(138);
-var isCancel = __webpack_require__(8);
-var defaults = __webpack_require__(5);
+var transformData = __webpack_require__(137);
+var isCancel = __webpack_require__(6);
+var defaults = __webpack_require__(3);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -17086,7 +17717,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 136 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17112,13 +17743,13 @@ module.exports = function enhanceError(error, config, code, response) {
 
 
 /***/ }),
-/* 137 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(9);
+var createError = __webpack_require__(7);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -17144,7 +17775,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 138 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17171,7 +17802,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 139 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17214,7 +17845,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 140 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17289,7 +17920,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 141 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17308,7 +17939,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 142 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17368,7 +17999,7 @@ module.exports = (
 
 
 /***/ }),
-/* 143 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17389,7 +18020,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 144 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17464,7 +18095,7 @@ module.exports = (
 
 
 /***/ }),
-/* 145 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17483,7 +18114,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 146 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17527,7 +18158,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 147 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17561,12 +18192,97 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
+/* 147 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      editIntroData: {
+        category: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].category,
+        type: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].type,
+        types: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].types,
+        title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].title,
+        summary: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].summary,
+        introduction: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction
+      },
+      mainImage: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.standard,
+      editNavbarData: {
+        previousText: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].previous_text,
+        backUrl: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
+      },
+      stepsData: {
+        steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps,
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
+      }
+    };
+  },
+
+  methods: {
+    guideStepsUrl: function guideStepsUrl() {
+      return '/mockups/guide/steps/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid + '/' + __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps[0].stepid;
+    }
+  }
+});
+
+/***/ }),
 /* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data_js__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data_js__ = __webpack_require__(9);
 //
 //
 //
@@ -17591,7 +18307,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         intro: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].introduction
       },
       navbarData: {
-        title: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].previous_text
+        title: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].previous_text,
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].guideid
       },
       stepsData: {
         steps: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].steps
@@ -17622,9 +18339,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data']
+  props: ['data'],
+  methods: {
+    viewUrl: function viewUrl() {
+      return '/mockups/guide/' + this.data.guideid;
+    }
+  }
 });
 
 /***/ }),
@@ -17633,26 +18365,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -17700,6 +18412,132 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  data: function data() {
+    return {};
+  },
+
+  methods: {
+    isGuideType: function isGuideType(doctype) {
+      return doctype.toLowerCase() === this.data.type;
+    }
+  }
+});
+
+/***/ }),
+/* 152 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  data: function data() {
+    return {};
+  },
+
+  methods: {
+    editUrl: function editUrl() {
+      return '/mockups/guide/intro/' + this.data.guideid;
+    }
+  }
+});
+
+/***/ }),
+/* 153 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data'],
@@ -17720,7 +18558,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 152 */
+/* 154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17743,7 +18581,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 153 */
+/* 155 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17881,11 +18719,100 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 154 */
+/* 156 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  beforeMount: function beforeMount() {
+    this.gatherThumbnails();
+  },
+  data: function data() {
+    return {
+      isActive: [],
+      imageThumbs: []
+    };
+  },
+
+  computed: {
+    active: function active() {
+      return function (index) {
+        return this.isActive[index];
+      };
+    }
+  },
+  methods: {
+    getActiveState: function getActiveState(index) {
+      return this.isActive[index];
+    },
+    shouldBeActive: function shouldBeActive(index, arr) {
+      var _this = this;
+
+      arr.forEach(function (active, idx) {
+        if (idx === index) {
+          _this.isActive[index] = !_this.isActive[index];
+        }
+      });
+    },
+    setNotActive: function setNotActive() {
+      var _this2 = this;
+
+      this.data.forEach(function (data, index) {
+        _this2.isActive[index] = false;
+      });
+    },
+    imageThumb: function imageThumb(index) {
+      return {
+        backgroundImage: 'url(\'' + this.imageThumbs[index] + '\')'
+      };
+    },
+    gatherThumbnails: function gatherThumbnails() {
+      var _this3 = this;
+
+      this.data.steps.forEach(function (image, index) {
+        _this3.imageThumbs[index] = image.media.data[0].mini;
+        _this3.isActive[index] = false;
+      });
+    },
+    stepEditUrl: function stepEditUrl(index) {
+      return '/mockups/guide/steps/' + this.data.guideid + '/' + this.data.steps[index].stepid;
+    }
+  }
+});
+
+/***/ }),
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(164);
+window._ = __webpack_require__(162);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -17894,9 +18821,9 @@ window._ = __webpack_require__(164);
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(163);
+  window.$ = window.jQuery = __webpack_require__(161);
 
-  __webpack_require__(156);
+  __webpack_require__(158);
 } catch (e) {}
 
 /**
@@ -17905,7 +18832,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(130);
+window.axios = __webpack_require__(129);
 
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -17926,8 +18853,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // });
 
 /***/ }),
-/* 155 */,
-/* 156 */
+/* 158 */
 /***/ (function(module, exports) {
 
 /*!
@@ -20310,19 +21236,70 @@ if (typeof jQuery === 'undefined') {
 
 
 /***/ }),
-/* 157 */,
-/* 158 */,
-/* 159 */,
-/* 160 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(160)();
 exports.push([module.i, "\n.completion-container {\n  margin: 60px 0;\n  position: relative;\n}\n.guide-complete {\n  margin: 0;\n  background-color: #f2f8fd;\n  border: 1px solid #b3d4f0;\n  border-raidus: 4px;\n  padding: 26px;\n}\n#guideConclusion {\n  text-align: center;\n}\n.finish-line {\n  margin: 0 auto 30px;\n  position: relative;\n  display: inline-block;\n  padding: 0 15px;\n  z-index: 1;\n  font-size: 20px;\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.conclusionText {\n  font-size: 1.2em;\n  font-weight: 500;\n}\n", ""]);
 
 /***/ }),
-/* 161 */,
-/* 162 */,
-/* 163 */
+/* 160 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -30582,7 +31559,7 @@ return jQuery;
 
 
 /***/ }),
-/* 164 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -47671,243 +48648,243 @@ return jQuery;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(126), __webpack_require__(127)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(125), __webpack_require__(126)(module)))
 
 /***/ }),
-/* 165 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 11,
-	"./af.js": 11,
-	"./ar": 18,
-	"./ar-dz": 12,
-	"./ar-dz.js": 12,
-	"./ar-kw": 13,
-	"./ar-kw.js": 13,
-	"./ar-ly": 14,
-	"./ar-ly.js": 14,
-	"./ar-ma": 15,
-	"./ar-ma.js": 15,
-	"./ar-sa": 16,
-	"./ar-sa.js": 16,
-	"./ar-tn": 17,
-	"./ar-tn.js": 17,
-	"./ar.js": 18,
-	"./az": 19,
-	"./az.js": 19,
-	"./be": 20,
-	"./be.js": 20,
-	"./bg": 21,
-	"./bg.js": 21,
-	"./bn": 22,
-	"./bn.js": 22,
-	"./bo": 23,
-	"./bo.js": 23,
-	"./br": 24,
-	"./br.js": 24,
-	"./bs": 25,
-	"./bs.js": 25,
-	"./ca": 26,
-	"./ca.js": 26,
-	"./cs": 27,
-	"./cs.js": 27,
-	"./cv": 28,
-	"./cv.js": 28,
-	"./cy": 29,
-	"./cy.js": 29,
-	"./da": 30,
-	"./da.js": 30,
-	"./de": 33,
-	"./de-at": 31,
-	"./de-at.js": 31,
-	"./de-ch": 32,
-	"./de-ch.js": 32,
-	"./de.js": 33,
-	"./dv": 34,
-	"./dv.js": 34,
-	"./el": 35,
-	"./el.js": 35,
-	"./en-au": 36,
-	"./en-au.js": 36,
-	"./en-ca": 37,
-	"./en-ca.js": 37,
-	"./en-gb": 38,
-	"./en-gb.js": 38,
-	"./en-ie": 39,
-	"./en-ie.js": 39,
-	"./en-nz": 40,
-	"./en-nz.js": 40,
-	"./eo": 41,
-	"./eo.js": 41,
-	"./es": 43,
-	"./es-do": 42,
-	"./es-do.js": 42,
-	"./es.js": 43,
-	"./et": 44,
-	"./et.js": 44,
-	"./eu": 45,
-	"./eu.js": 45,
-	"./fa": 46,
-	"./fa.js": 46,
-	"./fi": 47,
-	"./fi.js": 47,
-	"./fo": 48,
-	"./fo.js": 48,
-	"./fr": 51,
-	"./fr-ca": 49,
-	"./fr-ca.js": 49,
-	"./fr-ch": 50,
-	"./fr-ch.js": 50,
-	"./fr.js": 51,
-	"./fy": 52,
-	"./fy.js": 52,
-	"./gd": 53,
-	"./gd.js": 53,
-	"./gl": 54,
-	"./gl.js": 54,
-	"./gom-latn": 55,
-	"./gom-latn.js": 55,
-	"./he": 56,
-	"./he.js": 56,
-	"./hi": 57,
-	"./hi.js": 57,
-	"./hr": 58,
-	"./hr.js": 58,
-	"./hu": 59,
-	"./hu.js": 59,
-	"./hy-am": 60,
-	"./hy-am.js": 60,
-	"./id": 61,
-	"./id.js": 61,
-	"./is": 62,
-	"./is.js": 62,
-	"./it": 63,
-	"./it.js": 63,
-	"./ja": 64,
-	"./ja.js": 64,
-	"./jv": 65,
-	"./jv.js": 65,
-	"./ka": 66,
-	"./ka.js": 66,
-	"./kk": 67,
-	"./kk.js": 67,
-	"./km": 68,
-	"./km.js": 68,
-	"./kn": 69,
-	"./kn.js": 69,
-	"./ko": 70,
-	"./ko.js": 70,
-	"./ky": 71,
-	"./ky.js": 71,
-	"./lb": 72,
-	"./lb.js": 72,
-	"./lo": 73,
-	"./lo.js": 73,
-	"./lt": 74,
-	"./lt.js": 74,
-	"./lv": 75,
-	"./lv.js": 75,
-	"./me": 76,
-	"./me.js": 76,
-	"./mi": 77,
-	"./mi.js": 77,
-	"./mk": 78,
-	"./mk.js": 78,
-	"./ml": 79,
-	"./ml.js": 79,
-	"./mr": 80,
-	"./mr.js": 80,
-	"./ms": 82,
-	"./ms-my": 81,
-	"./ms-my.js": 81,
-	"./ms.js": 82,
-	"./my": 83,
-	"./my.js": 83,
-	"./nb": 84,
-	"./nb.js": 84,
-	"./ne": 85,
-	"./ne.js": 85,
-	"./nl": 87,
-	"./nl-be": 86,
-	"./nl-be.js": 86,
-	"./nl.js": 87,
-	"./nn": 88,
-	"./nn.js": 88,
-	"./pa-in": 89,
-	"./pa-in.js": 89,
-	"./pl": 90,
-	"./pl.js": 90,
-	"./pt": 92,
-	"./pt-br": 91,
-	"./pt-br.js": 91,
-	"./pt.js": 92,
-	"./ro": 93,
-	"./ro.js": 93,
-	"./ru": 94,
-	"./ru.js": 94,
-	"./sd": 95,
-	"./sd.js": 95,
-	"./se": 96,
-	"./se.js": 96,
-	"./si": 97,
-	"./si.js": 97,
-	"./sk": 98,
-	"./sk.js": 98,
-	"./sl": 99,
-	"./sl.js": 99,
-	"./sq": 100,
-	"./sq.js": 100,
-	"./sr": 102,
-	"./sr-cyrl": 101,
-	"./sr-cyrl.js": 101,
-	"./sr.js": 102,
-	"./ss": 103,
-	"./ss.js": 103,
-	"./sv": 104,
-	"./sv.js": 104,
-	"./sw": 105,
-	"./sw.js": 105,
-	"./ta": 106,
-	"./ta.js": 106,
-	"./te": 107,
-	"./te.js": 107,
-	"./tet": 108,
-	"./tet.js": 108,
-	"./th": 109,
-	"./th.js": 109,
-	"./tl-ph": 110,
-	"./tl-ph.js": 110,
-	"./tlh": 111,
-	"./tlh.js": 111,
-	"./tr": 112,
-	"./tr.js": 112,
-	"./tzl": 113,
-	"./tzl.js": 113,
-	"./tzm": 115,
-	"./tzm-latn": 114,
-	"./tzm-latn.js": 114,
-	"./tzm.js": 115,
-	"./uk": 116,
-	"./uk.js": 116,
-	"./ur": 117,
-	"./ur.js": 117,
-	"./uz": 119,
-	"./uz-latn": 118,
-	"./uz-latn.js": 118,
-	"./uz.js": 119,
-	"./vi": 120,
-	"./vi.js": 120,
-	"./x-pseudo": 121,
-	"./x-pseudo.js": 121,
-	"./yo": 122,
-	"./yo.js": 122,
-	"./zh-cn": 123,
-	"./zh-cn.js": 123,
-	"./zh-hk": 124,
-	"./zh-hk.js": 124,
-	"./zh-tw": 125,
-	"./zh-tw.js": 125
+	"./af": 10,
+	"./af.js": 10,
+	"./ar": 17,
+	"./ar-dz": 11,
+	"./ar-dz.js": 11,
+	"./ar-kw": 12,
+	"./ar-kw.js": 12,
+	"./ar-ly": 13,
+	"./ar-ly.js": 13,
+	"./ar-ma": 14,
+	"./ar-ma.js": 14,
+	"./ar-sa": 15,
+	"./ar-sa.js": 15,
+	"./ar-tn": 16,
+	"./ar-tn.js": 16,
+	"./ar.js": 17,
+	"./az": 18,
+	"./az.js": 18,
+	"./be": 19,
+	"./be.js": 19,
+	"./bg": 20,
+	"./bg.js": 20,
+	"./bn": 21,
+	"./bn.js": 21,
+	"./bo": 22,
+	"./bo.js": 22,
+	"./br": 23,
+	"./br.js": 23,
+	"./bs": 24,
+	"./bs.js": 24,
+	"./ca": 25,
+	"./ca.js": 25,
+	"./cs": 26,
+	"./cs.js": 26,
+	"./cv": 27,
+	"./cv.js": 27,
+	"./cy": 28,
+	"./cy.js": 28,
+	"./da": 29,
+	"./da.js": 29,
+	"./de": 32,
+	"./de-at": 30,
+	"./de-at.js": 30,
+	"./de-ch": 31,
+	"./de-ch.js": 31,
+	"./de.js": 32,
+	"./dv": 33,
+	"./dv.js": 33,
+	"./el": 34,
+	"./el.js": 34,
+	"./en-au": 35,
+	"./en-au.js": 35,
+	"./en-ca": 36,
+	"./en-ca.js": 36,
+	"./en-gb": 37,
+	"./en-gb.js": 37,
+	"./en-ie": 38,
+	"./en-ie.js": 38,
+	"./en-nz": 39,
+	"./en-nz.js": 39,
+	"./eo": 40,
+	"./eo.js": 40,
+	"./es": 42,
+	"./es-do": 41,
+	"./es-do.js": 41,
+	"./es.js": 42,
+	"./et": 43,
+	"./et.js": 43,
+	"./eu": 44,
+	"./eu.js": 44,
+	"./fa": 45,
+	"./fa.js": 45,
+	"./fi": 46,
+	"./fi.js": 46,
+	"./fo": 47,
+	"./fo.js": 47,
+	"./fr": 50,
+	"./fr-ca": 48,
+	"./fr-ca.js": 48,
+	"./fr-ch": 49,
+	"./fr-ch.js": 49,
+	"./fr.js": 50,
+	"./fy": 51,
+	"./fy.js": 51,
+	"./gd": 52,
+	"./gd.js": 52,
+	"./gl": 53,
+	"./gl.js": 53,
+	"./gom-latn": 54,
+	"./gom-latn.js": 54,
+	"./he": 55,
+	"./he.js": 55,
+	"./hi": 56,
+	"./hi.js": 56,
+	"./hr": 57,
+	"./hr.js": 57,
+	"./hu": 58,
+	"./hu.js": 58,
+	"./hy-am": 59,
+	"./hy-am.js": 59,
+	"./id": 60,
+	"./id.js": 60,
+	"./is": 61,
+	"./is.js": 61,
+	"./it": 62,
+	"./it.js": 62,
+	"./ja": 63,
+	"./ja.js": 63,
+	"./jv": 64,
+	"./jv.js": 64,
+	"./ka": 65,
+	"./ka.js": 65,
+	"./kk": 66,
+	"./kk.js": 66,
+	"./km": 67,
+	"./km.js": 67,
+	"./kn": 68,
+	"./kn.js": 68,
+	"./ko": 69,
+	"./ko.js": 69,
+	"./ky": 70,
+	"./ky.js": 70,
+	"./lb": 71,
+	"./lb.js": 71,
+	"./lo": 72,
+	"./lo.js": 72,
+	"./lt": 73,
+	"./lt.js": 73,
+	"./lv": 74,
+	"./lv.js": 74,
+	"./me": 75,
+	"./me.js": 75,
+	"./mi": 76,
+	"./mi.js": 76,
+	"./mk": 77,
+	"./mk.js": 77,
+	"./ml": 78,
+	"./ml.js": 78,
+	"./mr": 79,
+	"./mr.js": 79,
+	"./ms": 81,
+	"./ms-my": 80,
+	"./ms-my.js": 80,
+	"./ms.js": 81,
+	"./my": 82,
+	"./my.js": 82,
+	"./nb": 83,
+	"./nb.js": 83,
+	"./ne": 84,
+	"./ne.js": 84,
+	"./nl": 86,
+	"./nl-be": 85,
+	"./nl-be.js": 85,
+	"./nl.js": 86,
+	"./nn": 87,
+	"./nn.js": 87,
+	"./pa-in": 88,
+	"./pa-in.js": 88,
+	"./pl": 89,
+	"./pl.js": 89,
+	"./pt": 91,
+	"./pt-br": 90,
+	"./pt-br.js": 90,
+	"./pt.js": 91,
+	"./ro": 92,
+	"./ro.js": 92,
+	"./ru": 93,
+	"./ru.js": 93,
+	"./sd": 94,
+	"./sd.js": 94,
+	"./se": 95,
+	"./se.js": 95,
+	"./si": 96,
+	"./si.js": 96,
+	"./sk": 97,
+	"./sk.js": 97,
+	"./sl": 98,
+	"./sl.js": 98,
+	"./sq": 99,
+	"./sq.js": 99,
+	"./sr": 101,
+	"./sr-cyrl": 100,
+	"./sr-cyrl.js": 100,
+	"./sr.js": 101,
+	"./ss": 102,
+	"./ss.js": 102,
+	"./sv": 103,
+	"./sv.js": 103,
+	"./sw": 104,
+	"./sw.js": 104,
+	"./ta": 105,
+	"./ta.js": 105,
+	"./te": 106,
+	"./te.js": 106,
+	"./tet": 107,
+	"./tet.js": 107,
+	"./th": 108,
+	"./th.js": 108,
+	"./tl-ph": 109,
+	"./tl-ph.js": 109,
+	"./tlh": 110,
+	"./tlh.js": 110,
+	"./tr": 111,
+	"./tr.js": 111,
+	"./tzl": 112,
+	"./tzl.js": 112,
+	"./tzm": 114,
+	"./tzm-latn": 113,
+	"./tzm-latn.js": 113,
+	"./tzm.js": 114,
+	"./uk": 115,
+	"./uk.js": 115,
+	"./ur": 116,
+	"./ur.js": 116,
+	"./uz": 118,
+	"./uz-latn": 117,
+	"./uz-latn.js": 117,
+	"./uz.js": 118,
+	"./vi": 119,
+	"./vi.js": 119,
+	"./x-pseudo": 120,
+	"./x-pseudo.js": 120,
+	"./yo": 121,
+	"./yo.js": 121,
+	"./zh-cn": 122,
+	"./zh-cn.js": 122,
+	"./zh-hk": 123,
+	"./zh-hk.js": 123,
+	"./zh-tw": 124,
+	"./zh-tw.js": 124
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -47923,10 +48900,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 165;
+webpackContext.id = 163;
 
 /***/ }),
-/* 166 */
+/* 164 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -48116,14 +49093,48 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 167 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(3)(
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(147),
+  /* template */
+  __webpack_require__(181),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/EditGuide.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditGuide.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-8fa4a458", Component.options)
+  } else {
+    hotAPI.reload("data-v-8fa4a458", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 166 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(148),
   /* template */
-  __webpack_require__(174),
+  __webpack_require__(177),
   /* scopeId */
   null,
   /* cssModules */
@@ -48150,18 +49161,52 @@ module.exports = Component.exports
 
 
 /***/ }),
+/* 167 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(149),
+  /* template */
+  __webpack_require__(180),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/EditNavbar.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditNavbar.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6315bfb4", Component.options)
+  } else {
+    hotAPI.reload("data-v-6315bfb4", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
 /* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(182)
+__webpack_require__(185)
 
-var Component = __webpack_require__(3)(
+var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(149),
+  __webpack_require__(150),
   /* template */
-  __webpack_require__(176),
+  __webpack_require__(179),
   /* scopeId */
   null,
   /* cssModules */
@@ -48191,11 +49236,45 @@ module.exports = Component.exports
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(3)(
+var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(150),
+  __webpack_require__(151),
   /* template */
-  __webpack_require__(177),
+  __webpack_require__(176),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/GuideEditIntroduction.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] GuideEditIntroduction.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1169a056", Component.options)
+  } else {
+    hotAPI.reload("data-v-1169a056", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 170 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(152),
+  /* template */
+  __webpack_require__(182),
   /* scopeId */
   null,
   /* cssModules */
@@ -48222,14 +49301,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(3)(
+var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(151),
+  __webpack_require__(153),
   /* template */
-  __webpack_require__(175),
+  __webpack_require__(178),
   /* scopeId */
   null,
   /* cssModules */
@@ -48256,14 +49335,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(3)(
+var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(152),
+  __webpack_require__(154),
   /* template */
-  __webpack_require__(178),
+  __webpack_require__(184),
   /* scopeId */
   null,
   /* cssModules */
@@ -48290,14 +49369,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(3)(
+var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(153),
+  __webpack_require__(155),
   /* template */
-  __webpack_require__(173),
+  __webpack_require__(175),
   /* scopeId */
   null,
   /* cssModules */
@@ -48324,7 +49403,41 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 173 */
+/* 174 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(156),
+  /* template */
+  __webpack_require__(183),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/StepsGuideIndex.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] StepsGuideIndex.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-9737689a", Component.options)
+  } else {
+    hotAPI.reload("data-v-9737689a", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48456,7 +49569,157 @@ if (false) {
 }
 
 /***/ }),
-/* 174 */
+/* 176 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "tab-pane active",
+    attrs: {
+      "role": "tabpanel",
+      "id": "introduction"
+    }
+  }, [_c('div', {
+    attrs: {
+      "id": "guide-intro-form"
+    }
+  }, [_c('div', {
+    staticClass: "form-body",
+    attrs: {
+      "id": "form-inputs"
+    }
+  }, [_c('div', {
+    staticClass: "form-field form-field-top",
+    attrs: {
+      "id": "type-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-type"
+    }
+  }, [_vm._v("What type of guide is this?")]), _vm._v(" "), _c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "",
+      "id": "intro-type"
+    }
+  }, _vm._l((_vm.data.types), function(doctype) {
+    return _c('option', {
+      domProps: {
+        "value": doctype,
+        "selected": _vm.isGuideType(doctype)
+      }
+    }, [_vm._v("\n            " + _vm._s(doctype) + "\n          ")])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "device-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-device"
+    }
+  }, [_vm._v("Device")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[device]",
+      "id": "intro-device"
+    },
+    domProps: {
+      "value": _vm.data.category
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "title-div"
+    }
+  }, [_c('label', {
+    staticClass: "tip",
+    attrs: {
+      "for": "intro-title"
+    }
+  }, [_vm._v("Title")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[title]",
+      "id": "intro-title"
+    },
+    domProps: {
+      "value": _vm.data.title
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "summary form-field",
+    attrs: {
+      "id": "summary-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-summary"
+    }
+  }, [_vm._v("Search Summary")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[summary]",
+      "id": "intro-summary",
+      "rows": "3",
+      "placeholder": "Summarize in a sentence or two what this guide will accomplish."
+    }
+  }, [_vm._v(_vm._s(_vm.data.summary))])]), _vm._v(" "), _c('div', {
+    staticClass: "introduction form-field",
+    attrs: {
+      "id": "introduction-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-introduction"
+    }
+  }, [_vm._v("Introduction")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[introduction]",
+      "id": "intro-introduction",
+      "rows": "7",
+      "placeholder": ""
+    }
+  }, [_vm._v(_vm._s(_vm.data.introduction))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "submit"
+  }, [_c('div', {
+    staticClass: "guide-action-buttons"
+  }, [_c('button', {
+    staticClass: "btn btn-primary"
+  }, [_vm._v("Save")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "pagination pagination-bottom"
+  }, [_c('p', {
+    staticClass: "left"
+  }), _vm._v(" "), _c('p', {
+    staticClass: "middle"
+  }, [_vm._v("Editing Introduction")]), _vm._v(" "), _c('p', {
+    staticClass: "right"
+  }, [_c('a', {
+    attrs: {
+      "href": "#",
+      "id": "next-arrow"
+    }
+  }, [_vm._v("Guide Steps")]), _vm._v(" \n        "), _c('i', {
+    staticClass: "fa fa-arrow-right"
+  })])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-1169a056", module.exports)
+  }
+}
+
+/***/ }),
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48489,7 +49752,7 @@ if (false) {
 }
 
 /***/ }),
-/* 175 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48527,7 +49790,7 @@ if (false) {
 }
 
 /***/ }),
-/* 176 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48562,7 +49825,173 @@ if (false) {
 }
 
 /***/ }),
-/* 177 */
+/* 180 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "clearfix"
+  }, [_c('div', {
+    staticClass: "lower-navbar"
+  }, [_c('ul', {
+    staticClass: "edit-navbar"
+  }, [_c('li', [_c('a', {
+    attrs: {
+      "href": _vm.viewUrl()
+    }
+  }, [_vm._v("View")])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "breadcrumb"
+    }
+  }, [_c('a', {
+    staticClass: "breadcrumb-item back-nav",
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('span', {
+    staticClass: "arrow fa fa-arrow-left"
+  }), _vm._v("\n          Back to " + _vm._s(_vm.data.previousText) + "\n      ")])]), _vm._v(" "), _c('div', {
+    staticClass: "clearer"
+  })])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    staticClass: "active-nav"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Edit")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("History")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6315bfb4", module.exports)
+  }
+}
+
+/***/ }),
+/* 181 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "container edit-container"
+  }, [_c('div', {
+    attrs: {
+      "id": "main-body"
+    }
+  }, [_c('edit-navbar', {
+    attrs: {
+      "data": _vm.editNavbarData
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    attrs: {
+      "id": "content-float"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-8",
+    attrs: {
+      "id": "content"
+    }
+  }, [_c('div', {
+    staticClass: "tab-wrap"
+  }, [_c('ul', {
+    staticClass: "nav nav-tabs tab-list",
+    attrs: {
+      "role": "tablist",
+      "id": "content-tabs"
+    }
+  }, [_vm._m(0), _vm._v(" "), _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": _vm.guideStepsUrl()
+    }
+  }, [_vm._v("Guide Steps")])])]), _vm._v(" "), _c('div', {
+    staticClass: "tab-content"
+  }, [_c('guide-edit-introduction', {
+    attrs: {
+      "data": _vm.editIntroData
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "tab-pane",
+    attrs: {
+      "role": "tabpanel",
+      "id": "guide-steps"
+    }
+  })], 1)])])]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "sidebar-float"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-4",
+    attrs: {
+      "id": "sidebar"
+    }
+  }, [_c('div', {
+    attrs: {
+      "id": "sidebar-guide-edit"
+    }
+  }, [_c('div', {
+    staticClass: "media-target",
+    attrs: {
+      "id": "main-guide-image"
+    }
+  }, [_c('div', {
+    staticClass: "media-item media-image contents"
+  }, [_c('img', {
+    staticClass: "standard",
+    attrs: {
+      "src": _vm.mainImage,
+      "alt": ""
+    }
+  }), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('steps-guide-index', {
+    attrs: {
+      "data": _vm.stepsData
+    }
+  })], 1)])])])], 1)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    staticClass: "active",
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#introduction",
+      "aria-controls": "home",
+      "role": "tab",
+      "data-toggle": "tab"
+    }
+  }, [_vm._v("Introduction")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "alter-target standard replace-image"
+  }, [_c('div', {
+    staticClass: "icon"
+  })])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-8fa4a458", module.exports)
+  }
+}
+
+/***/ }),
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48581,19 +50010,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "glyphicon glyphicon-chevron-left icon"
-  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.data.title))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('li', {
+  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.data.title))])])]), _vm._v(" "), _c('li', {
     staticClass: "page-navigation-link"
   }, [_c('a', {
     staticClass: "nav-link",
     attrs: {
-      "href": "/mockups/guide/intro"
+      "href": _vm.editUrl()
     }
   }, [_c('span', [_vm._v("Edit ")]), _vm._v(" "), _c('i', {
     staticClass: "glyphicon glyphicon-edit"
-  })])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  })])]), _vm._v(" "), _vm._m(0)])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
     staticClass: "page-navigation-link"
   }, [_c('div', {
@@ -48633,7 +50060,69 @@ if (false) {
 }
 
 /***/ }),
-/* 178 */
+/* 183 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "form-body locked",
+    attrs: {
+      "id": "guide-step-index"
+    }
+  }, [_c('h3', {
+    staticClass: "toggle-bar subhead"
+  }, [_vm._v("Steps")]), _vm._v(" "), _c('div', {
+    staticClass: "toggle-div"
+  }, [_c('div', {
+    attrs: {
+      "id": "thumbs-container"
+    }
+  }, _vm._l((_vm.data.steps), function(image, index) {
+    return _c('div', {
+      class: {
+        'guide-sidebar-thumb': true, 'active': _vm.active(index)
+      },
+      style: (_vm.imageThumb(index)),
+      on: {
+        "mouseover": function($event) {
+          _vm.shouldBeActive(index, _vm.data.steps)
+        },
+        "mouseout": function($event) {
+          _vm.shouldBeActive(index, _vm.data.steps)
+        }
+      }
+    }, [_c('a', {
+      staticClass: "thumb-overlay",
+      attrs: {
+        "href": _vm.stepEditUrl(index)
+      }
+    }), _vm._v(" "), _c('p', {
+      staticClass: "step-number"
+    }, [_vm._v(_vm._s(index + 1))])])
+  }))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "clearer"
+  })])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "guide-sidebar-add-step"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-plus"
+  })])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-9737689a", module.exports)
+  }
+}
+
+/***/ }),
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48654,20 +50143,17 @@ if (false) {
 }
 
 /***/ }),
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(160);
+var content = __webpack_require__(159);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("536d4fdc", content, false);
+var update = __webpack_require__(186)("536d4fdc", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -48683,9 +50169,228 @@ if(false) {
 }
 
 /***/ }),
-/* 183 */,
-/* 184 */,
-/* 185 */
+/* 186 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(187)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction) {
+  isProduction = _isProduction
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[data-vue-ssr-id~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 187 */
 /***/ (function(module, exports) {
 
 /**
@@ -48718,7 +50423,7 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 186 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58353,1732 +60058,15 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(126)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(125)))
 
 /***/ }),
-/* 187 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(128);
-module.exports = __webpack_require__(129);
+__webpack_require__(127);
+module.exports = __webpack_require__(128);
 
-
-/***/ }),
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */,
-/* 192 */,
-/* 193 */,
-/* 194 */,
-/* 195 */,
-/* 196 */,
-/* 197 */,
-/* 198 */,
-/* 199 */,
-/* 200 */,
-/* 201 */,
-/* 202 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(3)(
-  /* script */
-  __webpack_require__(205),
-  /* template */
-  __webpack_require__(203),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/EditGuide.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] EditGuide.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8fa4a458", Component.options)
-  } else {
-    hotAPI.reload("data-v-8fa4a458", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 203 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "container edit-container"
-  }, [_c('div', {
-    attrs: {
-      "id": "main-body"
-    }
-  }, [_c('edit-navbar', {
-    attrs: {
-      "data": _vm.editNavbarData
-    }
-  }), _vm._v(" "), _c('div', {
-    staticClass: "row"
-  }, [_c('div', {
-    attrs: {
-      "id": "content-float"
-    }
-  }, [_c('div', {
-    staticClass: "col-md-8",
-    attrs: {
-      "id": "content"
-    }
-  }, [_c('div', {
-    staticClass: "tab-wrap"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
-    staticClass: "tab-content"
-  }, [_c('guide-edit-introduction', {
-    attrs: {
-      "data": _vm.editIntroData
-    }
-  }), _vm._v(" "), _c('div', {
-    staticClass: "tab-pane",
-    attrs: {
-      "role": "tabpanel",
-      "id": "guide-steps"
-    }
-  })], 1)])])]), _vm._v(" "), _c('div', {
-    attrs: {
-      "id": "sidebar-float"
-    }
-  }, [_c('div', {
-    staticClass: "col-md-4",
-    attrs: {
-      "id": "sidebar"
-    }
-  }, [_c('div', {
-    attrs: {
-      "id": "sidebar-guide-edit"
-    }
-  }, [_c('div', {
-    staticClass: "media-target",
-    attrs: {
-      "id": "main-guide-image"
-    }
-  }, [_c('div', {
-    staticClass: "media-item media-image contents"
-  }, [_c('img', {
-    staticClass: "standard",
-    attrs: {
-      "src": _vm.mainImage,
-      "alt": ""
-    }
-  }), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('steps-guide-index', {
-    attrs: {
-      "data": _vm.steps
-    }
-  })], 1)])])])], 1)])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('ul', {
-    staticClass: "nav nav-tabs tab-list",
-    attrs: {
-      "role": "tablist",
-      "id": "content-tabs"
-    }
-  }, [_c('li', {
-    staticClass: "active",
-    attrs: {
-      "role": "presentation"
-    }
-  }, [_c('a', {
-    attrs: {
-      "href": "#introduction",
-      "aria-controls": "home",
-      "role": "tab",
-      "data-toggle": "tab"
-    }
-  }, [_vm._v("Introduction")])]), _vm._v(" "), _c('li', {
-    attrs: {
-      "role": "presentation"
-    }
-  }, [_c('a', {
-    attrs: {
-      "href": "/mockups/guide/steps"
-    }
-  }, [_vm._v("Guide Steps")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "alter-target standard replace-image"
-  }, [_c('div', {
-    staticClass: "icon"
-  })])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-8fa4a458", module.exports)
-  }
-}
-
-/***/ }),
-/* 204 */,
-/* 205 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data__ = __webpack_require__(226);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      editIntroData: {
-        category: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].category,
-        type: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].type,
-        types: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].types,
-        title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].title,
-        summary: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].summary,
-        introduction: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction
-      },
-      mainImage: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.standard,
-      editNavbarData: {
-        previousText: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].previous_text,
-        backUrl: '/mockups/guide'
-      },
-      steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps
-    };
-  }
-});
-
-/***/ }),
-/* 206 */,
-/* 207 */,
-/* 208 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(3)(
-  /* script */
-  __webpack_require__(210),
-  /* template */
-  __webpack_require__(209),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/StepsGuideIndex.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] StepsGuideIndex.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-9737689a", Component.options)
-  } else {
-    hotAPI.reload("data-v-9737689a", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 209 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "form-body locked",
-    attrs: {
-      "id": "guide-step-index"
-    }
-  }, [_c('h3', {
-    staticClass: "toggle-bar subhead"
-  }, [_vm._v("Steps")]), _vm._v(" "), _c('div', {
-    staticClass: "toggle-div"
-  }, [_c('div', {
-    attrs: {
-      "id": "thumbs-container"
-    }
-  }, _vm._l((_vm.data), function(image, index) {
-    return _c('div', {
-      class: {
-        'guide-sidebar-thumb': true, 'active': _vm.active(index)
-      },
-      style: (_vm.imageThumb(index)),
-      on: {
-        "mouseover": function($event) {
-          _vm.shouldBeActive(index, _vm.data)
-        },
-        "mouseout": function($event) {
-          _vm.shouldBeActive(index, _vm.data)
-        }
-      }
-    }, [_c('a', {
-      staticClass: "thumb-overlay",
-      attrs: {
-        "href": "#"
-      }
-    }), _vm._v(" "), _c('p', {
-      staticClass: "step-number"
-    }, [_vm._v(_vm._s(index + 1))])])
-  }))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
-    staticClass: "clearer"
-  })])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "guide-sidebar-add-step"
-  }, [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-plus"
-  })])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-9737689a", module.exports)
-  }
-}
-
-/***/ }),
-/* 210 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data'],
-  beforeMount: function beforeMount() {
-    this.gatherThumbnails();
-  },
-  data: function data() {
-    return {
-      isActive: [],
-      imageThumbs: []
-    };
-  },
-
-  computed: {
-    active: function active() {
-      return function (index) {
-        return this.isActive[index];
-      };
-    }
-  },
-  methods: {
-    getActiveState: function getActiveState(index) {
-      return this.isActive[index];
-    },
-    shouldBeActive: function shouldBeActive(index, arr) {
-      var _this = this;
-
-      arr.forEach(function (active, idx) {
-        if (idx === index) {
-          _this.isActive[index] = !_this.isActive[index];
-        }
-      });
-    },
-    setNotActive: function setNotActive() {
-      var _this2 = this;
-
-      this.data.forEach(function (data, index) {
-        _this2.isActive[index] = false;
-      });
-    },
-    imageThumb: function imageThumb(index) {
-      return {
-        backgroundImage: 'url(\'' + this.imageThumbs[index] + '\')'
-      };
-    },
-    gatherThumbnails: function gatherThumbnails() {
-      var _this3 = this;
-
-      this.data.forEach(function (image, index) {
-        _this3.imageThumbs[index] = image.media.data[0].mini;
-        _this3.isActive[index] = false;
-      });
-    }
-  }
-});
-
-/***/ }),
-/* 211 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data'],
-  data: function data() {
-    return {};
-  },
-
-  methods: {
-    isGuideType: function isGuideType(doctype) {
-      return doctype.toLowerCase() === this.data.type;
-    }
-  }
-});
-
-/***/ }),
-/* 212 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(3)(
-  /* script */
-  __webpack_require__(211),
-  /* template */
-  __webpack_require__(213),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/GuideEditIntroduction.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] GuideEditIntroduction.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1169a056", Component.options)
-  } else {
-    hotAPI.reload("data-v-1169a056", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 213 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "tab-pane active",
-    attrs: {
-      "role": "tabpanel",
-      "id": "introduction"
-    }
-  }, [_c('div', {
-    attrs: {
-      "id": "guide-intro-form"
-    }
-  }, [_c('div', {
-    staticClass: "form-body",
-    attrs: {
-      "id": "form-inputs"
-    }
-  }, [_c('div', {
-    staticClass: "form-field form-field-top",
-    attrs: {
-      "id": "type-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-type"
-    }
-  }, [_vm._v("What type of guide is this?")]), _vm._v(" "), _c('select', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "",
-      "id": "intro-type"
-    }
-  }, _vm._l((_vm.data.types), function(doctype) {
-    return _c('option', {
-      domProps: {
-        "value": doctype,
-        "selected": _vm.isGuideType(doctype)
-      }
-    }, [_vm._v("\n            " + _vm._s(doctype) + "\n          ")])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "form-field text-field",
-    attrs: {
-      "id": "device-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-device"
-    }
-  }, [_vm._v("Device")]), _vm._v(" "), _c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "name": "intro[device]",
-      "id": "intro-device"
-    },
-    domProps: {
-      "value": _vm.data.category
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-field text-field",
-    attrs: {
-      "id": "title-div"
-    }
-  }, [_c('label', {
-    staticClass: "tip",
-    attrs: {
-      "for": "intro-title"
-    }
-  }, [_vm._v("Title")]), _vm._v(" "), _c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "name": "intro[title]",
-      "id": "intro-title"
-    },
-    domProps: {
-      "value": _vm.data.title
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "summary form-field",
-    attrs: {
-      "id": "summary-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-summary"
-    }
-  }, [_vm._v("Search Summary")]), _vm._v(" "), _c('textarea', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "intro[summary]",
-      "id": "intro-summary",
-      "rows": "3",
-      "placeholder": "Summarize in a sentence or two what this guide will accomplish."
-    }
-  }, [_vm._v(_vm._s(_vm.data.summary))])]), _vm._v(" "), _c('div', {
-    staticClass: "introduction form-field",
-    attrs: {
-      "id": "introduction-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-introduction"
-    }
-  }, [_vm._v("Introduction")]), _vm._v(" "), _c('textarea', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "intro[introduction]",
-      "id": "intro-introduction",
-      "rows": "7",
-      "placeholder": ""
-    }
-  }, [_vm._v(_vm._s(_vm.data.introduction))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "submit"
-  }, [_c('div', {
-    staticClass: "guide-action-buttons"
-  }, [_c('button', {
-    staticClass: "btn btn-primary"
-  }, [_vm._v("Save")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "pagination pagination-bottom"
-  }, [_c('p', {
-    staticClass: "left"
-  }), _vm._v(" "), _c('p', {
-    staticClass: "middle"
-  }, [_vm._v("Editing Introduction")]), _vm._v(" "), _c('p', {
-    staticClass: "right"
-  }, [_c('a', {
-    attrs: {
-      "href": "#",
-      "id": "next-arrow"
-    }
-  }, [_vm._v("Guide Steps")]), _vm._v(" \n        "), _c('i', {
-    staticClass: "fa fa-arrow-right"
-  })])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1169a056", module.exports)
-  }
-}
-
-/***/ }),
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data']
-});
-
-/***/ }),
-/* 220 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(3)(
-  /* script */
-  __webpack_require__(219),
-  /* template */
-  __webpack_require__(221),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/EditNavbar.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] EditNavbar.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6315bfb4", Component.options)
-  } else {
-    hotAPI.reload("data-v-6315bfb4", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 221 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "clearfix"
-  }, [_c('div', {
-    staticClass: "lower-navbar"
-  }, [_c('ul', {
-    staticClass: "edit-navbar"
-  }, [_c('li', [_c('a', {
-    attrs: {
-      "href": _vm.data.backUrl
-    }
-  }, [_vm._v("View")])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c('div', {
-    attrs: {
-      "id": "breadcrumb"
-    }
-  }, [_c('a', {
-    staticClass: "breadcrumb-item back-nav",
-    attrs: {
-      "href": "#"
-    }
-  }, [_c('span', {
-    staticClass: "arrow fa fa-arrow-left"
-  }), _vm._v("\n          Back to " + _vm._s(_vm.data.previousText) + "\n      ")])]), _vm._v(" "), _c('div', {
-    staticClass: "clearer"
-  })])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('li', {
-    staticClass: "active-nav"
-  }, [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Edit")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('li', [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("History")])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-6315bfb4", module.exports)
-  }
-}
-
-/***/ }),
-/* 222 */,
-/* 223 */,
-/* 224 */,
-/* 225 */,
-/* 226 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-  "previous_text": "iMac Intel 27\" Retina 5K Repair",
-  "conclusion": "<p>I hope you have enjoyed reading this document</p>",
-  "difficulty": "Moderate",
-  "documents": [],
-  "flags": [{
-    "title": "Featured Guide",
-    "flagid": "GUIDE_STARRED",
-    "text": "This guide has been found to be exceptionally cool by the iFixit staff."
-  }],
-  "guideid": 30260,
-  "revision": "F",
-  "image": {
-    "id": 895976,
-    "guid": "lRKYbGnjXT2jatbx",
-    "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.mini",
-    "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.thumbnail",
-    "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.standard",
-    "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.medium",
-    "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.large",
-    "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx.huge",
-    "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx"
-  },
-  "introduction": "<p>Think of the most colorful and radiant display you’ve ever seen. Now, discard that memory and stare at Apple’s newest iMac Intel 27” with Retina 5K Display. We're not talking 1080p or 4K, we're talking about 5K—millions and millions of pixels on a 27-inch display. Will the addition of a high-resolution display affect the repairability of the newest iMac Intel 27”? Let’s find out!</p>\n\n<p>Follow us on <a href=\"https://www.facebook.com/iFixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Facebook</a>, <a href=\"http://instagram.com/ifixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Instagram</a>, or <a href=\"https://twitter.com/ifixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Twitter</a> for the latest teardown news.</p>",
-  "parts": [],
-  "prerequisites": [],
-  "steps": [{
-    "title": "",
-    "lines": [{
-      "text_raw": "How do you herd together 14.7 million pixels? You can ask nicely, or you can brandish some heavy-duty hardware. Inside the Retina 5K iMac:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "How do you herd together 14.7 million pixels? You can ask nicely, or you can brandish some heavy-duty hardware. Inside the Retina 5K iMac:"
-    }, {
-      "text_raw": "3.5 GHz quad-core Intel Core i5 processor, with Turbo Boost up to 3.9 GHz",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "3.5 GHz quad-core Intel Core i5 processor, with Turbo Boost up to 3.9 GHz"
-    }, {
-      "text_raw": "8 GB (2x4 GB) of 1600 MHz DDR3 RAM",
-      "bullet": "orange",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "8 GB (2x4 GB) of 1600 MHz DDR3 RAM"
-    }, {
-      "text_raw": "AMD Radeon R9 M290X graphics processor with 2 GB of GDDR5 video memory",
-      "bullet": "yellow",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "AMD Radeon R9 M290X graphics processor with 2 GB of GDDR5 video memory"
-    }, {
-      "text_raw": "802.11ac Wi-Fi + Bluetooth 4.0",
-      "bullet": "green",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "802.11ac Wi-Fi + Bluetooth 4.0"
-    }, {
-      "text_raw": "PCIe-based SSD storage and SATA hard drive",
-      "bullet": "blue",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "PCIe-based SSD storage and SATA hard drive"
-    }],
-    "guideid": 30260,
-    "stepid": 70934,
-    "orderby": 1,
-    "revisionid": 1256883,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401858,
-        "guid": "GrgDucWOP1QGxb1P",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/GrgDucWOP1QGxb1P",
-        "visible": true
-      }, {
-        "id": 401878,
-        "guid": "HKi6IJeupf5cFvaM",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/HKi6IJeupf5cFvaM",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "Not one to waste a good model number on just a single device, Apple [[Topic:iMac Intel 27\" EMC 2546|again]] [[Topic:iMac Intel 27\" EMC 2639|recycles]] A1419.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Not one to waste a good model number on just a single device, Apple <a href=\"https://www.ifixit.com/Topic/iMac_Intel_27%22_EMC_2546\">again</a> <a href=\"https://www.ifixit.com/Topic/iMac_Intel_27%22_EMC_2639\">recycles</a> A1419."
-    }, {
-      "text_raw": "For a unique identifier, this is EMC 2806.",
-      "bullet": "icon_note",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "For a unique identifier, this is EMC 2806."
-    }, {
-      "text_raw": "At the rear of the iMac, we find a plethora of I/O ports and a lone SDXC card slot:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "At the rear of the iMac, we find a plethora of I/O ports and a lone SDXC card slot:"
-    }, {
-      "text_raw": "Headphone jack / Optical digital audio output",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Headphone jack / Optical digital audio output"
-    }, {
-      "text_raw": "SDXC card slot",
-      "bullet": "orange",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "SDXC card slot"
-    }, {
-      "text_raw": "Four USB 3.0 ports",
-      "bullet": "yellow",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Four USB 3.0 ports"
-    }, {
-      "text_raw": "Two Thunderbolt 2.0 ports",
-      "bullet": "green",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Two Thunderbolt 2.0 ports"
-    }, {
-      "text_raw": "Gigabit ethernet port",
-      "bullet": "blue",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Gigabit ethernet port"
-    }],
-    "guideid": 30260,
-    "stepid": 70935,
-    "orderby": 2,
-    "revisionid": 1059688,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401864,
-        "guid": "t3aKREOF2KbIZFsM",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/t3aKREOF2KbIZFsM",
-        "visible": true
-      }, {
-        "id": 401943,
-        "guid": "XaBorQfLDBAYDnWH",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/XaBorQfLDBAYDnWH",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "Fixers rejoice! The iMac Intel 27\" Retina 5K Display retains the familiar, easily accessible RAM upgrade slot from iMacs of yore.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Fixers rejoice! The iMac Intel 27&quot; Retina 5K Display retains the familiar, easily accessible RAM upgrade slot from iMacs of yore."
-    }, {
-      "text_raw": "For those who require assistance replacing their RAM modules, Apple has attempted to provide some direction—that you get to see after you're halfway through the process.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "For those who require assistance replacing their RAM modules, Apple has attempted to provide some direction—that you get to see after you're halfway through the process."
-    }, {
-      "text_raw": "For anyone who would rather be guided by glorious high-resolution images and lovingly crafted text, that's [guide|20249|also available|new_window=true].",
-      "bullet": "icon_note",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "For anyone who would rather be guided by glorious high-resolution images and lovingly crafted text, that's <a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+RAM+Replacement/20249\" target=\"_blank\">also available</a>."
-    }],
-    "guideid": 30260,
-    "stepid": 70939,
-    "orderby": 3,
-    "revisionid": 1059422,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401892,
-        "guid": "eIGbhGOaYP46J3DU",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/eIGbhGOaYP46J3DU",
-        "visible": true
-      }, {
-        "id": 401893,
-        "guid": "pSJgr2AHAgjjQ33B",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/pSJgr2AHAgjjQ33B",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "We're pretty adept at slicing open iMacs with our ever-so-fancy [product|IF145-219|iMac Opening Tool|new_window=true] and our noble [product|IF145-101|Plastic Card|new_window=true].",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "We're pretty adept at slicing open iMacs with our ever-so-fancy <a href=\"https://www.ifixit.com/Store/Tools/iMac-Opening-Wheel/IF145-219\" target=\"_blank\">iMac Opening Tool</a> and our noble <a href=\"https://www.ifixit.com/Store/Tools/Plastic-Cards/IF145-101\" target=\"_blank\">Plastic Card</a>."
-    }, {
-      "text_raw": "While the procedure still requires a steady hand and a willingness to replace the custom-cut, two-sided adhesive tape when you're done, it's otherwise pretty straightforward, and unchanged from previous models.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "While the procedure still requires a steady hand and a willingness to replace the custom-cut, two-sided adhesive tape when you're done, it's otherwise pretty straightforward, and unchanged from previous models."
-    }, {
-      "text_raw": "With the adhesive tape gone, we get our first peek at the hardware inside the Retina 5K iMac.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "With the adhesive tape gone, we get our first peek at the hardware inside the Retina 5K iMac."
-    }],
-    "guideid": 30260,
-    "stepid": 70952,
-    "orderby": 4,
-    "revisionid": 1059456,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401921,
-        "guid": "q6KQZ3rNdrhyNl2P",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/q6KQZ3rNdrhyNl2P",
-        "visible": true
-      }, {
-        "id": 401919,
-        "guid": "JOy2VVh1nRctxKNj",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/JOy2VVh1nRctxKNj",
-        "visible": false
-      }, {
-        "id": 401920,
-        "guid": "dwJTWHXE3FuqBRLe",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/dwJTWHXE3FuqBRLe",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "The first order of business is finding out whether this 5K display runs on actual magic, or something more susceptible to dissection.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "The first order of business is finding out whether this 5K display runs on actual magic, or something more susceptible to dissection."
-    }, {
-      "text_raw": "This particular display was manufactured by LG Display. (So, magic is looking less likely.)",
-      "bullet": "icon_note",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "This particular display was manufactured by LG Display. (So, magic is looking less likely.)"
-    }, {
-      "text_raw": "With a few twists of our screwdriver, a very long, very thin display board is revealed.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "With a few twists of our screwdriver, a very long, very thin display board is revealed."
-    }],
-    "guideid": 30260,
-    "stepid": 70955,
-    "orderby": 5,
-    "revisionid": 1059500,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401949,
-        "guid": "nDnWVSfRGSMMCtdP",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/nDnWVSfRGSMMCtdP",
-        "visible": true
-      }, {
-        "id": 401967,
-        "guid": "LBUJZi11Hu2rEWbi",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/LBUJZi11Hu2rEWbi",
-        "visible": false
-      }, {
-        "id": 401948,
-        "guid": "4SFV2Aj1msQnS5qc",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/4SFV2Aj1msQnS5qc",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "Let's take a look at the hardware that allows  14.7 million pixels with a resolution of 5120 x 2880 on a 27-inch display:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Let's take a look at the hardware that allows  14.7 million pixels with a resolution of 5120 x 2880 on a 27-inch display:"
-    }, {
-      "text_raw": "Texas Instruments [link|http://www.ti.com/product/sn74lvc8t245|NH245|new_window=true] 8-Bit Dual-Supply Bus Transceiver",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/sn74lvc8t245\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">NH245</a> 8-Bit Dual-Supply Bus Transceiver"
-    }, {
-      "text_raw": "Texas Instruments [link|http://www.ti.com/product/buf16821|BUF16821|new_window=true] Programmable Gamma-Voltage Generator and Vcom Calibrator",
-      "bullet": "orange",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/buf16821\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">BUF16821</a> Programmable Gamma-Voltage Generator and Vcom Calibrator"
-    }, {
-      "text_raw": "Parade Technologies DP665 LCD [http://www.anandtech.com/show/8623/hands-on-apples-imac-with-retina-display|Timing Controller|new_window=true]",
-      "bullet": "yellow",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Parade Technologies DP665 LCD <a href=\"http://www.anandtech.com/show/8623/hands-on-apples-imac-with-retina-display\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Timing Controller</a>"
-    }, {
-      "text_raw": "We assume this is an Apple modified version of the [link|http://www.paradetech.com/products/displayport-lcd-timing-controller-products/dp663/|DP663|new_window=true] LCD Timing Controller",
-      "bullet": "icon_note",
-      "level": 2,
-      "lineid": null,
-      "text_rendered": "We assume this is an Apple modified version of the <a href=\"http://www.paradetech.com/products/displayport-lcd-timing-controller-products/dp663/\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">DP663</a> LCD Timing Controller"
-    }, {
-      "text_raw": "Texas Instruments [link|http://www.ti.com/product/tps65270|TPS65270|new_window=true] Monolithic Dual Synchronous Buck Regulator",
-      "bullet": "green",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/tps65270\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">TPS65270</a> Monolithic Dual Synchronous Buck Regulator"
-    }, {
-      "text_raw": "Texas Instruments [link|http://www.ti.com/product/tps65168|TPS65168|new_window=true] High Resolution Fully Programmable LCD Bias IC for TV",
-      "bullet": "blue",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Texas Instruments <a href=\"http://www.ti.com/product/tps65168\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">TPS65168</a> High Resolution Fully Programmable LCD Bias IC for TV"
-    }],
-    "guideid": 30260,
-    "stepid": 70940,
-    "orderby": 6,
-    "revisionid": 1092722,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401938,
-        "guid": "gymJxgdZPPNgPyPp",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/gymJxgdZPPNgPyPp",
-        "visible": true
-      }, {
-        "id": 401944,
-        "guid": "GRYRXBZjbTWKKBeW",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/GRYRXBZjbTWKKBeW",
-        "visible": false
-      }, {
-        "id": 401946,
-        "guid": "txaCARMSLWBAiaao",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/txaCARMSLWBAiaao",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "Barring the new display, the hardware inside the iMac Intel 27\" Retina 5K Display looks much the same as [guide|17828|last year's 27\" iMac|stepid=52531].",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Barring the new display, the hardware inside the iMac Intel 27&quot; Retina 5K Display looks much the same as <a href=\"https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+EMC+2639+Teardown/17828#s52531\">last year's 27&quot; iMac</a>."
-    }, {
-      "text_raw": "In fact, as we dive in deeper, we realize it is very nearly ''[guide|24341|exactly|stepid=49670]'' the same.",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "In fact, as we dive in deeper, we realize it is very nearly <em><a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+Adhesive+Strips+Replacement/24341#s49670\">exactly</a></em> the same."
-    }, {
-      "text_raw": "We would have documented the logic board removal, but we already have! We'll be following [guide|19650|last year's logic board guide|new_window=true]—check it out and head back here while we skip ahead.",
-      "bullet": "icon_note",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "We would have documented the logic board removal, but we already have! We'll be following <a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+Logic+Board+Replacement/19650\" target=\"_blank\">last year's logic board guide</a>—check it out and head back here while we skip ahead."
-    }, {
-      "text_raw": "And after following the guide to the letter, we've got our findings on the differences inside:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "And after following the guide to the letter, we've got our findings on the differences inside:"
-    }, {
-      "text_raw": "The Retina 5K's display data cable is slightly wider—to support those extra pixels.",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "The Retina 5K's display data cable is slightly wider—to support those extra pixels."
-    }],
-    "guideid": 30260,
-    "stepid": 70956,
-    "orderby": 7,
-    "revisionid": 1059629,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401956,
-        "guid": "pYHRZpMG6v3p6uIL",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/pYHRZpMG6v3p6uIL",
-        "visible": true
-      }, {
-        "id": 401955,
-        "guid": "rXpKqypfgnes1VhW",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/rXpKqypfgnes1VhW",
-        "visible": false
-      }, {
-        "id": 401975,
-        "guid": "EgscnBEfIAGEIX6Q",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/EgscnBEfIAGEIX6Q",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "Let's see what ICs this unsurprisingly familiar logic board is packing:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Let's see what ICs this unsurprisingly familiar logic board is packing:"
-    }, {
-      "text_raw": "AMD Radeon [http://www.amd.com/en-us/products/graphics/notebook/r9-m200#|R9 M290X|new_window=true] GPU",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "AMD Radeon <a href=\"http://www.amd.com/en-us/products/graphics/notebook/r9-m200#\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">R9 M290X</a> GPU"
-    }, {
-      "text_raw": "Intel Core [link|http://ark.intel.com/products/80810/Intel-Core-i5-4690-Processor-6M-Cache-up-to-3_90-GHz|i5-4690|new_window=true] Processor",
-      "bullet": "orange",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Intel Core <a href=\"http://ark.intel.com/products/80810/Intel-Core-i5-4690-Processor-6M-Cache-up-to-3_90-GHz\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">i5-4690</a> Processor"
-    }, {
-      "text_raw": "Just like last year, the CPU is not soldered to the logic board, and can be easily [guide|19630|replaced] (we just left it in the socket for the picture).",
-      "bullet": "icon_note",
-      "level": 2,
-      "lineid": null,
-      "text_rendered": "Just like last year, the CPU is not soldered to the logic board, and can be easily <a href=\"https://www.ifixit.com/Guide/iMac+Intel+27-Inch+EMC+2639+CPU+Replacement/19630\">replaced</a> (we just left it in the socket for the picture)."
-    }, {
-      "text_raw": "SK Hynix [https://www.skhynix.com/products/graphics/view.jsp?info.ramKind=26&info.serialNo=H5GC(Q)2H24BFR|H5GC2H24BFR|new_window=true] 256 MB GDDR5 SGRAM (256 MB x 8 modules = 2 GB total)",
-      "bullet": "yellow",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "SK Hynix <a href=\"https://www.skhynix.com/products/graphics/view.jsp?info.ramKind=26&amp;info.serialNo=H5GC(Q)2H24BFR\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">H5GC2H24BFR</a> 256 MB GDDR5 SGRAM (256 MB x 8 modules = 2 GB total)"
-    }, {
-      "text_raw": "Delta Electronics 8904CF 143003",
-      "bullet": "green",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Delta Electronics 8904CF 143003"
-    }, {
-      "text_raw": "Intel DH82Z87 (Z87) Platform Controller Hub",
-      "bullet": "blue",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Intel DH82Z87 (Z87) Platform Controller Hub"
-    }, {
-      "text_raw": "Fairchild Semiconductor DE32GV",
-      "bullet": "violet",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Fairchild Semiconductor DE32GV"
-    }],
-    "guideid": 30260,
-    "stepid": 70954,
-    "orderby": 8,
-    "revisionid": 1430643,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 402020,
-        "guid": "EWttSGR4I3l6eCMt",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/EWttSGR4I3l6eCMt",
-        "visible": true
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "Front side of logic board:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Front side of logic board:"
-    }, {
-      "text_raw": "Broadcom BCM5776 Gigabit Ethernet Controller",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Broadcom BCM5776 Gigabit Ethernet Controller"
-    }, {
-      "text_raw": "Cirrus Logic 4206BCNZ Audio Controller",
-      "bullet": "orange",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Cirrus Logic 4206BCNZ Audio Controller"
-    }, {
-      "text_raw": "Intel [link|http://ark.intel.com/products/76721/Intel-DSL5520-Thunderbolt-2-Controller|DSL5520|new_window=true] Thunderbolt 2 Controller",
-      "bullet": "yellow",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Intel <a href=\"http://ark.intel.com/products/76721/Intel-DSL5520-Thunderbolt-2-Controller\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">DSL5520</a> Thunderbolt 2 Controller"
-    }, {
-      "text_raw": "LMF4S1EH 5BBCIG 47A6HPW",
-      "bullet": "green",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "LMF4S1EH 5BBCIG 47A6HPW"
-    }, {
-      "text_raw": "Microchip Technology [link|http://www.microchip.com/wwwproducts/Devices.aspx?product=EMC1428|1428-7 420BE5A BMY|new_window=true] System Management Bus (SMBus) Temperature Sensor",
-      "bullet": "blue",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Microchip Technology <a href=\"http://www.microchip.com/wwwproducts/Devices.aspx?product=EMC1428\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">1428-7 420BE5A BMY</a> System Management Bus (SMBus) Temperature Sensor"
-    }, {
-      "text_raw": "Intersil [http://www.intersil.com/content/dam/Intersil/documents/isl6/isl6327.pdf|ISL6327|new_window=true] Enhanced 6-Phase PWM Controller",
-      "bullet": "violet",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Intersil <a href=\"http://www.intersil.com/content/dam/Intersil/documents/isl6/isl6327.pdf\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">ISL6327</a> Enhanced 6-Phase PWM Controller"
-    }],
-    "guideid": 30260,
-    "stepid": 70961,
-    "orderby": 9,
-    "revisionid": 1366729,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 402012,
-        "guid": "r5nmCfZAVAQfZr4M",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/r5nmCfZAVAQfZr4M",
-        "visible": true
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "This looks to be the exact same SanDisk PCIe SSD as the one found in the [guide|18695|MacBook Pro 13\" Retina Display Late 2013|stepid=53226|new_window=true].",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "This looks to be the exact same SanDisk PCIe SSD as the one found in the <a href=\"https://www.ifixit.com/Teardown/MacBook+Pro+13-Inch+Retina+Display+Late+2013+Teardown/18695#s53226\" target=\"_blank\">MacBook Pro 13&quot; Retina Display Late 2013</a>."
-    }, {
-      "text_raw": "Unsurprisingly, we find the exact same ICs:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Unsurprisingly, we find the exact same ICs:"
-    }, {
-      "text_raw": "SanDisk 05131 016G 16 GB NAND Flash (four on each side, total of 8 x 16 GB = 128 GB)",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "SanDisk 05131 016G 16 GB NAND Flash (four on each side, total of 8 x 16 GB = 128 GB)"
-    }, {
-      "text_raw": "SK Hynix [https://www.skhynix.com/products/consumer/view.jsp?info.ramKind=19&info.serialNo=H5TQ2G63DFR|H5TQ2G63DFR|new_window=true] 2 GB DDR3 SDRAM",
-      "bullet": "orange",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "SK Hynix <a href=\"https://www.skhynix.com/products/consumer/view.jsp?info.ramKind=19&amp;info.serialNo=H5TQ2G63DFR\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">H5TQ2G63DFR</a> 2 GB DDR3 SDRAM"
-    }, {
-      "text_raw": "Marvell [http://investor.marvell.com/phoenix.zhtml?c=120802&p=irol-newsArticle_print&ID=1933063|88SS91383|new_window=true] PCIe SSD Controller",
-      "bullet": "yellow",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Marvell <a href=\"http://investor.marvell.com/phoenix.zhtml?c=120802&amp;p=irol-newsArticle_print&amp;ID=1933063\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">88SS91383</a> PCIe SSD Controller"
-    }],
-    "guideid": 30260,
-    "stepid": 70957,
-    "orderby": 10,
-    "revisionid": 1059587,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401969,
-        "guid": "PbQAPKwGOYbMTIqh",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/PbQAPKwGOYbMTIqh",
-        "visible": true
-      }, {
-        "id": 401970,
-        "guid": "dujVvncDt2YihR31",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/dujVvncDt2YihR31",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "The AirPort/Bluetooth card, identified by its model number BCM94360CD, is [guide|17828|exactly the same|stepid=52536] as the one we encountered in last years iMac Intel 27 inch:",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "The AirPort/Bluetooth card, identified by its model number BCM94360CD, is <a href=\"https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+EMC+2639+Teardown/17828#s52536\">exactly the same</a> as the one we encountered in last years iMac Intel 27 inch:"
-    }, {
-      "text_raw": "Broadcom [http://www.broadcom.com/products/Wireless-LAN/802.11-Wireless-LAN-Solutions/BCM4360|BCM4360KML1G] 5G WiFi 3-Stream 802.11ac Gigabit Transceiver",
-      "bullet": "red",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Broadcom <a href=\"http://www.broadcom.com/products/Wireless-LAN/802.11-Wireless-LAN-Solutions/BCM4360\" rel=\"nofollow noopener noreferrer\">BCM4360KML1G</a> 5G WiFi 3-Stream 802.11ac Gigabit Transceiver"
-    }, {
-      "text_raw": "Skyworks [link|http://www.skyworksinc.com/uploads/documents/SE5516A_202396H.pdf|SE5516|new_window=true] Dual-Band 802.11a/b/g/n/ac WLAN Front-End Module",
-      "bullet": "orange",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Skyworks <a href=\"http://www.skyworksinc.com/uploads/documents/SE5516A_202396H.pdf\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">SE5516</a> Dual-Band 802.11a/b/g/n/ac WLAN Front-End Module"
-    }, {
-      "text_raw": "Broadcom [http://www.broadcom.com/products/Bluetooth/Bluetooth-RF-Silicon-and-Software-Solutions/BCM20702|BCM20702|new_window=true] Single-Chip Bluetooth 4.0 HCI Solution with Bluetooth Low Energy (BLE) Support",
-      "bullet": "yellow",
-      "level": 1,
-      "lineid": null,
-      "text_rendered": "Broadcom <a href=\"http://www.broadcom.com/products/Bluetooth/Bluetooth-RF-Silicon-and-Software-Solutions/BCM20702\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">BCM20702</a> Single-Chip Bluetooth 4.0 HCI Solution with Bluetooth Low Energy (BLE) Support"
-    }],
-    "guideid": 30260,
-    "stepid": 70958,
-    "orderby": 11,
-    "revisionid": 1059661,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401972,
-        "guid": "m63oETaZVww4wCNV",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/m63oETaZVww4wCNV",
-        "visible": true
-      }, {
-        "id": 402023,
-        "guid": "sATJFV4Xcb2Gheq2",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/sATJFV4Xcb2Gheq2",
-        "visible": false
-      }, {
-        "id": 401971,
-        "guid": "DLFARdBBlIt3KnQA",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/DLFARdBBlIt3KnQA",
-        "visible": false
-      }]
-    }
-  }, {
-    "title": "",
-    "lines": [{
-      "text_raw": "iMac 27\" Retina 5K Display Repairability Score: '''5 out of 10''' (10 is easiest to repair)",
-      "bullet": "black",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "iMac 27&quot; Retina 5K Display Repairability Score: <strong>5 out of 10</strong> (10 is easiest to repair)"
-    }, {
-      "text_raw": "RAM is user-replaceable without opening the case, thanks to the rear access door.",
-      "bullet": "green",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "RAM is user-replaceable without opening the case, thanks to the rear access door."
-    }, {
-      "text_raw": "You can still replace the hard drive and CPU inside this machine, albeit with some adhesive cutting.",
-      "bullet": "green",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "You can still replace the hard drive and CPU inside this machine, albeit with some adhesive cutting."
-    }, {
-      "text_raw": "Components are modular and fairly easy to remove.",
-      "bullet": "green",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "Components are modular and fairly easy to remove."
-    }, {
-      "text_raw": "The glass and LCD are fused together, and there are no more magnets holding the glass in place.",
-      "bullet": "red",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "The glass and LCD are fused together, and there are no more magnets holding the glass in place."
-    }, {
-      "text_raw": "You'll have to masterfully peel off the old double-sided sticky tape and apply new tape in order to reseal this iMac into original condition.",
-      "bullet": "red",
-      "level": 0,
-      "lineid": null,
-      "text_rendered": "You'll have to masterfully peel off the old double-sided sticky tape and apply new tape in order to reseal this iMac into original condition."
-    }],
-    "guideid": 30260,
-    "stepid": 70959,
-    "orderby": 12,
-    "revisionid": 1059531,
-    "media": {
-      "type": "image",
-      "data": [{
-        "id": 401978,
-        "guid": "KtF5YuVRiVqBUgTj",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/KtF5YuVRiVqBUgTj",
-        "visible": true
-      }, {
-        "id": 401979,
-        "guid": "JLbAAcjqmqKYuYLG",
-        "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.mini",
-        "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.thumbnail",
-        "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.standard",
-        "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.medium",
-        "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.large",
-        "huge": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG.huge",
-        "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/JLbAAcjqmqKYuYLG",
-        "visible": false
-      }]
-    }
-  }],
-  "subject": "",
-  "summary": "iMac Intel 27\" Retina 5K Display on October 17, 2014.",
-  "time_required": "No estimate",
-  "time_required_min": 0,
-  "time_required_max": 0,
-  "title": "iMac Intel 27\" Retina 5K Display Teardown",
-  "tools": [{
-    "type": "",
-    "quantity": 1,
-    "text": "iMac Intel 27\" (EMC 2546, 2639, 2806) Adhesive Strips",
-    "notes": null,
-    "url": "http://www.ifixit.com/Apple-Parts/iMac-Intel-27-Inch-EMC-2546-Adhesive-Strips/IF174-005",
-    "thumbnail": "https://da2lh5cs8ikqj.cloudfront.net/cart-products/KhZJIqGtxrq3OlUf.mini"
-  }, {
-    "type": "",
-    "quantity": 1,
-    "text": "Spudger",
-    "notes": null,
-    "url": "http://www.ifixit.com/Tools/Spudger/IF145-002",
-    "thumbnail": "https://da2lh5cs8ikqj.cloudfront.net/cart-products/fIQ3oZSjd1yLgqpX.mini"
-  }],
-  "type": "teardown",
-  "revisionid": 753275,
-  "created_date": 1413563912,
-  "published_date": 1413588480,
-  "modified_date": 1493330183,
-  "prereq_modified_date": 0,
-  "public": true,
-  "category": "iMac Intel 27\" Retina 5K Display",
-  "url": "https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+Retina+5K+Display+Teardown/30260",
-  "can_edit": true,
-  "favorited": false,
-  "completed": false,
-  "author": {
-    "userid": 524640,
-    "username": "Sam Lionheart",
-    "unique_username": "sam",
-    "join_date": 1350625879,
-    "image": {
-      "id": 277243,
-      "guid": "goWW1KSXtt5RIr4A",
-      "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.mini",
-      "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.thumbnail",
-      "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.standard",
-      "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.medium",
-      "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.large",
-      "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A"
-    },
-    "reputation": 246141,
-    "url": "https://www.ifixit.com/User/524640/Sam+Lionheart",
-    "teams": [1],
-    "privileges": ["Admin"]
-  },
-  "featured_documentid": null,
-  "types": ["Replacement", "Disassembly", "Teardown", "Technique"]
-});
 
 /***/ })
 /******/ ]);

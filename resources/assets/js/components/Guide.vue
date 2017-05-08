@@ -22,7 +22,8 @@
           intro: GuideData.introduction
         },
         navbarData: {
-          title: GuideData.previous_text
+          title: GuideData.previous_text,
+          guideid: GuideData.guideid
         },
         stepsData: {
           steps: GuideData.steps

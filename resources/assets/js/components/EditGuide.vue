@@ -11,7 +11,7 @@
                   <a href="#introduction" aria-controls="home" role="tab" data-toggle="tab">Introduction</a>
                 </li>
                 <li role="presentation">
-                  <a href="/mockups/guide/steps">Guide Steps</a>
+                  <a :href="guideStepsUrl()">Guide Steps</a>
                 </li>
               </ul>
               <div class="tab-content">
@@ -34,7 +34,7 @@
                   </div>
                 </div>
               </div>
-              <steps-guide-index :data="steps"></steps-guide-index>
+              <steps-guide-index :data="stepsData"></steps-guide-index>
             </div>
           </div>
         </div>
@@ -60,9 +60,17 @@
         mainImage: GuideData.image.standard,
         editNavbarData: {
           previousText: GuideData.previous_text,
-          backUrl: '/mockups/guide'
+          backUrl: GuideData.guideid
         },
-        steps: GuideData.steps
+        stepsData: {
+          steps: GuideData.steps,
+          guideid: GuideData.guideid
+        }
+      }
+    },
+    methods: {
+      guideStepsUrl() {
+        return `/mockups/guide/steps/${GuideData.guideid}/${GuideData.steps[0].stepid}`;
       }
     }
   }

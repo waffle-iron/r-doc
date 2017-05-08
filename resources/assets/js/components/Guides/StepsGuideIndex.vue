@@ -4,22 +4,22 @@
     <div class="toggle-div">
       <div id="thumbs-container">
         <div :class="{'guide-sidebar-thumb': true, 'active': active(index)}"
-        v-for="(image, index) in data"
-        :style="imageThumb(index)"
-        @mouseover="shouldBeActive(index, data)"
-        @mouseout="shouldBeActive(index, data)">
-        <a href="#" class="thumb-overlay"></a>
-        <p class="step-number">{{index + 1}}</p>
+             v-for="(image, index) in data.steps"
+             :style="imageThumb(index)"
+             @mouseover="shouldBeActive(index, data.steps)"
+             @mouseout="shouldBeActive(index, data.steps)">
+          <a :href="stepEditUrl(index)" class="thumb-overlay"></a>
+          <p class="step-number">{{index + 1}}</p>
+        </div>
       </div>
     </div>
+    <div class="guide-sidebar-add-step">
+      <a href="#">
+        <i class="fa fa-plus"></i>
+      </a>
+    </div>
+    <div class="clearer"></div>
   </div>
-  <div class="guide-sidebar-add-step">
-    <a href="#">
-      <i class="fa fa-plus"></i>
-    </a>
-  </div>
-  <div class="clearer"></div>
-</div>
 </template>
 
 <script>
@@ -63,11 +63,14 @@
         };
       },
       gatherThumbnails() {
-        this.data.forEach((image, index) => {
+        this.data.steps.forEach((image, index) => {
           this.imageThumbs[index] = image.media.data[0].mini;
           this.isActive[index] = false;
         });
+      },
+      stepEditUrl(index) {
+        return `/mockups/guide/steps/${this.data.guideid}/${this.data.steps[index].stepid}`;
       }
     }
   }
-  </script>
+</script>

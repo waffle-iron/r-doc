@@ -17,6 +17,6 @@ Route::get('/', function () { return view('welcome'); });
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/mockups/guide', 'MockupsController@guide')->name('mockup-guide');
-Route::get('/mockups/guide/intro/', 'MockupsController@edit')->name('mockup-guide-edit');
-Route::get('/mockups/guide/steps/', 'MockupsController@editSteps')->name('mockup-guide-step-edit');
+Route::get('/mockups/guide/{guideid}', 'MockupsController@guide')->name('mockup-guide');
+Route::get('/mockups/guide/intro/{guideid}', 'MockupsController@edit')->name('mockup-guide-intro-edit');
+Route::get('/mockups/guide/steps/{guideid}/{stepid}', 'MockupsController@editSteps')->name('mockup-guide-step-edit');

@@ -9,7 +9,7 @@
           </a>
         </li>
         <li class="page-navigation-link">
-          <a href="/mockups/guide/intro" class="nav-link">
+          <a :href="editUrl()" class="nav-link">
             <span>Edit&nbsp;</span>
             <i class="glyphicon glyphicon-edit"></i>
           </a>
@@ -35,6 +35,15 @@
 
 <script>
 export default {
-  props: ['data']
+  props: ['data'],
+  data() {
+    return {
+    }
+  },
+  methods: {
+    editUrl() {
+      return `/mockups/guide/intro/${this.data.guideid}`
+    }
+  }
 }
 </script>

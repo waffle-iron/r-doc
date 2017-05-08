@@ -3,7 +3,7 @@
     <div class="lower-navbar">
       <ul class="edit-navbar">
         <li>
-          <a :href="data.backUrl">View</a>
+          <a :href="viewUrl()">View</a>
         </li>
         <li class="active-nav">
           <a href="#">Edit</a>
@@ -25,6 +25,11 @@
 
 <script>
   export default {
-    props: ['data']
+    props: ['data'],
+    methods: {
+      viewUrl() {
+        return `/mockups/guide/${this.data.guideid}`;
+      }
+    }
   }
 </script>
