@@ -20311,27 +20311,9 @@ if (typeof jQuery === 'undefined') {
 
 
 /***/ }),
-/* 157 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.steps-container {\n  position: relative;\n}\n.step {\n  line-height: 1em;\n}\n.step-title {\n  text-decoration: none;\n  line-height: 1.5em;\n  padding: 2.1em 0;\n}\n.fragment-link {\n  font-size: 2em;\n}\n.fragment-link:hover {\n  text-decoration: none;\n}\n.anchor {\n  color: #212426;\n  opacity: 0.2;\n  vertical-align: middle;\n}\n.step-title strong {\n  font-weight: 700;\n  color: #212426;\n  padding-top: 5px;\n}\n.step-title .step-title-title {\n  margin-left: 20px;\n  color: #212426;\n  font-weight: 300;\n}\n.step-edit-link {\n  float: right;\n  padding: 2.1em 0;\n}\n.step-main-media > .visible {\n  position: static;\n  visibility: visible;\n}\n.step-main-media > img {\n  position: absolute;\n  visibility: hidden;\n  top: 0;\n  left: 0;\n  height: auto;\n}\n.step-image {\n  width: 100%;\n  height: auto;\n}\n.step-thumbnails {\n  margin-bottom: 20px;\n}\n.step-thumbnail {\n  box-shadow: 0 0 0 0 transparent;\n  transition: -webkit-transform 0.2s;\n  transition: transform 0.2s;\n  transition: transform 0.2s, -webkit-transform 0.2s;\n}\n.step-thumbnails .active {\n  -webkit-transform: translateY(-4px);\n          transform: translateY(-4px);\n}\n.step-thumbnails .active img {\n  opacity: 1;\n  box-shadow: 0 4px 10px rgba(0,0,0,0.5);\n}\n.step-thumbnail img {\n  display: block;\n  width: 100%;\n  max-height: 90px;\n  border-radius: 3px;\n  transition: box-shadow 0.2s, border-color 0.2s, opacity 0.2s;\n}\n.step-thumbnail-inner {\n  width: 110px;\n  height: auto;\n}\n.step-lines {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n.step-lines li {\n  position: relative;\n  margin: 0 0 20px 0;\n  width: 100%;\n}\n.step-lines .bullet {\n  position: absolute;\n  top: 7px;\n  font-size: 10px;\n}\n.bullet {\n  width: 12px;\n  height: 12px;\n  line-height: 12px;\n}\n.step-lines .bullet-black {\n  color: #ccc;\n}\n.bullet-red {\n  color: #c1280b;\n}\n.bullet-orange {\n  color: #ff9024;\n}\n.bullet-yellow {\n  color: #f3e00e;\n}\n.bullet-green {\n  color: #16dc81;\n}\n.bullet-blue {\n  color: #2343e8;\n}\n.step-lines p {\n  font-size: 16px;\n  line-height: 22px;\n  padding: 0 2px 0 26px;\n  margin: 0;\n}\n.step-lines ul {\n  list-style: none;\n  padding: 0;\n  margin: 20px 0 0 20px;\n}\n.clearer {\n  clear: both;\n  height: 0;\n  padding: 0;\n  margin: 0;\n  line-height: 0;\n  font-size: 0;\n}\n.divider-row .divider {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.divider-content {\n  height: 1px;\n  background-color: #f0f0f0;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n", ""]);
-
-/***/ }),
-/* 158 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.guide__container {\n  margin-bottom: 50px;\n  position: relative;\n}\n", ""]);
-
-/***/ }),
-/* 159 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.guide__introduction {\n  margin: 30px 0;\n}\n.guide__image-container {\n  width: 100%;\n  height: auto;\n  margin-top: 20px;\n  background-color: black;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n  position: relative;\n  overflow: hidden;\n  border-radius: 4px;\n  -webkit-box-flex: 0;\n      -ms-flex: 0 1 auto;\n          flex: 0 1 auto;\n  z-index: 0;\n  color: white;\n}\n.guide__main-image {\n  position: relative;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  overflow: hidden;\n  z-index: 1;\n  background-size: cover;\n  background: #f2f2f2 center;\n}\n.guide__image-overlay {\n  background-color: rgba(0, 0, 0, 0.6);\n  width: 100%;\n  min-height: 350px;\n  text-align: center;\n  white-space: nowrap;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.guide__type {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 3;\n  text-align: center;\n}\n.guide__type > p {\n  display: inline-block;\n  height: 41px;\n  margin: 0;\n  padding: 10px 10px;\n  background-color: #0071ce;\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n  color: white;\n  font-weight: bold;\n}\n.guide__title {\n  margin-top: 40px;\n  margin-bottom: 0;\n  padding: 40px;\n  white-space: normal;\n}\n.guide__revision {\n  font-weight: bold;\n  font-size: 1.5em;\n}\n", ""]);
-
-/***/ }),
+/* 157 */,
+/* 158 */,
+/* 159 */,
 /* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20339,20 +20321,8 @@ exports = module.exports = __webpack_require__(2)();
 exports.push([module.i, "\n.completion-container {\n  margin: 60px 0;\n  position: relative;\n}\n.guide-complete {\n  margin: 0;\n  background-color: #f2f8fd;\n  border: 1px solid #b3d4f0;\n  border-raidus: 4px;\n  padding: 26px;\n}\n#guideConclusion {\n  text-align: center;\n}\n.finish-line {\n  margin: 0 auto 30px;\n  position: relative;\n  display: inline-block;\n  padding: 0 15px;\n  z-index: 1;\n  font-size: 20px;\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.conclusionText {\n  font-size: 1.2em;\n  font-weight: 500;\n}\n", ""]);
 
 /***/ }),
-/* 161 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.guide__navigation-in-header {\n  padding: 0 10px;\n}\n.page-navigation-bar {\n  margin-top: -22px;\n  margin-left: 0;\n  margin-right: 0;\n  padding: 0;\n  height: 50px;\n  background-color: rgba(33, 36, 38, 0.05);\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px;\n  list-style-type: none;\n  text-align: left;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n}\n.page-navigation-bar .back-link {\n  margin-right: auto;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  min-width: 0;\n}\n.page-navigation-link a {\n  display: inline-block;\n  padding-right: 20px;\n  line-height: 50px;\n  color: #4e5052;\n  white-space: nowrap;\n  cursor: pointer;\n  transition: background-color 0.1s, color 0.1s;\n}\n.page-navigation-link:first-child a {\n  padding-left: 5px;\n  border-bottom-left-radius: 4px;\n}\n.page-navigation-link a:hover {\n  background-color: rgba(0, 0, 0, 0.05);\n  text-decoration: none;\n  color: #24272a;\n}\n.page-navigation-link .icon {\n  margin: 0 10px;\n  color: #24272a;\n  opacity: 0.3;\n  transition: opacity 0.1s;\n}\n.nav-link {\n  padding-left: 20px;\n}\n.nav-link:focus {\n  text-decoration: none;\n}\n", ""]);
-
-/***/ }),
-/* 162 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-/***/ }),
+/* 161 */,
+/* 162 */,
 /* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -48150,10 +48120,6 @@ process.umask = function() { return 0; };
 /* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
-/* styles */
-__webpack_require__(180)
-
 var Component = __webpack_require__(3)(
   /* script */
   __webpack_require__(148),
@@ -48226,10 +48192,6 @@ module.exports = Component.exports
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
-/* styles */
-__webpack_require__(183)
-
 var Component = __webpack_require__(3)(
   /* script */
   __webpack_require__(150),
@@ -48263,10 +48225,6 @@ module.exports = Component.exports
 /***/ }),
 /* 170 */
 /***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(181)
 
 var Component = __webpack_require__(3)(
   /* script */
@@ -48302,10 +48260,6 @@ module.exports = Component.exports
 /* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
-/* styles */
-__webpack_require__(184)
-
 var Component = __webpack_require__(3)(
   /* script */
   __webpack_require__(152),
@@ -48339,10 +48293,6 @@ module.exports = Component.exports
 /***/ }),
 /* 172 */
 /***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(179)
 
 var Component = __webpack_require__(3)(
   /* script */
@@ -48705,84 +48655,9 @@ if (false) {
 }
 
 /***/ }),
-/* 179 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(157);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("ecd1f256", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-0bb5aede\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideStep.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-0bb5aede\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideStep.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 180 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(158);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("226dca0a", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-19b81484\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Guide.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-19b81484\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Guide.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 181 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(159);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("f8c8b122", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-2dc52b8e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideImage.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-2dc52b8e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideImage.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
+/* 179 */,
+/* 180 */,
+/* 181 */,
 /* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -48809,58 +48684,8 @@ if(false) {
 }
 
 /***/ }),
-/* 183 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(161);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("15be05c6", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-9355c9da\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideHeaderNavigation.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-9355c9da\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideHeaderNavigation.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 184 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(162);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("73079933", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-b19ee1a8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideIntroduction.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-b19ee1a8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuideIntroduction.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
+/* 183 */,
+/* 184 */,
 /* 185 */
 /***/ (function(module, exports) {
 
@@ -59629,7 +59454,8 @@ if (false) {
     "teams": [1],
     "privileges": ["Admin"]
   },
-  "featured_documentid": null
+  "featured_documentid": null,
+  "types": ["replacement", "disassembly", "teardown", "technique"]
 });
 
 /***/ }),
@@ -59704,12 +59530,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeMount: function beforeMount() {
     this.gatherThumbnails();
-    //      this.setNotActive();
   },
   data: function data() {
     return {
@@ -59722,7 +59548,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     active: function active() {
       return function (index) {
-        console.log(this.isActive);
         return this.isActive[index];
       };
     }
@@ -59769,7 +59594,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n#main-body {\n  padding-top: 0.1px;\n  background-color: #fff;\n  text-align: start;\n  position: relative;\n  min-height: 300px;\n  border-radius: 0;\n  box-shadow: 0 0 6px #ccc;\n}\n.lower-navbar {\n  background-color: #f2f2f2;\n  position: relative;\n}\n.edit-navbar {\n  float: right;\n  list-style-type: none;\n  position: relative;\n  top: 0;\n  right: 0;\n  margin: 0;\n  padding: 0;\n  background-color: #f2f2f2;\n  height: 40px;\n}\n.arrow {\n  font-size: 1.2em;\n  font-weight: normal;\n  line-height: 1.388em;\n}\n.edit-navbar li {\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  line-height: 30px;\n  float: left;\n  border-right: 1px solid #ddd;\n}\n.edit-navbar li:hover {\n  background-color: #fff;\n}\n.edit-navbar li:last-child {\n  border: 0;\n}\n.edit-navbar li a {\n  margin: 5px 0;\n  height: 30px;\n  line-height: 30px;\n  display: inline-block;\n  padding: 0 20px;\n  border-style: none;\n  color: #888;\n}\n.edit-navbar li a:hover,\n.edit-navbar li a:active,\n.edit-navbar li a:focus {\n  text-decoration: none;\n}\n.edit-navbar li.active-nav a {\n  color: #212426 !important;\n  font-weight: bold;\n}\n#breadcrumb {\n  display: block;\n  line-height: 40px;\n}\n#breadcrumb .back-nav {\n  margin-left: 12px;\n}\n#breadcrumb .breadcrumb-item {\n  font-weight: bold;\n  font-size: 13px;\n}\n#breadcrumb a {\n  color: #555;\n}\n#breadcrumb a:hover,\n#breadcrumb a:active,\n#breadcrumb a:focus {\n  text-decoration: none;\n}\n#sidebar-float {\n  float: right;\n  padding-right: 24px;\n  padding-bottom: 24px;\n}\n#sidebar {\n  width: 316px;\n  margin-top: 24px;\n}\n#sidebar > div:first-child {\n  margin-top: 0;\n}\n#main-guide-image {\n  position: relative;\n  margin: 8px 0 0;\n  border: 8px solid #eee;\n  border-radius: 4px;\n}\n.media-target {\n  cursor: pointer;\n  overflow: hidden;\n  display: inline-block;\n}\n.media-target .contents {\n  background-position: center;\n  background-repeat: no-repeat;\n}\n.media-item {\n  position: relative;\n  overflow: hidden;\n}\n.media-target .replace-image {\n  opacity: 0;\n}\n.alter-target {\n  position: absolute;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8);\n  z-index: 1;\n  transition: opacity ease-out 0.28s;\n}\n.media-target .standard .icon {\n  height: 100%;\n  width: 100%;\n  margin: 0;\n}\n.replace-image > .icon {\n  background-image: url(https://d1ulmmr4d4i8j4.cloudfront.net/static/images/guide/replace-large.png);\n  z-index: 2;\n}\n#sidebar .form-body {\n  margin: 8px 0;\n}\n#guide-step-index {\n  padding-right: 0;\n}\n.form-body {\n  padding: 0 8px 8px 8px;\n  overflow: auto;\n  background-color: #eee;\n  border-radius: 4px;\n}\nh3 .toggle-bar .subhead {\n  font-size: 18px;\n  padding-right: 10px;\n}\n.form-body h3 .subhead {\n  margin-top: 0;\n  padding: 5px 0 2px;\n}\nh3 .toggle-bar {\n  margin: 0 0 4px 0;\n  border-radius: 4px;\n  background-color: #eee;\n  cursor: pointer;\n}\nh3 {\n  font-weight: 600;\n}\n#sidebar-toggle-edit .toggle-div {\n  padding-left: 2px;\n}\n#guide-step-index .guide-sidebar-thumb {\n  position: relative;\n  float: left;\n  width: 56px;\n  height: 42px;\n  margin: 0 4px 4px 0;\n  background: no-repeat center center;\n}\n#guide-step-index .guide-sidebar-thumb a {\n  display: block;\n  height: 100%;\n}\n.guide-sidebar-thumb .thumb-overlay {\n  opacity: 0.3;\n  background-color: rgb(60, 93, 139);\n}\n#guide-step-index .active > .thumb-overlay {\n  opacity: 0.01;\n}\n#guide-step-index .active > .step-number {\n  background-color: #fece71;\n}\n.step-number {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  width: 1.6em;\n  margin: 0;\n  background-color: #212426;\n  text-align: center;\n  font-size: 1em;\n  font-weight: bold;\n  color: #fff;\n}\n#guide-step-index .guide-sidebar-add-step {\n  position: relative;\n  float: left;\n  width: 56px;\n  height: 42px;\n  margin: 0 4px 4px 0;\n  background-repeat: no-repeat;\n  background-position: left -84px;\n}\n#guide-step-index .guide-sidebar-add-step a {\n  display: block;\n  text-align: center;\n  width: 100%;\n  height: 100%;\n  padding: 2px;\n  text-shadow: 0 -1px 0 #feb325;\n  background-color: #fece71;\n  color: #fff;\n}\n.guide-sidebar-add-step a i.fa {\n  font-size: 23px;\n  font-weight: bold;\n  margin-top: 7px;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 207 */

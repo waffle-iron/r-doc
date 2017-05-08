@@ -1036,5 +1036,11 @@ export default
       "Admin"
     ]
   },
-  "featured_documentid": null
+  "featured_documentid": null,
+  "types": [
+      "replacement",
+      "disassembly",
+      "teardown",
+      "technique"
+  ]
 }

@@ -36,10 +36,3 @@
     }
   }
 </script>
-
-<style>
-  .guide__container {
-    margin-bottom: 50px;
-    position: relative;
-  }
-</style>
