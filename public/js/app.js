@@ -16690,6 +16690,7 @@ __webpack_require__(154);
 
 window.Vue = __webpack_require__(186);
 window.moment = __webpack_require__(0);
+// window.GuideData = require('./data.js');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -16706,6 +16707,7 @@ Vue.component('guide-completed', __webpack_require__(168));
 Vue.component('edit-guide', __webpack_require__(202));
 Vue.component('steps-guide-index', __webpack_require__(208));
 Vue.component('guide-edit-introduction', __webpack_require__(212));
+Vue.component('edit-navbar', __webpack_require__(220));
 
 var app = new Vue({
   el: '#app'
@@ -17564,7 +17566,7 @@ module.exports = function spread(callback) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data_js__ = __webpack_require__(226);
 //
 //
 //
@@ -17578,27 +17580,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  created: function created() {
-    //this is where the axios request will pull in the page data.
-  },
   data: function data() {
     return {
-      //        GuideData,
       imageData: {
-        title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].title,
-        type: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].type,
-        revision: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].revision,
-        published: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].published_date,
-        mainImage: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.huge,
-        intro: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction
+        title: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].title,
+        type: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].type,
+        revision: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].revision,
+        published: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].published_date,
+        mainImage: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].image.huge,
+        intro: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].introduction
       },
       navbarData: {
-        title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].previous_text
+        title: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].previous_text
       },
       stepsData: {
-        steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps
+        steps: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].steps
       },
-      completedData: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].conclusion
+      completedData: __WEBPACK_IMPORTED_MODULE_0__data_js__["a" /* default */].conclusion
     };
   }
 });
@@ -17626,7 +17624,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['completedText']
+  props: ['data']
 });
 
 /***/ }),
@@ -17672,7 +17670,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['navData']
+  props: ['data']
 });
 
 /***/ }),
@@ -17704,11 +17702,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['headerData'],
+  props: ['data'],
   data: function data() {
     return {
       imageObject: {
-        backgroundImage: 'url(\'' + this.headerData.mainImage + '\')'
+        backgroundImage: 'url(\'' + this.data.mainImage + '\')'
       }
     };
   },
@@ -17827,7 +17825,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['stepData'],
+  props: ['data'],
   data: function data() {
     return {
       visibleObject: []
@@ -17861,7 +17859,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     createImageObject: function createImageObject() {
-      var steps = this.stepData.steps;
+      var steps = this.data.steps;
       var media = [];
       steps.forEach(function (step) {
         media.push(step.media.data);
@@ -48332,7 +48330,7 @@ module.exports = Component.exports
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "steps-container"
-  }, _vm._l((_vm.stepData.steps), function(step, index) {
+  }, _vm._l((_vm.data.steps), function(step, index) {
     return _c('div', [_c('section', {
       staticClass: "step",
       attrs: {
@@ -48466,19 +48464,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "container guide__container"
   }, [_c('guide-header-navigation', {
     attrs: {
-      "navData": _vm.navbarData
+      "data": _vm.navbarData
     }
   }), _vm._v(" "), _c('guide-image', {
     attrs: {
-      "headerData": _vm.imageData
+      "data": _vm.imageData
     }
   }), _vm._v(" "), _c('guide-step', {
     attrs: {
-      "stepData": _vm.stepsData
+      "data": _vm.stepsData
     }
   }), _vm._v(" "), _c('guide-completed', {
     attrs: {
-      "completedText": _vm.completedData
+      "data": _vm.completedData
     }
   })], 1)
 },staticRenderFns: []}
@@ -48504,19 +48502,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "guide__image-overlay"
   }, [_c('h1', {
     staticClass: "guide__title"
-  }, [_vm._v(_vm._s(_vm.headerData.title))]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.data.title))]), _vm._v(" "), _c('div', {
     staticClass: "guide__revision"
-  }, [_vm._v("Revision: " + _vm._s(_vm.headerData.revision))]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Revision: " + _vm._s(_vm.data.revision))]), _vm._v(" "), _c('div', {
     staticClass: "guide__published"
-  }, [_vm._v("Published: " + _vm._s(_vm.getDate(_vm.headerData.published)))])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Published: " + _vm._s(_vm.getDate(_vm.data.published)))])])]), _vm._v(" "), _c('div', {
     staticClass: "guide__type"
   }, [_c('p', [_c('i', {
     staticClass: "glyphicon glyphicon-book"
-  }), _vm._v(" "), _c('strong', [_vm._v(_vm._s(_vm.headerData.type))])])])]), _vm._v(" "), _c('div', {
+  }), _vm._v(" "), _c('strong', [_vm._v(_vm._s(_vm.data.type))])])])]), _vm._v(" "), _c('div', {
     staticClass: "guide__introduction"
   }, [_c('h2', [_vm._v("Introduction")]), _vm._v(" "), _c('div', {
     domProps: {
-      "innerHTML": _vm._s(_vm.headerData.intro)
+      "innerHTML": _vm._s(_vm.data.intro)
     }
   })])])
 },staticRenderFns: []}
@@ -48545,7 +48543,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "conclusionText"
   }, [_c('p', {
     domProps: {
-      "innerHTML": _vm._s(_vm.completedText)
+      "innerHTML": _vm._s(_vm.data)
     }
   })])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -48583,14 +48581,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "glyphicon glyphicon-chevron-left icon"
-  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.navData.title))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])])
+  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.data.title))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
     staticClass: "page-navigation-link"
   }, [_c('a', {
     staticClass: "nav-link",
     attrs: {
-      "href": "/mockups/guide/edit"
+      "href": "/mockups/guide/intro"
     }
   }, [_c('span', [_vm._v("Edit ")]), _vm._v(" "), _c('i', {
     staticClass: "glyphicon glyphicon-edit"
@@ -58424,24 +58422,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "main-body"
     }
-  }, [_c('div', {
-    staticClass: "clearfix"
-  }, [_c('div', {
-    staticClass: "lower-navbar"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
+  }, [_c('edit-navbar', {
     attrs: {
-      "id": "breadcrumb"
+      "data": _vm.editNavbarData
     }
-  }, [_c('a', {
-    staticClass: "breadcrumb-item back-nav",
-    attrs: {
-      "href": "#"
-    }
-  }, [_c('span', {
-    staticClass: "arrow fa fa-arrow-left"
-  }), _vm._v("  Back to " + _vm._s(_vm.guideData.previous_text) + "\n          ")])]), _vm._v(" "), _c('div', {
-    staticClass: "clearer"
-  })])]), _vm._v(" "), _c('div', {
+  }), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     attrs: {
@@ -58454,25 +58439,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     staticClass: "tab-wrap"
-  }, [_vm._m(1), _vm._v(" "), _c('div', {
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "tab-content"
-  }, [_c('div', {
-    staticClass: "tab-pane active",
-    attrs: {
-      "role": "tabpanel",
-      "id": "home"
-    }
   }, [_c('guide-edit-introduction', {
     attrs: {
-      "introData": _vm.editIntroData
+      "data": _vm.editIntroData
     }
-  })], 1), _vm._v(" "), _c('div', {
+  }), _vm._v(" "), _c('div', {
     staticClass: "tab-pane",
     attrs: {
       "role": "tabpanel",
-      "id": "messages"
+      "id": "guide-steps"
     }
-  }, [_vm._v("Guide Steps")])])])])]), _vm._v(" "), _c('div', {
+  })], 1)])])]), _vm._v(" "), _c('div', {
     attrs: {
       "id": "sidebar-float"
     }
@@ -58495,33 +58474,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "standard",
     attrs: {
-      "src": _vm.guideData.image.standard,
+      "src": _vm.mainImage,
       "alt": ""
     }
-  }), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c('steps-guide-index', {
+  }), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('steps-guide-index', {
     attrs: {
-      "indexData": _vm.guideData.steps
+      "data": _vm.steps
     }
-  })], 1)])])])])])
+  })], 1)])])])], 1)])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('ul', {
-    staticClass: "edit-navbar"
-  }, [_c('li', [_c('a', {
-    attrs: {
-      "href": "/mockups/guide"
-    }
-  }, [_vm._v("View")])]), _vm._v(" "), _c('li', {
-    staticClass: "active-nav"
-  }, [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Edit")])]), _vm._v(" "), _c('li', [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("History")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('ul', {
     staticClass: "nav nav-tabs tab-list",
     attrs: {
@@ -58535,7 +58496,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('a', {
     attrs: {
-      "href": "#home",
+      "href": "#introduction",
       "aria-controls": "home",
       "role": "tab",
       "data-toggle": "tab"
@@ -58546,10 +58507,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('a', {
     attrs: {
-      "href": "#messages",
-      "aria-controls": "messages",
-      "role": "tab",
-      "data-toggle": "tab"
+      "href": "/mockups/guide/steps"
     }
   }, [_vm._v("Guide Steps")])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -58568,7 +58526,654 @@ if (false) {
 }
 
 /***/ }),
-/* 204 */
+/* 204 */,
+/* 205 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data__ = __webpack_require__(226);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      editIntroData: {
+        category: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].category,
+        type: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].type,
+        types: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].types,
+        title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].title,
+        summary: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].summary,
+        introduction: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction
+      },
+      mainImage: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.standard,
+      editNavbarData: {
+        previousText: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].previous_text,
+        backUrl: '/mockups/guide'
+      },
+      steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps
+    };
+  }
+});
+
+/***/ }),
+/* 206 */,
+/* 207 */,
+/* 208 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(3)(
+  /* script */
+  __webpack_require__(210),
+  /* template */
+  __webpack_require__(209),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/StepsGuideIndex.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] StepsGuideIndex.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-9737689a", Component.options)
+  } else {
+    hotAPI.reload("data-v-9737689a", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 209 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "form-body locked",
+    attrs: {
+      "id": "guide-step-index"
+    }
+  }, [_c('h3', {
+    staticClass: "toggle-bar subhead"
+  }, [_vm._v("Steps")]), _vm._v(" "), _c('div', {
+    staticClass: "toggle-div"
+  }, [_c('div', {
+    attrs: {
+      "id": "thumbs-container"
+    }
+  }, _vm._l((_vm.data), function(image, index) {
+    return _c('div', {
+      class: {
+        'guide-sidebar-thumb': true, 'active': _vm.active(index)
+      },
+      style: (_vm.imageThumb(index)),
+      on: {
+        "mouseover": function($event) {
+          _vm.shouldBeActive(index, _vm.data)
+        },
+        "mouseout": function($event) {
+          _vm.shouldBeActive(index, _vm.data)
+        }
+      }
+    }, [_c('a', {
+      staticClass: "thumb-overlay",
+      attrs: {
+        "href": "#"
+      }
+    }), _vm._v(" "), _c('p', {
+      staticClass: "step-number"
+    }, [_vm._v(_vm._s(index + 1))])])
+  }))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "clearer"
+  })])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "guide-sidebar-add-step"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-plus"
+  })])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-9737689a", module.exports)
+  }
+}
+
+/***/ }),
+/* 210 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  beforeMount: function beforeMount() {
+    this.gatherThumbnails();
+  },
+  data: function data() {
+    return {
+      isActive: [],
+      imageThumbs: []
+    };
+  },
+
+  computed: {
+    active: function active() {
+      return function (index) {
+        return this.isActive[index];
+      };
+    }
+  },
+  methods: {
+    getActiveState: function getActiveState(index) {
+      return this.isActive[index];
+    },
+    shouldBeActive: function shouldBeActive(index, arr) {
+      var _this = this;
+
+      arr.forEach(function (active, idx) {
+        if (idx === index) {
+          _this.isActive[index] = !_this.isActive[index];
+        }
+      });
+    },
+    setNotActive: function setNotActive() {
+      var _this2 = this;
+
+      this.data.forEach(function (data, index) {
+        _this2.isActive[index] = false;
+      });
+    },
+    imageThumb: function imageThumb(index) {
+      return {
+        backgroundImage: 'url(\'' + this.imageThumbs[index] + '\')'
+      };
+    },
+    gatherThumbnails: function gatherThumbnails() {
+      var _this3 = this;
+
+      this.data.forEach(function (image, index) {
+        _this3.imageThumbs[index] = image.media.data[0].mini;
+        _this3.isActive[index] = false;
+      });
+    }
+  }
+});
+
+/***/ }),
+/* 211 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  data: function data() {
+    return {};
+  },
+
+  methods: {
+    isGuideType: function isGuideType(doctype) {
+      return doctype.toLowerCase() === this.data.type;
+    }
+  }
+});
+
+/***/ }),
+/* 212 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(3)(
+  /* script */
+  __webpack_require__(211),
+  /* template */
+  __webpack_require__(213),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/GuideEditIntroduction.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] GuideEditIntroduction.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1169a056", Component.options)
+  } else {
+    hotAPI.reload("data-v-1169a056", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "tab-pane active",
+    attrs: {
+      "role": "tabpanel",
+      "id": "introduction"
+    }
+  }, [_c('div', {
+    attrs: {
+      "id": "guide-intro-form"
+    }
+  }, [_c('div', {
+    staticClass: "form-body",
+    attrs: {
+      "id": "form-inputs"
+    }
+  }, [_c('div', {
+    staticClass: "form-field form-field-top",
+    attrs: {
+      "id": "type-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-type"
+    }
+  }, [_vm._v("What type of guide is this?")]), _vm._v(" "), _c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "",
+      "id": "intro-type"
+    }
+  }, _vm._l((_vm.data.types), function(doctype) {
+    return _c('option', {
+      domProps: {
+        "value": doctype,
+        "selected": _vm.isGuideType(doctype)
+      }
+    }, [_vm._v("\n            " + _vm._s(doctype) + "\n          ")])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "device-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-device"
+    }
+  }, [_vm._v("Device")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[device]",
+      "id": "intro-device"
+    },
+    domProps: {
+      "value": _vm.data.category
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-field text-field",
+    attrs: {
+      "id": "title-div"
+    }
+  }, [_c('label', {
+    staticClass: "tip",
+    attrs: {
+      "for": "intro-title"
+    }
+  }, [_vm._v("Title")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": "intro[title]",
+      "id": "intro-title"
+    },
+    domProps: {
+      "value": _vm.data.title
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "summary form-field",
+    attrs: {
+      "id": "summary-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-summary"
+    }
+  }, [_vm._v("Search Summary")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[summary]",
+      "id": "intro-summary",
+      "rows": "3",
+      "placeholder": "Summarize in a sentence or two what this guide will accomplish."
+    }
+  }, [_vm._v(_vm._s(_vm.data.summary))])]), _vm._v(" "), _c('div', {
+    staticClass: "introduction form-field",
+    attrs: {
+      "id": "introduction-div"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "intro-introduction"
+    }
+  }, [_vm._v("Introduction")]), _vm._v(" "), _c('textarea', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "intro[introduction]",
+      "id": "intro-introduction",
+      "rows": "7",
+      "placeholder": ""
+    }
+  }, [_vm._v(_vm._s(_vm.data.introduction))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "submit"
+  }, [_c('div', {
+    staticClass: "guide-action-buttons"
+  }, [_c('button', {
+    staticClass: "btn btn-primary"
+  }, [_vm._v("Save")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "pagination pagination-bottom"
+  }, [_c('p', {
+    staticClass: "left"
+  }), _vm._v(" "), _c('p', {
+    staticClass: "middle"
+  }, [_vm._v("Editing Introduction")]), _vm._v(" "), _c('p', {
+    staticClass: "right"
+  }, [_c('a', {
+    attrs: {
+      "href": "#",
+      "id": "next-arrow"
+    }
+  }, [_vm._v("Guide Steps")]), _vm._v(" \n        "), _c('i', {
+    staticClass: "fa fa-arrow-right"
+  })])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-1169a056", module.exports)
+  }
+}
+
+/***/ }),
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data']
+});
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(3)(
+  /* script */
+  __webpack_require__(219),
+  /* template */
+  __webpack_require__(221),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/EditNavbar.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] EditNavbar.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6315bfb4", Component.options)
+  } else {
+    hotAPI.reload("data-v-6315bfb4", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 221 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "clearfix"
+  }, [_c('div', {
+    staticClass: "lower-navbar"
+  }, [_c('ul', {
+    staticClass: "edit-navbar"
+  }, [_c('li', [_c('a', {
+    attrs: {
+      "href": _vm.data.backUrl
+    }
+  }, [_vm._v("View")])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "breadcrumb"
+    }
+  }, [_c('a', {
+    staticClass: "breadcrumb-item back-nav",
+    attrs: {
+      "href": "#"
+    }
+  }, [_c('span', {
+    staticClass: "arrow fa fa-arrow-left"
+  }), _vm._v("\n          Back to " + _vm._s(_vm.data.previousText) + "\n      ")])]), _vm._v(" "), _c('div', {
+    staticClass: "clearer"
+  })])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    staticClass: "active-nav"
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Edit")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("History")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6315bfb4", module.exports)
+  }
+}
+
+/***/ }),
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */,
+/* 226 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59474,535 +60079,6 @@ if (false) {
   "featured_documentid": null,
   "types": ["Replacement", "Disassembly", "Teardown", "Technique"]
 });
-
-/***/ }),
-/* 205 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data__ = __webpack_require__(204);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  ready: function ready() {
-    var _this = this;
-
-    $('#myTabs a').click(function (e) {
-      e.preventDefault();
-      $(_this).tab(show);
-    });
-  },
-  data: function data() {
-    return {
-      guideData: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */],
-      editIntroData: {
-        category: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].category,
-        type: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].type,
-        types: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].types,
-        title: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].title,
-        summary: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].summary,
-        introduction: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].introduction
-      }
-    };
-  }
-});
-
-/***/ }),
-/* 206 */,
-/* 207 */,
-/* 208 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(3)(
-  /* script */
-  __webpack_require__(210),
-  /* template */
-  __webpack_require__(209),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/StepsGuideIndex.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] StepsGuideIndex.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-9737689a", Component.options)
-  } else {
-    hotAPI.reload("data-v-9737689a", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 209 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "form-body locked",
-    attrs: {
-      "id": "guide-step-index"
-    }
-  }, [_c('h3', {
-    staticClass: "toggle-bar subhead"
-  }, [_vm._v("Steps")]), _vm._v(" "), _c('div', {
-    staticClass: "toggle-div"
-  }, [_c('div', {
-    attrs: {
-      "id": "thumbs-container"
-    }
-  }, _vm._l((_vm.indexData), function(image, index) {
-    return _c('div', {
-      class: {
-        'guide-sidebar-thumb': true, 'active': _vm.active(index)
-      },
-      style: (_vm.imageThumb(index)),
-      on: {
-        "mouseover": function($event) {
-          _vm.shouldBeActive(index, _vm.indexData)
-        },
-        "mouseout": function($event) {
-          _vm.shouldBeActive(index, _vm.indexData)
-        }
-      }
-    }, [_c('a', {
-      staticClass: "thumb-overlay",
-      attrs: {
-        "href": "#"
-      }
-    }), _vm._v(" "), _c('p', {
-      staticClass: "step-number"
-    }, [_vm._v(_vm._s(index + 1))])])
-  }))]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
-    staticClass: "clearer"
-  })])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "guide-sidebar-add-step"
-  }, [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-plus"
-  })])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-9737689a", module.exports)
-  }
-}
-
-/***/ }),
-/* 210 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['indexData'],
-  beforeMount: function beforeMount() {
-    this.gatherThumbnails();
-  },
-  data: function data() {
-    return {
-      isActive: [],
-      imageThumbs: []
-    };
-  },
-
-  computed: {
-    active: function active() {
-      return function (index) {
-        return this.isActive[index];
-      };
-    }
-  },
-  methods: {
-    getActiveState: function getActiveState(index) {
-      return this.isActive[index];
-    },
-    shouldBeActive: function shouldBeActive(index, arr) {
-      var _this = this;
-
-      arr.forEach(function (active, idx) {
-        if (idx === index) {
-          _this.isActive[index] = !_this.isActive[index];
-        }
-      });
-    },
-    setNotActive: function setNotActive() {
-      var _this2 = this;
-
-      this.indexData.forEach(function (data, index) {
-        _this2.isActive[index] = false;
-      });
-    },
-    imageThumb: function imageThumb(index) {
-      return {
-        backgroundImage: 'url(\'' + this.imageThumbs[index] + '\')'
-      };
-    },
-    gatherThumbnails: function gatherThumbnails() {
-      var _this3 = this;
-
-      this.indexData.forEach(function (image, index) {
-        _this3.imageThumbs[index] = image.media.data[0].mini;
-        _this3.isActive[index] = false;
-      });
-    }
-  }
-});
-
-/***/ }),
-/* 211 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['introData'],
-  data: function data() {
-    return {};
-  },
-
-  methods: {
-    isGuideType: function isGuideType(type) {
-      return type.toLowerCase() === this.introData.type;
-    }
-  }
-});
-
-/***/ }),
-/* 212 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(3)(
-  /* script */
-  __webpack_require__(211),
-  /* template */
-  __webpack_require__(213),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/r/Sites/rdx/resources/assets/js/components/Guides/GuideEditIntroduction.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] GuideEditIntroduction.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1169a056", Component.options)
-  } else {
-    hotAPI.reload("data-v-1169a056", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 213 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    attrs: {
-      "id": "guide-intro-form"
-    }
-  }, [_c('div', {
-    staticClass: "form-body",
-    attrs: {
-      "id": "form-inputs"
-    }
-  }, [_c('div', {
-    staticClass: "form-field form-field-top",
-    attrs: {
-      "id": "type-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-type"
-    }
-  }, [_vm._v("What type of guide is this?")]), _vm._v(" "), _c('select', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "",
-      "id": "intro-type"
-    }
-  }, _vm._l((_vm.introData.types), function(type) {
-    return _c('option', {
-      domProps: {
-        "value": type,
-        "selected": _vm.isGuideType(type)
-      }
-    }, [_vm._v("\n          " + _vm._s(_vm.introData.type) + "\n        ")])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "form-field text-field",
-    attrs: {
-      "id": "device-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-device"
-    }
-  }, [_vm._v("Device")]), _vm._v(" "), _c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "name": "intro[device]",
-      "id": "intro-device"
-    },
-    domProps: {
-      "value": _vm.introData.category
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-field text-field",
-    attrs: {
-      "id": "title-div"
-    }
-  }, [_c('label', {
-    staticClass: "tip",
-    attrs: {
-      "for": "intro-title"
-    }
-  }, [_vm._v("Title")]), _vm._v(" "), _c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "name": "intro[title]",
-      "id": "intro-title"
-    },
-    domProps: {
-      "value": _vm.introData.title
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "summary form-field",
-    attrs: {
-      "id": "summary-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-summary"
-    }
-  }, [_vm._v("Search Summary")]), _vm._v(" "), _c('textarea', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "intro[summary]",
-      "id": "intro-summary",
-      "rows": "3",
-      "placeholder": "Summarize in a sentence or two what this guide will accomplish."
-    }
-  }, [_vm._v(_vm._s(_vm.introData.summary))])]), _vm._v(" "), _c('div', {
-    staticClass: "introduction form-field",
-    attrs: {
-      "id": "introduction-div"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "intro-introduction"
-    }
-  }, [_vm._v("Introduction")]), _vm._v(" "), _c('textarea', {
-    staticClass: "form-control",
-    attrs: {
-      "name": "intro[introduction]",
-      "id": "intro-introduction",
-      "rows": "7",
-      "placeholder": ""
-    }
-  }, [_vm._v(_vm._s(_vm.introData.introduction))])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1)])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "submit"
-  }, [_c('div', {
-    staticClass: "guide-action-buttons"
-  }, [_c('button', {
-    staticClass: "btn btn-primary"
-  }, [_vm._v("Save")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "pagination pagination-bottom"
-  }, [_c('p', {
-    staticClass: "left"
-  }), _vm._v(" "), _c('p', {
-    staticClass: "middle"
-  }, [_vm._v("Editing Introduction")]), _vm._v(" "), _c('p', {
-    staticClass: "right"
-  }, [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Guide Steps")]), _vm._v(" \n      "), _c('i', {
-    staticClass: "fa fa-arrow-right"
-  })])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1169a056", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);

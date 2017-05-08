@@ -4,10 +4,10 @@
     <div class="toggle-div">
       <div id="thumbs-container">
         <div :class="{'guide-sidebar-thumb': true, 'active': active(index)}"
-        v-for="(image, index) in indexData"
+        v-for="(image, index) in data"
         :style="imageThumb(index)"
-        @mouseover="shouldBeActive(index, indexData)"
-        @mouseout="shouldBeActive(index, indexData)">
+        @mouseover="shouldBeActive(index, data)"
+        @mouseout="shouldBeActive(index, data)">
         <a href="#" class="thumb-overlay"></a>
         <p class="step-number">{{index + 1}}</p>
       </div>
@@ -24,7 +24,7 @@
 
 <script>
   export default {
-    props: ['indexData'],
+    props: ['data'],
     beforeMount() {
       this.gatherThumbnails();
     },
@@ -53,7 +53,7 @@
         });
       },
       setNotActive() {
-        this.indexData.forEach((data, index) => {
+        this.data.forEach((data, index) => {
           this.isActive[index] = false;
         });
       },
@@ -63,7 +63,7 @@
         };
       },
       gatherThumbnails() {
-        this.indexData.forEach((image, index) => {
+        this.data.forEach((image, index) => {
           this.imageThumbs[index] = image.media.data[0].mini;
           this.isActive[index] = false;
         });

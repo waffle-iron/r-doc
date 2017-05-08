@@ -6,7 +6,7 @@
           <i class="fa fa-flag-checkered "></i>&nbsp;Conclusion
         </div>
         <div class="conclusionText">
-          <p v-html="completedText"></p>
+          <p v-html="data"></p>
         </div>
       </div>
     </div>
@@ -15,7 +15,7 @@
 
 <script>
   export default {
-    props: ['completedText']
+    props: ['data']
   }
 </script>
 

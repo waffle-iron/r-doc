@@ -8,6 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+// window.GuideData = require('./data.js');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -24,6 +25,7 @@ Vue.component('guide-completed', require('./components/Guides/GuideCompleted.vue
 Vue.component('edit-guide', require('./components/EditGuide.vue'));
 Vue.component('steps-guide-index', require('./components/Guides/StepsGuideIndex.vue'));
 Vue.component('guide-edit-introduction', require('./components/Guides/GuideEditIntroduction.vue'));
+Vue.component('edit-navbar', require('./components/Guides/EditNavbar.vue'));
 
 const app = new Vue({
   el: '#app'

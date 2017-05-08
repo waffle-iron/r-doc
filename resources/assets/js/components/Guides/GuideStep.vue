@@ -1,6 +1,6 @@
 <template>
   <div class="steps-container">
-    <div v-for="(step, index) in stepData.steps">
+    <div v-for="(step, index) in data.steps">
       <section :id="getStepId(step.stepid)" class="step">
         <div class="row">
           <div class="col-md-10">
@@ -75,7 +75,7 @@
 
 <script>
   export default {
-    props: ['stepData'],
+    props: ['data'],
     data() {
       return {
         visibleObject: []
@@ -108,7 +108,7 @@
         }
       },
       createImageObject() {
-        let steps = this.stepData.steps;
+        let steps = this.data.steps;
         let media = [];
         steps.forEach(step => {
           media.push(step.media.data);

@@ -5,11 +5,11 @@
         <li class="page-navigation-link back-link">
           <a href="#" class="nav-link">
             <i class="glyphicon glyphicon-chevron-left icon"></i>
-            <span>{{navData.title}}</span>
+            <span>{{data.title}}</span>
           </a>
         </li>
         <li class="page-navigation-link">
-          <a href="/mockups/guide/edit" class="nav-link">
+          <a href="/mockups/guide/intro" class="nav-link">
             <span>Edit&nbsp;</span>
             <i class="glyphicon glyphicon-edit"></i>
           </a>
@@ -35,6 +35,6 @@
 
 <script>
 export default {
-  props: ['navData']
+  props: ['data']
 }
 </script>

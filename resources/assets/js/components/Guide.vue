@@ -1,22 +1,18 @@
 <template>
   <div class="container guide__container">
-    <guide-header-navigation :navData="navbarData"></guide-header-navigation>
-    <guide-image :headerData="imageData"></guide-image>
-    <guide-step :stepData="stepsData"></guide-step>
-    <guide-completed :completedText="completedData"></guide-completed>
+    <guide-header-navigation :data="navbarData"></guide-header-navigation>
+    <guide-image :data="imageData"></guide-image>
+    <guide-step :data="stepsData"></guide-step>
+    <guide-completed :data="completedData"></guide-completed>
   </div>
 </template>
 
 <script>
-  import GuideData from './data';
+  import GuideData from './../data.js'
 
   export default {
-    created() {
-      //this is where the axios request will pull in the page data.
-    },
     data() {
       return {
-//        GuideData,
         imageData: {
           title: GuideData.title,
           type: GuideData.type,

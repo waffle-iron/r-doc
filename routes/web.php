@@ -18,4 +18,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/mockups/guide', 'MockupsController@guide')->name('mockup-guide');
-Route::get('/mockups/guide/edit', 'MockupsController@edit')->name('mockup-guide-edit');
+Route::get('/mockups/guide/intro/', 'MockupsController@edit')->name('mockup-guide-edit');
+Route::get('/mockups/guide/steps/', 'MockupsController@editSteps')->name('mockup-guide-step-edit');

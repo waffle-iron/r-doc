@@ -16,6 +16,10 @@ class MockupsController extends Controller
     }
 
     public function edit() {
-      return view('guide.edit');
+      return view('guide.edit-introduction');
+    }
+
+    public function editSteps() {
+      return view('guide.edit-steps');
     }
 }
