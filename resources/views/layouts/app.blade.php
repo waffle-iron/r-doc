@@ -49,6 +49,7 @@
             </a>
             <ul class="dropdown-menu" role="menu">
               <li><a href="{{route('mockup-guide')}}">Guide</a></li>
+              <li><a href="{{route('mockup-guide-edit')}}">Edit Guide</a></li>
             </ul>
           </li>&nbsp;
         </ul>

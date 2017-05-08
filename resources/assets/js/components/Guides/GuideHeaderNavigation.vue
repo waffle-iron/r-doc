@@ -9,7 +9,7 @@
           </a>
         </li>
         <li class="page-navigation-link">
-          <a href="#" class="nav-link">
+          <a href="/mockups/guide/edit" class="nav-link">
             <span>Edit&nbsp;</span>
             <i class="glyphicon glyphicon-edit"></i>
           </a>
@@ -45,7 +45,6 @@ export default {
     padding: 0 10px;
 
   }
-
 
   .page-navigation-bar {
     margin-top: -22px;

@@ -8,14 +8,15 @@
 </template>
 
 <script>
-  import GuideData from './Guides/data';
+  import GuideData from './data';
+
   export default {
     created() {
       //this is where the axios request will pull in the page data.
     },
     data() {
       return {
-        GuideData,
+//        GuideData,
         imageData: {
           title: GuideData.title,
           type: GuideData.type,

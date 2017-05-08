@@ -22,6 +22,7 @@ Vue.component('guide-image', require('./components/Guides/GuideImage.vue'));
 Vue.component('guide-introduction', require('./components/Guides/GuideIntroduction.vue'));
 Vue.component('guide-step', require('./components/Guides/GuideStep.vue'));
 Vue.component('guide-completed', require('./components/Guides/GuideCompleted.vue'));
+Vue.component('edit-guide', require('./components/EditGuide.vue'));
 
 const app = new Vue({
     el: '#app'
