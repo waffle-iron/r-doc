@@ -39,7 +39,6 @@
         <p class="left"></p>
         <p class="middle">Editing Introduction</p>
         <p class="right">
-          <!-- TODO: Can I move to the next tab with this link? -->
           <a :href="editStepsUrl()" id="next-arrow">Guide Steps</a>&nbsp;
           <i class="fa fa-arrow-right"></i>
         </p>

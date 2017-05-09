@@ -18447,7 +18447,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -18709,23 +18708,71 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data', 'edit'],
   created: function created() {
     this.currentStepEditId = this.getCurrentStepEditId();
     this.determineEditStep();
+    this.determinePreviousAndNextStep();
   },
   data: function data() {
     return {
       baseUrl: '/mockups/guide/steps',
+      baseBackUrl: '/mockups/guide/intro',
       visibleObject: [],
       currentStepEditId: 0,
-      editStep: {}
+      editStep: {},
+      previousStepUrl: '',
+      nextStepUrl: ''
     };
   },
 
+  computed: {
+    backLabel: function backLabel() {
+      if (this.editStep.orderby > 1) {
+        return 'Back';
+      } else {
+        return 'Introduction';
+      }
+    }
+  },
   methods: {
+    makeIntroductionBackUrl: function makeIntroductionBackUrl() {
+      this.previousStepUrl = this.baseBackUrl + '/' + this.data.guideid;
+    },
+    makeNextUrl: function makeNextUrl() {
+      this.nextStepUrl = this.baseUrl + '/' + this.data.guideid + '/' + this.data.steps[this.editStep.orderby].stepid;
+    },
+    makeNewStepUrl: function makeNewStepUrl() {
+      this.nextStepUrl = this.baseUrl + '/' + this.data.guideid + '/new-after/' + (this.editStep.orderby + 1);
+    },
+    makePreviousUrl: function makePreviousUrl() {
+      this.previousStepUrl = this.baseUrl + '/' + this.data.guideid + '/' + this.data.steps[this.editStep.orderby - 2].stepid;
+    },
+    determinePreviousAndNextStep: function determinePreviousAndNextStep() {
+      if (this.editStep.orderby === 1) {
+        this.makeIntroductionBackUrl();
+        this.makeNextUrl();
+      } else if (this.editStep.orderby === this.data.steps.length) {
+        this.makePreviousUrl();
+        this.makeNewStepUrl();
+      } else {
+        this.makeNextUrl();
+        this.makePreviousUrl();
+      }
+    },
     getCurrentStepEditId: function getCurrentStepEditId() {
       var path = window.location.pathname.split('/');
       return parseInt(path[path.length - 1]);
@@ -18735,7 +18782,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       if (this.edit) {
         this.data.steps.forEach(function (step) {
-          console.log(step.stepid);
           if (step.stepid === _this.currentStepEditId) {
             _this.editStep = step;
           }
@@ -18788,7 +18834,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     editStepUrl: function editStepUrl(index) {
       return this.baseUrl + '/' + this.data.guideid + '/' + this.data.steps[index].stepid;
-    }
+    },
+    navigateToNextStep: function navigateToNextStep() {},
+    navigateToPreviousStep: function navigateToPreviousStep() {}
   }
 });
 
@@ -49662,7 +49710,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('li', {
       staticClass: "clearer"
     })]) : _vm._e()]) : _vm._e()])
-  }))])])])])
+  }))])])]), _vm._v(" "), (_vm.edit) ? _c('div', {
+    staticClass: "pagination pagination-bottom"
+  }, [_c('p', {
+    staticClass: "left"
+  }, [_c('i', {
+    staticClass: "fa fa-arrow-left"
+  }), _vm._v(" \n      "), _c('a', {
+    attrs: {
+      "href": _vm.previousStepUrl
+    }
+  }, [_vm._v(_vm._s(_vm.backLabel))])]), _vm._v(" "), _c('p', {
+    staticClass: "middle"
+  }), _vm._v(" "), _c('p', {
+    staticClass: "right"
+  }, [_c('a', {
+    attrs: {
+      "href": _vm.nextStepUrl,
+      "id": "next-arrow"
+    }
+  }, [_vm._v("Next")]), _vm._v(" \n      "), _c('i', {
+    staticClass: "fa fa-arrow-right"
+  })])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "divider-container"
