@@ -19,7 +19,7 @@
 
 #### When I edit a guide introduction -- /guide/intro/{guideid}
 - [ ] there should be no css spacing issues.
-- [ ] i should see a markdown text editor for the Introduction textarea.
+- [x] i should see a markdown text editor for the Introduction textarea.
 
 #### When I edit a guide Step -- /guide/steps/{guideid}/{stepid}
 - [ ] there should be no css spacing issues.

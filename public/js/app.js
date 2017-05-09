@@ -29614,6 +29614,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -29626,7 +29627,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       baseUrl: '/mockups/guide/steps',
       introContent: toMarkdown(this.data.introduction),
-      configs: {}
+      configs: {
+        status: false,
+        spellChecker: false,
+        toolbar: ['heading-3', 'bold', 'italic', 'unordered-list', 'ordered-list', 'link', '|', 'preview', '|', 'guide']
+      }
     };
   },
 
@@ -51059,6 +51064,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Introduction")]), _vm._v(" "), _c('markdown-editor', {
     ref: "markdownEditor",
     attrs: {
+      "configs": _vm.configs,
       "id": "intro-introduction"
     },
     model: {

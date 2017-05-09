@@ -26,7 +26,8 @@
         </div>
         <div id="introduction-div" class="introduction form-field">
           <label for="intro-introduction">Introduction</label>
-          <markdown-editor v-model="introContent" ref="markdownEditor" id="intro-introduction"></markdown-editor>
+          <markdown-editor v-model="introContent" ref="markdownEditor"
+                           :configs="configs" id="intro-introduction"></markdown-editor>
         </div>
       </div>
       <div class="submit">
@@ -58,7 +59,22 @@
       return {
         baseUrl: '/mockups/guide/steps',
         introContent: toMarkdown(this.data.introduction),
-        configs: {}
+        configs: {
+          status: false,
+          spellChecker: false,
+          toolbar: [
+              'heading-3',
+              'bold',
+              'italic',
+              'unordered-list',
+              'ordered-list',
+              'link',
+              '|',
+              'preview',
+              '|',
+              'guide'
+          ]
+        }
       }
     },
     computed: {
