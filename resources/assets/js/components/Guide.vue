@@ -2,7 +2,7 @@
   <div class="container guide__container">
     <guide-header-navigation :data="navbarData"></guide-header-navigation>
     <guide-image :data="imageData"></guide-image>
-    <guide-step :data="stepsData"></guide-step>
+    <guide-step :data="stepsData" :edit="false"></guide-step>
     <guide-completed :data="completedData"></guide-completed>
   </div>
 </template>

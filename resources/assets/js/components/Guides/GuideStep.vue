@@ -1,5 +1,5 @@
 <template>
-  <div class="steps-container">
+  <div class="steps-container" v-if="!edit">
     <div v-for="(step, index) in data.steps">
       <section :id="getStepId(step.stepid)" class="step">
         <div class="row">
@@ -71,23 +71,101 @@
       </div>
     </div>
   </div>
+  <div class="steps-container" v-else>
+    <section :id="getStepId(editStep.stepid)" class="step">
+      <div class="row">
+        <div class="col-md-10">
+          <div class="step-title">
+              <h2><strong class="step-value">Step {{ editStep.orderby }}</strong></h2>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="row">
+      <div class="col-md-7">
+        <div class="step-media step-main-media" v-for="(media, index) in editStep.media.data">
+          <img :src="media.medium" alt=""
+               :class="{'step-image': true, 'img-responsive': true, visible: shouldBeVisible(media)}">
+        </div>
+        <div class="row step-thumbnails">
+          <div class="col-md-4" v-for="(media, index) in editStep.media.data">
+            <div :class="{'step-thumbnail-container': true, active: shouldBeVisible(media)}">
+              <div class="step-thumbnail-inner">
+                <img :src="media.medium" class="img-responsive step-thumbnail"
+                     @mouseover="makeVisible(media, editStep.media.data)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5 step-content">
+
+        <div class="row step-lines-container">
+          <ul class="step-lines">
+            <li v-for="line in editStep.lines">
+              <div :class="getBulletColor(line.bullet)" v-if="line.level === 0"></div>
+              <p v-html="line.text_rendered" v-if="line.level === 0"></p>
+              <div class="clearer" v-if="line.level === 0"></div>
+              <ul v-if="line.level === 1 || line.level === 2">
+                <li v-if="line.level === 1">
+                  <div :class="getBulletColor(line.bullet)" v-if="line.level===1"></div>
+                  <p v-html="line.text_rendered" v-if="line.level===1"></p>
+                </li>
+                <div class="clearer" v-if="line.level===1"></div>
+                <ul v-if="line.level === 2">
+                  <div :class="getBulletColor(line.bullet)"></div>
+                  <p v-html="line.text_rendered"></p>
+                  <li class="clearer"></li>
+                </ul>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="divider-container">
+      <div class="divider-row divider">
+        <div class="divider-content"></div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
   export default {
-    props: ['data'],
+    props: ['data', 'edit'],
+    created() {
+      this.currentStepEditId = this.getCurrentStepEditId();
+      this.determineEditStep();
+    },
     data() {
       return {
         visibleObject: [],
-        baseUrl: '/mockups/guide/steps'
+        baseUrl: '/mockups/guide/steps',
+        currentStepEditId: 0,
+        editStep: {}
       }
     },
     methods: {
+      getCurrentStepEditId() {
+        let path = window.location.pathname.split('/');
+        return parseInt(path[path.length - 1]);
+      },
+      determineEditStep() {
+        if (this.edit) {
+          this.data.steps.forEach(step => {
+            console.log(step.stepid);
+            if (step.stepid === this.currentStepEditId) {
+              this.editStep = step;
+            }
+          });
+        }
+      },
       getStepId(stepid) {
         return `#s${stepid}`;
       },
       getBulletColor(bullet) {
-        if(bullet === 'black') {
+        if (bullet === 'black') {
           return {
             'fa': true,
             'fa-circle': true,
@@ -121,7 +199,7 @@
       },
       makeVisible(obj, arr) {
         arr.forEach(image => {
-          if(image.id !== obj.id && image.visible) {
+          if (image.id !== obj.id && image.visible) {
             image.visible = false;
             obj.visible = true;
           }

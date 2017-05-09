@@ -18218,6 +18218,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -18253,6 +18257,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       stepsData: {
         steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps,
         guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
+      },
+      editStepsData: {
+        guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps[0].stepid
       }
     };
   },
@@ -18659,17 +18666,97 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data'],
+  props: ['data', 'edit'],
+  created: function created() {
+    this.currentStepEditId = this.getCurrentStepEditId();
+    this.determineEditStep();
+  },
   data: function data() {
     return {
       visibleObject: [],
-      baseUrl: '/mockups/guide/steps'
+      baseUrl: '/mockups/guide/steps',
+      currentStepEditId: 0,
+      editStep: {}
     };
   },
 
   methods: {
+    getCurrentStepEditId: function getCurrentStepEditId() {
+      var path = window.location.pathname.split('/');
+      return parseInt(path[path.length - 1]);
+    },
+    determineEditStep: function determineEditStep() {
+      var _this = this;
+
+      if (this.edit) {
+        this.data.steps.forEach(function (step) {
+          console.log(step.stepid);
+          if (step.stepid === _this.currentStepEditId) {
+            _this.editStep = step;
+          }
+        });
+      }
+    },
     getStepId: function getStepId(stepid) {
       return '#s' + stepid;
     },
@@ -49431,7 +49518,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
+  return (!_vm.edit) ? _c('div', {
     staticClass: "steps-container"
   }, _vm._l((_vm.data.steps), function(step, index) {
     return _c('div', [_c('section', {
@@ -49538,7 +49625,98 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         staticClass: "clearer"
       })]) : _vm._e()]) : _vm._e()])
     }))])])]), _vm._v(" "), _vm._m(0, true)])
-  }))
+  })) : _c('div', {
+    staticClass: "steps-container"
+  }, [_c('section', {
+    staticClass: "step",
+    attrs: {
+      "id": _vm.getStepId(_vm.editStep.stepid)
+    }
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-10"
+  }, [_c('div', {
+    staticClass: "step-title"
+  }, [_c('h2', [_c('strong', {
+    staticClass: "step-value"
+  }, [_vm._v("Step " + _vm._s(_vm.editStep.orderby))])])])])])]), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-7"
+  }, [_vm._l((_vm.editStep.media.data), function(media, index) {
+    return _c('div', {
+      staticClass: "step-media step-main-media"
+    }, [_c('img', {
+      class: {
+        'step-image': true, 'img-responsive': true, visible: _vm.shouldBeVisible(media)
+      },
+      attrs: {
+        "src": media.medium,
+        "alt": ""
+      }
+    })])
+  }), _vm._v(" "), _c('div', {
+    staticClass: "row step-thumbnails"
+  }, _vm._l((_vm.editStep.media.data), function(media, index) {
+    return _c('div', {
+      staticClass: "col-md-4"
+    }, [_c('div', {
+      class: {
+        'step-thumbnail-container': true, active: _vm.shouldBeVisible(media)
+      }
+    }, [_c('div', {
+      staticClass: "step-thumbnail-inner"
+    }, [_c('img', {
+      staticClass: "img-responsive step-thumbnail",
+      attrs: {
+        "src": media.medium
+      },
+      on: {
+        "mouseover": function($event) {
+          _vm.makeVisible(media, _vm.editStep.media.data)
+        }
+      }
+    })])])])
+  }))], 2), _vm._v(" "), _c('div', {
+    staticClass: "col-md-5 step-content"
+  }, [_c('div', {
+    staticClass: "row step-lines-container"
+  }, [_c('ul', {
+    staticClass: "step-lines"
+  }, _vm._l((_vm.editStep.lines), function(line) {
+    return _c('li', [(line.level === 0) ? _c('div', {
+      class: _vm.getBulletColor(line.bullet)
+    }) : _vm._e(), _vm._v(" "), (line.level === 0) ? _c('p', {
+      domProps: {
+        "innerHTML": _vm._s(line.text_rendered)
+      }
+    }) : _vm._e(), _vm._v(" "), (line.level === 0) ? _c('div', {
+      staticClass: "clearer"
+    }) : _vm._e(), _vm._v(" "), (line.level === 1 || line.level === 2) ? _c('ul', [(line.level === 1) ? _c('li', [(line.level === 1) ? _c('div', {
+      class: _vm.getBulletColor(line.bullet)
+    }) : _vm._e(), _vm._v(" "), (line.level === 1) ? _c('p', {
+      domProps: {
+        "innerHTML": _vm._s(line.text_rendered)
+      }
+    }) : _vm._e()]) : _vm._e(), _vm._v(" "), (line.level === 1) ? _c('div', {
+      staticClass: "clearer"
+    }) : _vm._e(), _vm._v(" "), (line.level === 2) ? _c('ul', [_c('div', {
+      class: _vm.getBulletColor(line.bullet)
+    }), _vm._v(" "), _c('p', {
+      domProps: {
+        "innerHTML": _vm._s(line.text_rendered)
+      }
+    }), _vm._v(" "), _c('li', {
+      staticClass: "clearer"
+    })]) : _vm._e()]) : _vm._e()])
+  }))])])]), _vm._v(" "), _c('div', {
+    staticClass: "divider-container"
+  }, [_c('div', {
+    staticClass: "divider-row divider"
+  }, [_c('div', {
+    staticClass: "divider-content"
+  })])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "divider-container"
@@ -49721,7 +49899,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('guide-step', {
     attrs: {
-      "data": _vm.stepsData
+      "data": _vm.stepsData,
+      "edit": false
     }
   }), _vm._v(" "), _c('guide-completed', {
     attrs: {
@@ -49867,16 +50046,16 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.type === 'introduction') ? _c('edit-container', [_c('edit-navbar', {
+  return _c('edit-container', [_c('edit-navbar', {
     attrs: {
       "data": _vm.editNavbarData
     }
-  }), _vm._v(" "), _c('div', {
+  }), _vm._v(" "), (_vm.type === 'introduction') ? _c('div', {
     staticClass: "row"
   }, [_c('edit-left', {
     attrs: {
       "data": _vm.editIntroData,
-      "tab": 'introduction'
+      "tab": _vm.type
     }
   }), _vm._v(" "), _c('edit-right', {
     attrs: {
@@ -49884,7 +50063,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "stepsData": _vm.stepsData,
       "tab": _vm.type
     }
-  })], 1)], 1) : _vm._e()
+  })], 1) : (_vm.type === 'steps') ? _c('div', {
+    staticClass: "row"
+  }, [_c('edit-left', {
+    attrs: {
+      "data": _vm.editStepsData,
+      "stepsData": _vm.stepsData,
+      "tab": _vm.type
+    }
+  }), _vm._v(" "), _c('edit-right', {
+    attrs: {
+      "imageData": _vm.imageData,
+      "stepsData": _vm.stepsData,
+      "tab": _vm.type
+    }
+  })], 1) : _vm._e()], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -60345,6 +60538,10 @@ if (false) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue__ = __webpack_require__(169);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GuideStep_vue__ = __webpack_require__(173);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GuideStep_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__GuideStep_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue__);
 //
 //
 //
@@ -60365,24 +60562,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data', 'tab'],
+  props: ['data', 'tab', 'stepsData'],
   components: {
-    GuideEditIntroduction: __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue___default.a
+    GuideEditIntroduction: __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue___default.a,
+    GuideStep: __WEBPACK_IMPORTED_MODULE_1__GuideStep_vue___default.a,
+    StepsGuideIndex: __WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue___default.a
   },
   created: function created() {},
   data: function data() {
     return {
-      baseUrl: '/mockups/guide/steps'
+      baseUrl: '/mockups/guide'
     };
   },
 
   methods: {
-    guideStepsUrl: function guideStepsUrl() {
-      return this.baseUrl + '/' + this.data.guideid + '/' + this.data.stepid;
+    guideStepsUrl: function guideStepsUrl(tabType) {
+      if (tabType === 'introduction') {
+        return this.baseUrl + '/steps/' + this.data.guideid + '/' + this.data.stepsid;
+      } else if (this.tab === 'steps') {
+        return this.baseUrl + '/intro/' + this.data.guideid;
+      }
     }
   }
 });
@@ -60392,7 +60619,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(160)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 223 */
@@ -60460,13 +60687,46 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('a', {
     attrs: {
-      "href": _vm.guideStepsUrl()
+      "href": _vm.guideStepsUrl(_vm.tab)
+    }
+  }, [_vm._v("Guide Steps")])])]) : (_vm.tab === 'steps') ? _c('ul', {
+    staticClass: "nav nav-tabs tab-list",
+    attrs: {
+      "role": "tablist",
+      "id": "content-tabs"
+    }
+  }, [_c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": _vm.guideStepsUrl(_vm.tab)
+    }
+  }, [_vm._v("Introduction")])]), _vm._v(" "), _c('li', {
+    staticClass: "active",
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#guide-steps",
+      "aria-controls": "guide-steps",
+      "role": "tab",
+      "data-toggle": "tab"
     }
   }, [_vm._v("Guide Steps")])])]) : _vm._e(), _vm._v(" "), (_vm.tab === 'introduction') ? _c('div', {
     staticClass: "tab-content"
   }, [_c('guide-edit-introduction', {
     attrs: {
       "data": _vm.data
+    }
+  })], 1) : (_vm.tab === 'steps') ? _c('div', {
+    staticClass: "tab-content"
+  }, [_c('guide-step', {
+    attrs: {
+      "data": _vm.stepsData,
+      "edit": true
     }
   })], 1) : _vm._e()])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -60544,6 +60804,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -60565,7 +60826,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(160)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 228 */
@@ -60624,6 +60885,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "id": "sidebar-guide-edit"
     }
   }, [_c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.tab === 'introduction'),
+      expression: "tab === 'introduction'"
+    }],
     staticClass: "media-target",
     attrs: {
       "id": "main-guide-image"
@@ -60636,12 +60903,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "src": _vm.imageData,
       "alt": ""
     }
-  }), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _c('steps-guide-index', {
+  }), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), (_vm.tab === 'introduction') ? _c('steps-guide-index', {
     attrs: {
       "data": _vm.stepsData,
       "edit": false
     }
-  })], 1)])])
+  }) : (_vm.tab === 'steps') ? _c('steps-guide-index', {
+    attrs: {
+      "data": _vm.stepsData,
+      "edit": true
+    }
+  }) : _vm._e()], 1)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "alter-target standard replace-image"
