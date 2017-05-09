@@ -1,5 +1,4 @@
-
-window._ = require('lodash');
+// window._ = require('lodash');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -8,10 +7,15 @@ window._ = require('lodash');
  */
 
 try {
-    window.$ = window.jQuery = require('jquery');
+  window.$ = window.jQuery = require('jquery');
+  require('bootstrap-sass');
+  window.moment = require('moment');
+  window.toMarkdown = require('to-markdown');
+} catch (e) {
+  console.log(e);
+}
 
-    require('bootstrap-sass');
-} catch (e) {}
+const VueSimplemde = require('vue-simplemde');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

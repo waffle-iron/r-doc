@@ -26,8 +26,7 @@
         </div>
         <div id="introduction-div" class="introduction form-field">
           <label for="intro-introduction">Introduction</label>
-          <textarea name="intro[introduction]" id="intro-introduction" rows="7" class="form-control"
-                    placeholder=''>{{data.introduction}}</textarea>
+          <markdown-editor v-model="introContent" ref="markdownEditor" id="intro-introduction"></markdown-editor>
         </div>
       </div>
       <div class="submit">
@@ -48,12 +47,18 @@
 </template>
 
 <script>
+  import {markdownEditor} from 'vue-simplemde';
 
   export default {
     props: ['data'],
+    components: {
+      markdownEditor
+    },
     data() {
       return {
-        baseUrl: '/mockups/guide/steps'
+        baseUrl: '/mockups/guide/steps',
+        introContent: toMarkdown(this.data.introduction),
+        configs: {}
       }
     },
     methods: {

@@ -7,9 +7,6 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-window.moment = require('moment');
-window.simplemde = require('simplemde');
-// window.GuideData = require('./data.js');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
