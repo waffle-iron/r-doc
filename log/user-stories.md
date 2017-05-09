@@ -5,9 +5,8 @@
 ### Viewing a guide -- /guide/{guideid}
 
 #### As a user...
-- [ ] When I view a guide, where each step number is listed, I should only see the arrow icon when I hover over the step number.
+- [x] When I view a guide, where each step number is listed, I should only see the arrow icon when I hover over the step number.
 - [ ] When I view a guide, when I click the options dropdown link in the upper right corner and then click the history link, I should be brought to the guide edit history screen (/guide/history/{guideid}).
-
 
 #### As an unauthenticated user...
 - [ ] When I view a guide, when I click the options dropdown link in the upper right corner and then click the Save to Favorites link, if I am not logged in, I should see a login popup modal.

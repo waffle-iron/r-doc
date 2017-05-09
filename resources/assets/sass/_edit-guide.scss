@@ -93,14 +93,21 @@
   text-decoration: none;
 }
 
+#sidebar-guide-edit {
+  margin-right: 24px;
+  margin-left: 24px;
+}
+
+#sidebar-guide-edit .media-target {
+  display: block;
+}
+
 #sidebar-float {
-  float: right;
   padding-right: 24px;
   padding-bottom: 24px;
 }
 
 #sidebar {
-  width: 344px;
   margin-top: 24px;
 }
 
@@ -162,11 +169,11 @@
 
 #guide-step-index {
   padding-right: 0;
+  padding-bottom: 12px;
 }
 
 .form-body {
   padding: 0 8px 8px 8px;
-  overflow: auto;
   background-color: #eee;
   border-radius: 4px;
 }
@@ -192,8 +199,11 @@ h3 {
   font-weight: 600;
 }
 
-#sidebar-toggle-edit .toggle-div {
+.toggle-div {
   padding-left: 2px;
+  margin-left: 18px;
+  margin-right: 18px;
+  padding-bottom: 12px;
 }
 
 #guide-step-index .guide-sidebar-thumb {
@@ -265,13 +275,12 @@ h3 {
 }
 
 #content-float {
-  float: left;
   padding-left: 24px;
+  padding-right: 24px;
   padding-bottom: 24px;
 }
 
 #content {
-  width: 593px;
   margin-top: 24px;
 }
 

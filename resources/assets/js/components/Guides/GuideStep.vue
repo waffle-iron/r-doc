@@ -6,7 +6,7 @@
           <div class="col-md-10">
             <div class="step-title">
               <a :href="getStepId(step.stepid)" class="fragment-link">
-                <i class="glyphicon glyphicon-circle-arrow-right anchor"></i>
+                <i class="fa fa-slack anchor"></i>
                 <strong class="step-value">Step {{ index + 1 }}</strong>
                 <span class="step-title-title"
                       v-if="index+1 === 1">iMac Intel 27" Retina 5K Display Teardown</span>

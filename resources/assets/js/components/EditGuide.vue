@@ -2,12 +2,12 @@
   <edit-container>
     <edit-navbar :data="editNavbarData"></edit-navbar>
     <div class="row" v-if="type === 'introduction'">
-      <edit-left :data="editIntroData" :tab="type"></edit-left>
       <edit-right :imageData="imageData" :stepsData="stepsData" :tab="type"></edit-right>
+      <edit-left :data="editIntroData" :tab="type"></edit-left>
     </div>
     <div class="row" v-else-if="type === 'steps'">
-      <edit-left :data="editStepsData" :stepsData="stepsData" :tab="type"></edit-left>
       <edit-right :imageData="imageData" :stepsData="stepsData" :tab="type"></edit-right>
+      <edit-left :data="editStepsData" :stepsData="stepsData" :tab="type"></edit-left>
     </div>
   </edit-container>
 </template>
@@ -43,7 +43,7 @@
           previousText: GuideData.previous_text,
           guideid: GuideData.guideid
         },
-        imageData: GuideData.image.standard,
+        imageData: GuideData.image.medium,
         stepsData: {
           steps: GuideData.steps,
           guideid: GuideData.guideid

@@ -161,14 +161,22 @@
   font-size: 2em;
 }
 
-.fragment-link:hover {
+.fragment-link:hover,
+.fragment-link:active,
+.fragment-link:focus,
+.fragment-link:visited {
   text-decoration: none;
 }
 
 .anchor {
-  color: #212426;
-  opacity: 0.2;
   vertical-align: middle;
+  color: #212426;
+  opacity: 0.1;
+  visibility: hidden;
+}
+
+.step-title:hover .anchor {
+  visibility: visible;
 }
 
 .step-title strong {

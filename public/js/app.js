@@ -29270,7 +29270,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         previousText: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].previous_text,
         guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
       },
-      imageData: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.standard,
+      imageData: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].image.medium,
       stepsData: {
         steps: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].steps,
         guideid: __WEBPACK_IMPORTED_MODULE_0__data__["a" /* default */].guideid
@@ -29497,8 +29497,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue__ = __webpack_require__(133);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue__);
-//
-//
 //
 //
 //
@@ -35244,7 +35242,7 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 179 */
@@ -50743,7 +50741,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "href": _vm.getStepId(step.stepid)
       }
     }, [_c('i', {
-      staticClass: "glyphicon glyphicon-circle-arrow-right anchor"
+      staticClass: "fa fa-slack anchor"
     }), _vm._v(" "), _c('strong', {
       staticClass: "step-value"
     }, [_vm._v("Step " + _vm._s(index + 1))]), _vm._v(" "), (index + 1 === 1) ? _c('span', {
@@ -51185,11 +51183,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    attrs: {
-      "id": "sidebar-float"
-    }
-  }, [_c('div', {
-    staticClass: "col-md-4",
+    staticClass: "col-md-5 col-md-push-7",
     attrs: {
       "id": "sidebar"
     }
@@ -51211,7 +51205,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "media-item media-image contents"
   }, [_c('img', {
-    staticClass: "standard",
+    staticClass: "standard img-responsive",
     attrs: {
       "src": _vm.imageData,
       "alt": ""
@@ -51226,7 +51220,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "data": _vm.stepsData,
       "edit": true
     }
-  }) : _vm._e()], 1)])])
+  }) : _vm._e()], 1)])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "alter-target standard replace-image"
@@ -51361,28 +51355,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), (_vm.type === 'introduction') ? _c('div', {
     staticClass: "row"
-  }, [_c('edit-left', {
+  }, [_c('edit-right', {
+    attrs: {
+      "imageData": _vm.imageData,
+      "stepsData": _vm.stepsData,
+      "tab": _vm.type
+    }
+  }), _vm._v(" "), _c('edit-left', {
     attrs: {
       "data": _vm.editIntroData,
       "tab": _vm.type
     }
-  }), _vm._v(" "), _c('edit-right', {
-    attrs: {
-      "imageData": _vm.imageData,
-      "stepsData": _vm.stepsData,
-      "tab": _vm.type
-    }
   })], 1) : (_vm.type === 'steps') ? _c('div', {
     staticClass: "row"
-  }, [_c('edit-left', {
+  }, [_c('edit-right', {
     attrs: {
-      "data": _vm.editStepsData,
+      "imageData": _vm.imageData,
       "stepsData": _vm.stepsData,
       "tab": _vm.type
     }
-  }), _vm._v(" "), _c('edit-right', {
+  }), _vm._v(" "), _c('edit-left', {
     attrs: {
-      "imageData": _vm.imageData,
+      "data": _vm.editStepsData,
       "stepsData": _vm.stepsData,
       "tab": _vm.type
     }
@@ -51503,7 +51497,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('p', {
       staticClass: "step-number"
     }, [_vm._v(_vm._s(index + 1))])])
-  }))]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('div', {
+  })), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c('div', {
     staticClass: "clearer"
   })])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -51541,7 +51535,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "id": "content-float"
     }
   }, [_c('div', {
-    staticClass: "col-md-8",
+    staticClass: "col-md-7 col-md-pull-5",
     attrs: {
       "id": "content"
     }

@@ -15,11 +15,11 @@
           <p class="step-number">{{index + 1}}</p>
         </div>
       </div>
-    </div>
-    <div class="guide-sidebar-add-step">
-      <a href="#">
-        <i class="fa fa-plus"></i>
-      </a>
+      <div class="guide-sidebar-add-step">
+        <a href="#">
+          <i class="fa fa-plus"></i>
+        </a>
+      </div>
     </div>
     <div class="clearer"></div>
   </div>

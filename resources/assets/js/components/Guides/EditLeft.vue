@@ -1,6 +1,6 @@
 <template>
   <div id="content-float">
-    <div id="content" class="col-md-8">
+    <div id="content" class="col-md-7 col-md-pull-5">
       <div class="tab-wrap">
         <ul class="nav nav-tabs tab-list"
             role="tablist"
