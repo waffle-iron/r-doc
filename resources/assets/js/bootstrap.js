@@ -6,11 +6,14 @@
  * code may be modified to fit the specific needs of your application.
  */
 
+const showdown = require('showdown');
+
 try {
   window.$ = window.jQuery = require('jquery');
   require('bootstrap-sass');
   window.moment = require('moment');
   window.toMarkdown = require('to-markdown');
+  window.converter = new showdown.Converter();
 } catch (e) {
   console.log(e);
 }

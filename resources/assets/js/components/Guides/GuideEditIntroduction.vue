@@ -61,6 +61,11 @@
         configs: {}
       }
     },
+    computed: {
+      introContentHTML() {
+        return converter.makeHtml(this.introContent);
+      }
+    },
     methods: {
       isGuideType(doctype) {
         return doctype.toLowerCase() === this.data.type;
