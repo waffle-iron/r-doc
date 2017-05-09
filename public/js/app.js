@@ -51423,7 +51423,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "column"
   }, [_c('ul', {
-    staticClass: "row page-navigation-bar"
+    staticClass: "nav-row page-navigation-bar"
   }, [_c('li', {
     staticClass: "page-navigation-link back-link"
   }, [_c('a', {

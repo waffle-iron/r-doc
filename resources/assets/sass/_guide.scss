@@ -1,3 +1,13 @@
+.nav-row {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.column {
+  flex: 1 1;
+}
+
 .guide__container {
   margin-bottom: 50px;
   position: relative;

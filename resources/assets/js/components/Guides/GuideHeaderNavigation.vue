@@ -1,7 +1,7 @@
 <template>
   <div class="guide__navigation-in-header row">
     <div class="column">
-      <ul class="row page-navigation-bar">
+      <ul class="nav-row page-navigation-bar">
         <li class="page-navigation-link back-link">
           <a href="#" class="nav-link">
             <i class="glyphicon glyphicon-chevron-left icon"></i>
