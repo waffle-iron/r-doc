@@ -9,7 +9,11 @@
           <div class="guide__published">Published: {{getDate(data.published)}}</div>
         </div>
       </div>
-      <div class="guide__type"><p><i class="glyphicon glyphicon-book"></i> <strong>{{data.type}}</strong></p>
+      <div class="guide__type">
+        <p>
+          <i class="glyphicon glyphicon-book"></i>
+          &nbsp;<strong>{{data.type}}</strong>
+        </p>
       </div>
     </div>
     <div class="guide__introduction">

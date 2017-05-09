@@ -99,7 +99,6 @@
         </div>
       </div>
       <div class="col-md-5 step-content">
-
         <div class="row step-lines-container">
           <ul class="step-lines">
             <li v-for="line in editStep.lines">
@@ -123,11 +122,6 @@
         </div>
       </div>
     </div>
-    <div class="divider-container">
-      <div class="divider-row divider">
-        <div class="divider-content"></div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -140,8 +134,8 @@
     },
     data() {
       return {
-        visibleObject: [],
         baseUrl: '/mockups/guide/steps',
+        visibleObject: [],
         currentStepEditId: 0,
         editStep: {}
       }

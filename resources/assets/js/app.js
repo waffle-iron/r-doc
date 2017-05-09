@@ -20,15 +20,6 @@ window.moment = require('moment');
 Vue.component('guide', require('./components/Guide.vue'));
 Vue.component('edit-guide', require('./components/EditGuide.vue'));
 
-// Nested components
-Vue.component('guide-header-navigation', require('./components/Guides/GuideHeaderNavigation.vue'));
-Vue.component('guide-image', require('./components/Guides/GuideImage.vue'));
-Vue.component('guide-introduction', require('./components/Guides/GuideIntroduction.vue'));
-Vue.component('guide-step', require('./components/Guides/GuideStep.vue'));
-Vue.component('guide-completed', require('./components/Guides/GuideCompleted.vue'));
-Vue.component('edit-guide-steps', require('./components/EditGuideStep.vue'));
-Vue.component('guide-edit-steps', require('./components/Guides/GuideEditSteps.vue'));
-
 const app = new Vue({
   el: '#app'
 });

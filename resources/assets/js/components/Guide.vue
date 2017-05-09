@@ -8,9 +8,19 @@
 </template>
 
 <script>
-  import GuideData from './../data.js'
+  import GuideData from './../data.js';
+  import GuideHeaderNavigation from './Guides/GuideHeaderNavigation.vue';
+  import GuideImage from './Guides/GuideImage.vue';
+  import GuideStep from './Guides/GuideStep.vue';
+  import GuideCompleted from './Guides/GuideCompleted.vue';
 
   export default {
+    components: {
+      GuideHeaderNavigation,
+      GuideImage,
+      GuideStep,
+      GuideCompleted
+    },
     data() {
       return {
         imageData: {
