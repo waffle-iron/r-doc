@@ -29895,9 +29895,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data', 'edit'],
@@ -30052,6 +30049,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data', 'edit'],
@@ -30061,7 +30075,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       isActive: [],
-      imageThumbs: []
+      imageThumbs: [],
+      reordering: false
     };
   },
 
@@ -30070,6 +30085,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       return function (index) {
         return this.isActive[index];
       };
+    },
+    isReordering: function isReordering() {
+      return this.reordering;
     }
   },
   methods: {
@@ -30107,6 +30125,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     stepEditUrl: function stepEditUrl(index) {
       return '/mockups/guide/steps/' + this.data.guideid + '/' + this.data.steps[index].stepid;
+    },
+    arrangeToggle: function arrangeToggle() {
+      this.reordering = !this.reordering;
+    },
+    saveStepOrder: function saveStepOrder() {
+      console.log('this is where an ajax request happens...');
+      this.arrangeToggle();
     }
   }
 });
@@ -50843,16 +50868,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "step-title"
   }, [_c('h2', [_c('strong', {
     staticClass: "step-value"
-  }, [_vm._v("Step " + _vm._s(_vm.editStep.orderby))])])])])])]), _vm._v(" "), _c('div', {
-    staticClass: "row"
-  }, [_c('div', {
-    staticClass: "col-md-7"
-  }, [_vm._l((_vm.editStep.media.data), function(media, index) {
+  }, [_vm._v("Step " + _vm._s(_vm.editStep.orderby))])])])])])]), _vm._v(" "), _vm._l((_vm.editStep.media.data), function(media, index) {
     return _c('div', {
       staticClass: "step-media step-main-media"
     }, [_c('img', {
       class: {
-        'step-image': true, 'img-responsive': true, visible: _vm.shouldBeVisible(media)
+        'step-image-edit': true, 'img-responsive': true, visible: _vm.shouldBeVisible(media)
       },
       attrs: {
         "src": media.medium,
@@ -50860,7 +50881,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     })])
   }), _vm._v(" "), _c('div', {
-    staticClass: "row step-thumbnails"
+    staticClass: "row edit-step-thumbnails"
   }, _vm._l((_vm.editStep.media.data), function(media, index) {
     return _c('div', {
       staticClass: "col-md-4"
@@ -50881,8 +50902,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     })])])])
-  }))], 2), _vm._v(" "), _c('div', {
-    staticClass: "col-md-5 step-content"
+  })), _vm._v(" "), _c('hr', {
+    staticClass: "thumbnail-divider"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "step-content"
   }, [_c('div', {
     staticClass: "row step-lines-container"
   }, [_c('ul', {
@@ -50913,7 +50936,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('li', {
       staticClass: "clearer"
     })]) : _vm._e()]) : _vm._e()])
-  }))])])]), _vm._v(" "), (_vm.edit) ? _c('div', {
+  }))])]), _vm._v(" "), (_vm.edit) ? _c('div', {
     staticClass: "pagination pagination-bottom"
   }, [_c('p', {
     staticClass: "left"
@@ -50934,7 +50957,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Next")]), _vm._v(" \n      "), _c('i', {
     staticClass: "fa fa-arrow-right"
-  })])]) : _vm._e()])
+  })])]) : _vm._e()], 2)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "divider-container"
@@ -51461,15 +51484,61 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "form-body locked",
+    class: {
+      'form-body': true, 'reordering-steps': _vm.reordering
+    },
     attrs: {
       "id": "guide-step-index"
     }
   }, [_c('div', {
     staticClass: "row"
   }, [_vm._m(0), _vm._v(" "), _c('div', {
-    staticClass: "col-md-9"
-  }, [(_vm.edit) ? _c('div', [_vm._v("[Rearrange placeholder]")]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "col-xs-6"
+  }, [(_vm.edit) ? _c('div', {
+    staticClass: "rearrange"
+  }, [(!_vm.isReordering) ? _c('span', {
+    staticClass: "rearrange-steps",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.arrangeToggle()
+      }
+    }
+  }, [_vm._v("Rearrange Steps")]) : _vm._e(), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.isReordering),
+      expression: "isReordering"
+    }],
+    staticClass: "rearrange-steps text-right",
+    on: {
+      "click": function($event) {
+        _vm.saveStepOrder()
+      }
+    }
+  }, [_vm._v("Save")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.isReordering),
+      expression: "isReordering"
+    }],
+    staticClass: "reordering-or"
+  }, [_vm._v(" or ")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.isReordering),
+      expression: "isReordering"
+    }],
+    staticClass: "rearrange-steps",
+    on: {
+      "click": function($event) {
+        _vm.arrangeToggle()
+      }
+    }
+  }, [_vm._v("Cancel")])]) : _vm._e()])]), _vm._v(" "), _c('div', {
     staticClass: "toggle-div"
   }, [_c('div', {
     attrs: {
@@ -51497,25 +51566,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('p', {
       staticClass: "step-number"
     }, [_vm._v(_vm._s(index + 1))])])
-  })), _vm._v(" "), _vm._m(1)]), _vm._v(" "), _c('div', {
+  })), _vm._v(" "), (!_vm.reordering) ? _c('div', {
+    staticClass: "guide-sidebar-add-step"
+  }, [_vm._m(1)]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "clearer"
   })])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "col-md-3"
+    staticClass: "col-xs-6"
   }, [_c('h3', {
     staticClass: "toggle-bar subhead"
   }, [_vm._v("Steps")])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "guide-sidebar-add-step"
-  }, [_c('a', {
+  return _c('a', {
     attrs: {
       "href": "#"
     }
   }, [_c('i', {
     staticClass: "fa fa-plus"
-  })])])
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {

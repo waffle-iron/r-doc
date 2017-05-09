@@ -81,45 +81,42 @@
         </div>
       </div>
     </section>
-    <div class="row">
-      <div class="col-md-7">
-        <div class="step-media step-main-media" v-for="(media, index) in editStep.media.data">
-          <img :src="media.medium" alt=""
-               :class="{'step-image': true, 'img-responsive': true, visible: shouldBeVisible(media)}">
-        </div>
-        <div class="row step-thumbnails">
-          <div class="col-md-4" v-for="(media, index) in editStep.media.data">
-            <div :class="{'step-thumbnail-container': true, active: shouldBeVisible(media)}">
-              <div class="step-thumbnail-inner">
-                <img :src="media.medium" class="img-responsive step-thumbnail"
-                     @mouseover="makeVisible(media, editStep.media.data)">
-              </div>
-            </div>
+    <div class="step-media step-main-media" v-for="(media, index) in editStep.media.data">
+      <img :src="media.medium" alt=""
+           :class="{'step-image-edit': true, 'img-responsive': true, visible: shouldBeVisible(media)}">
+    </div>
+    <div class="row edit-step-thumbnails">
+      <div class="col-md-4" v-for="(media, index) in editStep.media.data">
+        <div :class="{'step-thumbnail-container': true, active: shouldBeVisible(media)}">
+          <div class="step-thumbnail-inner">
+            <img :src="media.medium" class="img-responsive step-thumbnail"
+                 @mouseover="makeVisible(media, editStep.media.data)">
           </div>
         </div>
       </div>
-      <div class="col-md-5 step-content">
-        <div class="row step-lines-container">
-          <ul class="step-lines">
-            <li v-for="line in editStep.lines">
-              <div :class="getBulletColor(line.bullet)" v-if="line.level === 0"></div>
-              <p v-html="line.text_rendered" v-if="line.level === 0"></p>
-              <div class="clearer" v-if="line.level === 0"></div>
-              <ul v-if="line.level === 1 || line.level === 2">
-                <li v-if="line.level === 1">
-                  <div :class="getBulletColor(line.bullet)" v-if="line.level===1"></div>
-                  <p v-html="line.text_rendered" v-if="line.level===1"></p>
-                </li>
-                <div class="clearer" v-if="line.level===1"></div>
-                <ul v-if="line.level === 2">
-                  <div :class="getBulletColor(line.bullet)"></div>
-                  <p v-html="line.text_rendered"></p>
-                  <li class="clearer"></li>
-                </ul>
+    </div>
+    <hr class="thumbnail-divider">
+    <div class="step-content">
+      <div class="row step-lines-container">
+        <ul class="step-lines">
+          <li v-for="line in editStep.lines">
+            <div :class="getBulletColor(line.bullet)" v-if="line.level === 0"></div>
+            <p v-html="line.text_rendered" v-if="line.level === 0"></p>
+            <div class="clearer" v-if="line.level === 0"></div>
+            <ul v-if="line.level === 1 || line.level === 2">
+              <li v-if="line.level === 1">
+                <div :class="getBulletColor(line.bullet)" v-if="line.level===1"></div>
+                <p v-html="line.text_rendered" v-if="line.level===1"></p>
+              </li>
+              <div class="clearer" v-if="line.level===1"></div>
+              <ul v-if="line.level === 2">
+                <div :class="getBulletColor(line.bullet)"></div>
+                <p v-html="line.text_rendered"></p>
+                <li class="clearer"></li>
               </ul>
-            </li>
-          </ul>
-        </div>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
     <div class="pagination pagination-bottom" v-if="edit">

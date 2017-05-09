@@ -17,11 +17,11 @@
 ### Editing a guide \[as an authenticated user\]
 
 #### When I edit a guide introduction -- /guide/intro/{guideid}
-- [ ] there should be no css spacing issues.
+- [x] there should be no css spacing issues.
 - [x] i should see a markdown text editor for the Introduction textarea.
 
 #### When I edit a guide Step -- /guide/steps/{guideid}/{stepid}
-- [ ] there should be no css spacing issues.
+- [x] there should be no css spacing issues.
 - [ ] I should see a save button underneath the list of sub steps.
 - [ ] I should see a step delete button.
 - [ ] I should see an insert step button.

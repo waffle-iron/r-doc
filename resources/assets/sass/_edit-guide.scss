@@ -168,7 +168,7 @@
 }
 
 #guide-step-index {
-  padding-right: 0;
+  padding-right: 8px;
   padding-bottom: 12px;
 }
 
@@ -178,9 +178,10 @@
   border-radius: 4px;
 }
 
-h3 .toggle-bar .subhead {
-  font-size: 18px;
+#guide-step-index .subhead {
+  font-size: 24px;
   padding-right: 10px;
+  padding-left: 18px;
 }
 
 .form-body h3 .subhead {
@@ -202,7 +203,7 @@ h3 {
 .toggle-div {
   padding-left: 2px;
   margin-left: 18px;
-  margin-right: 18px;
+  margin-right: 12px;
   padding-bottom: 12px;
 }
 
@@ -213,6 +214,10 @@ h3 {
   height: 42px;
   margin: 0 4px 4px 0;
   background: no-repeat center center;
+}
+
+.toggle-div .thumbs-container {
+  text-align: center;
 }
 
 #guide-step-index .guide-sidebar-thumb a {
@@ -231,6 +236,48 @@ h3 {
 
 #guide-step-index .active > .step-number {
   background-color: #fece71;
+}
+
+.tab-content .steps-container .step-title {
+  padding: 0;
+}
+
+.steps-container .step-media {
+  padding: 0 18px;
+}
+
+.steps-container .edit-step-thumbnails {
+  margin: 24px;
+}
+
+.edit-step-thumbnails .active {
+  transform: translateY(-4px);
+}
+
+.edit-step-thumbnails .active img {
+  opacity: 1;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.step-thumbnail-inner {
+  border: 1px solid #bbbfc3;
+}
+
+.step-lines-container {
+  padding: 8px 36px;
+}
+
+.step-image-edit {
+  border: 1px solid #bbbfc3;
+}
+
+.thumbnail-divider {
+  height: 2px;
+  background-color: #555;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  opacity: 0.3;
 }
 
 .step-number {
@@ -451,3 +498,67 @@ div.submit {
 .edit-container {
   margin-bottom: 22px;
 }
+
+.rearrange,
+.rearrange:hover {
+  font-size: 12px;
+  margin-top: 26px;
+  margin-bottom: 12px;
+  color: #4b4bc2;
+  font-weight: 600;
+  text-align: right;
+  padding-right: 12px;
+}
+
+.rearrange-steps:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.reordering-or,
+.reordering-or.editing:hover {
+  color: #101010;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@-webkit-keyframes shake {
+  from {
+    -webkit-transform: rotate(2deg)
+  }
+
+  to {
+    -webkit-transform: rotate(-2deg)
+  }
+}
+
+#guide-step-index.reordering-steps .guide-sidebar-thumb {
+  -webkit-animation-name: shake;
+  -webkit-animation-duration: .15s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+  -webkit-animation-timing-function: ease-in-out
+}
+
+@-moz-keyframes shake {
+  from {
+    -moz-transform: rotate(2deg)
+  }
+
+  to {
+    -moz-transform: rotate(-2deg)
+  }
+}
+
+#guide-step-index.reordering-steps .guide-sidebar-thumb {
+  -moz-animation-name: shake;
+  -moz-animation-duration: .15s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-direction: alternate;
+  -moz-animation-timing-function: ease-in-out
+}
+
+#guide-step-index.reordering-steps .guide-sidebar-thumb a {
+  cursor: move;
+}
+
