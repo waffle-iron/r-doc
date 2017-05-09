@@ -157,7 +157,7 @@
     },
     computed: {
       backLabel() {
-        if(this.editStep.orderby > 1) {
+        if (this.editStep.orderby > 1) {
           return 'Back';
         } else {
           return 'Introduction';
@@ -178,17 +178,18 @@
         this.previousStepUrl = `${this.baseUrl}/${this.data.guideid}/${this.data.steps[this.editStep.orderby - 2].stepid}`
       },
       determinePreviousAndNextStep() {
-        if(this.editStep.orderby === 1) {
-          this.makeIntroductionBackUrl();
-          this.makeNextUrl()
-        } else if (this.editStep.orderby === this.data.steps.length) {
-          this.makePreviousUrl();
-          this.makeNewStepUrl();
-        } else {
-          this.makeNextUrl();
-          this.makePreviousUrl();
+        if (this.edit) {
+          if (this.editStep.orderby === 1) {
+            this.makeIntroductionBackUrl();
+            this.makeNextUrl()
+          } else if (this.editStep.orderby === this.data.steps.length) {
+            this.makePreviousUrl();
+            this.makeNewStepUrl();
+          } else {
+            this.makeNextUrl();
+            this.makePreviousUrl();
+          }
         }
-
       },
       getCurrentStepEditId() {
         let path = window.location.pathname.split('/');
@@ -249,12 +250,6 @@
       },
       editStepUrl(index) {
         return `${this.baseUrl}/${this.data.guideid}/${this.data.steps[index].stepid}`;
-      },
-      navigateToNextStep() {
-
-      },
-      navigateToPreviousStep() {
-
       }
     }
   }

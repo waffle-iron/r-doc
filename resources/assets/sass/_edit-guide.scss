@@ -227,7 +227,8 @@ h3 {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 1.6em;
+  width: 1.3em;
+  height: 1.4em;
   margin: 0;
   background-color: #212426;
   text-align: center;
@@ -398,6 +399,10 @@ div.submit {
   line-height: 2em;
   text-align: center;
   display: table;
+}
+
+.pagination .left {
+  text-align: start;
 }
 
 .pagination .left,

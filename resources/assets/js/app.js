@@ -8,6 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+window.simplemde = require('simplemde');
 // window.GuideData = require('./data.js');
 
 /**

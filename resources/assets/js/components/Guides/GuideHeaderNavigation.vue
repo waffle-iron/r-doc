@@ -24,7 +24,6 @@
             <ul class="dropdown-menu">
               <li><a href="#">History</a></li>
               <li><a href="#">Save to Favorites</a></li>
-              <li><a href="#">Download PDF</a></li>
             </ul>
           </div>
         </li>
