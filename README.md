@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/roberthamel/rdx.svg?branch=master)](https://travis-ci.org/roberthamel/rdx)
+
 ## License
 Copyright 2017 Robert Hamel
 

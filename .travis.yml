@@ -1,9 +1,15 @@
+sudo: required
+dist: trusty
+
 language: php
 
 php:
   - 7.1
 
 before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - ./vendor/laravel/dusk/bin/chromedriver-linux &
   - phpenv config-rm xdebug.ini
   - cp .env.travis .env
   - composer self-update
@@ -11,14 +17,15 @@ before_script:
   - php artisan key:generate
   - php artisan migrate
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - npm install
   - npm run production
+  - php artisan serve &
 
 before_install:
   - mysql -e 'CREATE DATABASE travis;'
 
 script:
   - vendor/bin/phpunit
+  - php artisan dusk
 
 services:
   - mysql
