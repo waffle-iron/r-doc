@@ -599,5 +599,86 @@ a.btn {
   float: right;
 }
 
+.bullet-selector {
+  cursor: pointer;
+}
 
+.bullet-panel {
+  position: absolute;
+  z-index: 900;
+  width: 280px;
+  border: 1px dashed #fe6f15;
+  padding-bottom: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.bullet-panel .bullet {
+  position: static;
+  float: left;
+  margin: 19px 11px 19px 11px;
+}
+
+.bullet-panel .bullet-icon-row {
+  clear: both;
+  position: relative;
+  height: 50px;
+  margin: 0 5px;
+  border-top: 1px solid #eee;
+  padding: 0 55px 0 9px;
+  line-height: 50px;
+}
+
+.bullet-panel h3 {
+  font-size: 1em;
+}
+
+#step-guide-form .bullet-icon {
+  height: 20px;
+  line-height: 20px;
+  font-size: 20px;
+  margin-left: 6px !important;
+}
+
+.bullet-panel .bullet-icon-row .bullet-icon {
+  position: absolute;
+  top: 0;
+  right: 6px;
+  margin-top: 18px;
+  margin-right: 9px;
+  font-size: 1.4em;
+}
+
+#guide-step-form .bullet-panel .bullet-icon {
+  margin-top: 13px !important;
+}
+
+.bullet-panel .bullet {
+  position: relative !important;
+  top: 0 !important;
+}
+
+.bullet-panel .bullet:hover {
+  background-color: #fef3d8;
+}
+
+.bullet-icon.fa.fa-info {
+  margin-right: 15px;
+}
+
+.bullet-icon-row:hover {
+  background-color: #fef3d8;
+}
+
+.step-content .step-lines li .bullet-panel {
+  display: block;
+  top: -2px;
+  left: 20px;
+}
+
+.step-content .step-lines li ul ul .bullet-panel {
+  display: block;
+  top: -2px;
+  left: 55px;
+}
 

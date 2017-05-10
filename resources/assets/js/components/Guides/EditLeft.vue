@@ -4,7 +4,6 @@
       <div class="tab-wrap">
         <ul class="nav nav-tabs tab-list"
             role="tablist"
-            id="content-tabs"
             v-if="tab === 'introduction'">
           <li role="presentation" class="active">
             <a href="#introduction"
@@ -17,7 +16,7 @@
           </li>
         </ul>
         <ul class="nav nav-tabs tab-list"
-            role="tablist" id="content-tabs"
+            role="tablist"
             v-else-if="tab === 'steps'">
           <li role="presentation">
             <a :href="guideStepsUrl(tab)">Introduction</a>

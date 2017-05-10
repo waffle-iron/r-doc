@@ -100,17 +100,28 @@
       <div class="row step-lines-container">
         <ul class="step-lines">
           <li v-for="line in editStep.lines">
-            <div :class="getBulletColor(line.bullet)" v-if="line.level === 0"></div>
+            <div :class="getBulletColor(line.bullet)"
+                 v-if="line.level === 0"
+                 @mouseover="changeToCircleBullet($event)"
+                 @mouseout="changeToSolidBullet($event)"
+                 @click.stop="showBulletSelector($event)"></div>
             <p v-html="line.text_rendered" v-if="line.level === 0"></p>
             <div class="clearer" v-if="line.level === 0"></div>
             <ul v-if="line.level === 1 || line.level === 2">
               <li v-if="line.level === 1">
-                <div :class="getBulletColor(line.bullet)" v-if="line.level===1"></div>
+                <div :class="getBulletColor(line.bullet)"
+                     v-if="line.level===1"
+                     @mouseover="changeToCircleBullet($event)"
+                     @mouseout="changeToSolidBullet($event)"
+                     @click.stop="showBulletSelector($event)"></div>
                 <p v-html="line.text_rendered" v-if="line.level===1"></p>
               </li>
               <div class="clearer" v-if="line.level===1"></div>
               <ul v-if="line.level === 2">
-                <div :class="getBulletColor(line.bullet)"></div>
+                <div :class="getBulletColor(line.bullet)"
+                     @mouseover="changeToCircleBullet($event)"
+                     @mouseout="changeToSolidBullet($event)"
+                     @click.stop="showBulletSelector($event)"></div>
                 <p v-html="line.text_rendered"></p>
                 <li class="clearer"></li>
               </ul>
@@ -151,6 +162,11 @@
       this.currentStepEditId = this.getCurrentStepEditId();
       this.determineEditStep();
       this.determinePreviousAndNextStep();
+      $('html').click(() => {
+        if($('.bullet-panel')) {
+          $('.bullet-panel').remove();
+        }
+      });
     },
     data() {
       return {
@@ -221,7 +237,8 @@
             'fa': true,
             'fa-circle': true,
             'bullet': true,
-            'bullet-black': true
+            'bullet-black': true,
+            'bullet-selector': this.edit === true ? true : false
           }
         } else {
           return {
@@ -233,7 +250,8 @@
             'bullet-orange': bullet === 'orange',
             'bullet-yellow': bullet === 'yellow',
             'bullet-green': bullet === 'green',
-            'bullet-blue': bullet === 'blue'
+            'bullet-blue': bullet === 'blue',
+            'bullet-selector': this.edit === true ? true : false
           }
         }
       },
@@ -258,6 +276,40 @@
       },
       editStepUrl(index) {
         return `${this.baseUrl}/${this.data.guideid}/${this.data.steps[index].stepid}`;
+      },
+      showBulletSelector(e) {
+        const bulletPanel = `
+          <div class="bullet-panel">
+            <div class="fa fa-circle bullet bullet-black"></div>
+            <div class="fa fa-circle bullet bullet-red"></div>
+            <div class="fa fa-circle bullet bullet-orange"></div>
+            <div class="fa fa-circle bullet bullet-yellow"></div>
+            <div class="fa fa-circle bullet bullet-green"></div>
+            <div class="fa fa-circle bullet bullet-light-blue"></div>
+            <div class="fa fa-circle bullet bullet-blue"></div>
+            <div class="fa fa-circle bullet bullet-violet"></div>
+            <h3 class="bullet-icon-row">Caution
+              <div class="bullet-icon fa fa-exclamation-triangle"></div>
+            </h3>
+            <h3 class="bullet-icon-row">Note
+              <div class="bullet-icon fa fa-info"></div>
+            </h3>
+            <h3 class="bullet-icon-row">Reminder
+              <div class="bullet-icon fa fa-bell"></div>
+            </h3>
+          </div>
+        `;
+        if (!$('.step-lines').find('.bullet-panel').length) {
+          $(bulletPanel).insertAfter(e.target);
+        } else {
+          $('.bullet-panel').remove();
+        }
+      },
+      changeToCircleBullet(e) {
+        $(e.target).addClass('fa-circle-o').removeClass('fa-circle');
+      },
+      changeToSolidBullet(e) {
+        $(e.target).addClass('fa-circle').removeClass('fa-circle-o');
       }
     }
   }

@@ -29411,7 +29411,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -29906,6 +29905,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data', 'edit'],
@@ -29913,6 +29923,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     this.currentStepEditId = this.getCurrentStepEditId();
     this.determineEditStep();
     this.determinePreviousAndNextStep();
+    $('html').click(function () {
+      if ($('.bullet-panel')) {
+        $('.bullet-panel').remove();
+      }
+    });
   },
   data: function data() {
     return {
@@ -29986,7 +30001,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           'fa': true,
           'fa-circle': true,
           'bullet': true,
-          'bullet-black': true
+          'bullet-black': true,
+          'bullet-selector': this.edit === true ? true : false
         };
       } else {
         return {
@@ -29998,7 +30014,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           'bullet-orange': bullet === 'orange',
           'bullet-yellow': bullet === 'yellow',
           'bullet-green': bullet === 'green',
-          'bullet-blue': bullet === 'blue'
+          'bullet-blue': bullet === 'blue',
+          'bullet-selector': this.edit === true ? true : false
         };
       }
     },
@@ -30023,6 +30040,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     editStepUrl: function editStepUrl(index) {
       return this.baseUrl + '/' + this.data.guideid + '/' + this.data.steps[index].stepid;
+    },
+    showBulletSelector: function showBulletSelector(e) {
+      var bulletPanel = '\n        <div class="bullet-panel">\n          <div class="fa fa-circle bullet bullet-black"></div>\n          <div class="fa fa-circle bullet bullet-red"></div>\n          <div class="fa fa-circle bullet bullet-orange"></div>\n          <div class="fa fa-circle bullet bullet-yellow"></div>\n          <div class="fa fa-circle bullet bullet-green"></div>\n          <div class="fa fa-circle bullet bullet-light-blue"></div>\n          <div class="fa fa-circle bullet bullet-blue"></div>\n          <div class="fa fa-circle bullet bullet-violet"></div>\n          <h3 class="bullet-icon-row">Caution\n            <div class="bullet-icon fa fa-exclamation-triangle"></div>\n          </h3>\n          <h3 class="bullet-icon-row">Note\n            <div class="bullet-icon fa fa-info"></div>\n          </h3>\n          <h3 class="bullet-icon-row">Reminder\n            <div class="bullet-icon fa fa-bell"></div>\n          </h3>\n        </div>\n      ';
+      if (!$('.step-lines').find('.bullet-panel').length) {
+        $(bulletPanel).insertAfter(e.target);
+      } else {
+        $('.bullet-panel').remove();
+      }
+    },
+    changeToCircleBullet: function changeToCircleBullet(e) {
+      $(e.target).addClass('fa-circle-o').removeClass('fa-circle');
+    },
+    changeToSolidBullet: function changeToSolidBullet(e) {
+      $(e.target).addClass('fa-circle').removeClass('fa-circle-o');
     }
   }
 });
@@ -35292,7 +35323,7 @@ exports.push([module.i, "\n.completion-container {\n  margin: 60px 0;\n  positio
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 181 */
@@ -50923,7 +50954,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "step-lines"
   }, _vm._l((_vm.editStep.lines), function(line) {
     return _c('li', [(line.level === 0) ? _c('div', {
-      class: _vm.getBulletColor(line.bullet)
+      class: _vm.getBulletColor(line.bullet),
+      on: {
+        "mouseover": function($event) {
+          _vm.changeToCircleBullet($event)
+        },
+        "mouseout": function($event) {
+          _vm.changeToSolidBullet($event)
+        },
+        "click": function($event) {
+          $event.stopPropagation();
+          _vm.showBulletSelector($event)
+        }
+      }
     }) : _vm._e(), _vm._v(" "), (line.level === 0) ? _c('p', {
       domProps: {
         "innerHTML": _vm._s(line.text_rendered)
@@ -50931,7 +50974,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }) : _vm._e(), _vm._v(" "), (line.level === 0) ? _c('div', {
       staticClass: "clearer"
     }) : _vm._e(), _vm._v(" "), (line.level === 1 || line.level === 2) ? _c('ul', [(line.level === 1) ? _c('li', [(line.level === 1) ? _c('div', {
-      class: _vm.getBulletColor(line.bullet)
+      class: _vm.getBulletColor(line.bullet),
+      on: {
+        "mouseover": function($event) {
+          _vm.changeToCircleBullet($event)
+        },
+        "mouseout": function($event) {
+          _vm.changeToSolidBullet($event)
+        },
+        "click": function($event) {
+          $event.stopPropagation();
+          _vm.showBulletSelector($event)
+        }
+      }
     }) : _vm._e(), _vm._v(" "), (line.level === 1) ? _c('p', {
       domProps: {
         "innerHTML": _vm._s(line.text_rendered)
@@ -50939,7 +50994,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }) : _vm._e()]) : _vm._e(), _vm._v(" "), (line.level === 1) ? _c('div', {
       staticClass: "clearer"
     }) : _vm._e(), _vm._v(" "), (line.level === 2) ? _c('ul', [_c('div', {
-      class: _vm.getBulletColor(line.bullet)
+      class: _vm.getBulletColor(line.bullet),
+      on: {
+        "mouseover": function($event) {
+          _vm.changeToCircleBullet($event)
+        },
+        "mouseout": function($event) {
+          _vm.changeToSolidBullet($event)
+        },
+        "click": function($event) {
+          $event.stopPropagation();
+          _vm.showBulletSelector($event)
+        }
+      }
     }), _vm._v(" "), _c('p', {
       domProps: {
         "innerHTML": _vm._s(line.text_rendered)
@@ -51650,8 +51717,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [(_vm.tab === 'introduction') ? _c('ul', {
     staticClass: "nav nav-tabs tab-list",
     attrs: {
-      "role": "tablist",
-      "id": "content-tabs"
+      "role": "tablist"
     }
   }, [_vm._m(0), _vm._v(" "), _c('li', {
     attrs: {
@@ -51664,8 +51730,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Guide Steps")])])]) : (_vm.tab === 'steps') ? _c('ul', {
     staticClass: "nav nav-tabs tab-list",
     attrs: {
-      "role": "tablist",
-      "id": "content-tabs"
+      "role": "tablist"
     }
   }, [_c('li', {
     attrs: {
