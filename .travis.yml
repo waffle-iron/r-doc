@@ -21,7 +21,7 @@ before_script:
   - php artisan serve &
 
 before_install:
-  - mysql -e 'CREATE DATABASE travis;'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS travis;'
 
 script:
   - vendor/bin/phpunit
