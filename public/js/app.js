@@ -29895,6 +29895,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['data', 'edit'],
@@ -50936,7 +50947,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('li', {
       staticClass: "clearer"
     })]) : _vm._e()]) : _vm._e()])
-  }))])]), _vm._v(" "), (_vm.edit) ? _c('div', {
+  }))])]), _vm._v(" "), _c('div', {
+    staticClass: "submit"
+  }, [_c('div', {
+    staticClass: "guide-action-buttons"
+  }, [_c('button', {
+    staticClass: "btn btn-primary"
+  }, [_vm._v("Save")])])]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "guide-step-actions"
+    }
+  }, [_c('a', {
+    staticClass: "btn btn-lg button-delete",
+    attrs: {
+      "id": "deleteStep",
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-trash-o"
+  }), _vm._v(" Delete Step")]), _vm._v(" "), _c('a', {
+    staticClass: "btn btn-lg",
+    attrs: {
+      "id": "insert-step",
+      "href": "#"
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-plus"
+  }), _vm._v(" Insert Step")])]), _vm._v(" "), (_vm.edit) ? _c('div', {
     staticClass: "pagination pagination-bottom"
   }, [_c('p', {
     staticClass: "left"

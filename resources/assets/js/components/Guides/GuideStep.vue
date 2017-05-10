@@ -119,6 +119,17 @@
         </ul>
       </div>
     </div>
+    <div class="submit">
+      <div class="guide-action-buttons">
+        <button class="btn btn-primary">Save</button>
+      </div>
+    </div>
+    <div id="guide-step-actions">
+      <a class="btn btn-lg button-delete" id="deleteStep" href="#">
+        <i class="fa fa-trash-o"></i>&nbsp;Delete Step</a>
+      <a id="insert-step" class="btn btn-lg" href="#">
+        <i class="fa fa-plus"></i>&nbsp;Insert Step</a>
+    </div>
     <div class="pagination pagination-bottom" v-if="edit">
       <p class="left">
         <i class="fa fa-arrow-left"></i>&nbsp;

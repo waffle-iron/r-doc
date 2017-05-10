@@ -22,12 +22,12 @@
 
 #### When I edit a guide Step -- /guide/steps/{guideid}/{stepid}
 - [x] there should be no css spacing issues.
-- [ ] I should see a save button underneath the list of sub steps.
-- [ ] I should see a step delete button.
-- [ ] I should see an insert step button.
+- [x] I should see a save button underneath the list of sub steps.
+- [x] I should see a step delete button.
+- [x] I should see an insert step button.
 - [ ] when i click the insert step button, a new step should be inserted after the current one and i should see a blank form.
-- [ ] the steps grid should be rearrangeable when i click the Rearrange Steps link.
-- [ ] after i rearrange the step icons, i should be able to save or cancel.
+- [x] the steps grid should be rearrangeable when i click the Rearrange Steps link.
+- [x] after i rearrange the step icons, i should be able to save or cancel.
 - [ ] Clicking the yellow plus icon should allow me to create a new step.
 - [ ] I should be able to drag the image icons to rearrange.
 - [ ] when i click a bullet, i should see a popover that allows me to choose:

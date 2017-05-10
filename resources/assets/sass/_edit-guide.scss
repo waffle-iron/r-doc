@@ -562,3 +562,42 @@ div.submit {
   cursor: move;
 }
 
+#guide-step-actions {
+  padding: 15px 0;
+}
+
+#guide-step-actions .btn {
+  margin-top: -8px;
+}
+
+a.btn.button-delete {
+  color: #e83115;
+  border-color: #fce0dc;
+}
+
+a.btn.btn-lg {
+  padding: 6px 12px 7px;
+}
+
+a.btn {
+  outline: 0;
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  color: #212426;
+  font-size: 14px;
+  text-align: center;
+  transition: border-color 0.1s, background-color 0.1s;
+  appearance: none;
+}
+
+#guide-step-actions #insert-step {
+  float: right;
+}
+
+
+
