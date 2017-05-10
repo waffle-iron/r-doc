@@ -1,5 +1,5 @@
-- name: "Contact"
-  link: "contact"
+- name: "User Stories"
+  link: "stories"
 
 - name: "Resume"
   link: "resume.pdf"
