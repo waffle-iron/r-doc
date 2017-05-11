@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>r-doc</title>
-    <description>Log entries for my Summer 2017 Senior Seminar Project.
+    <description>Log entries for my Summer 2017 Senior Seminar Project at Champlain College.
 </description>
     <link>https://roberthamel@github.io/r-doc/</link>
     <atom:link href="https://roberthamel@github.io/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 May 2017 14:53:39 -0500</pubDate>
-    <lastBuildDate>Thu, 11 May 2017 14:53:39 -0500</lastBuildDate>
+    <pubDate>Thu, 11 May 2017 17:04:56 -0500</pubDate>
+    <lastBuildDate>Thu, 11 May 2017 17:04:56 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
@@ -46,20 +46,32 @@
         <title>Wednesday May 10, 2017</title>
         <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;I took a break from front-end implementation today. I setup this Jekyll site as a document of my progress. I purchased a domain name and subscribed to a hosting service. Finally, I integrated my git repository with Travis CI to ensure that my site is working as expected.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;Now that I have continuous integration in place, I think it would be wise to take a more test-driven approach to working on this site. While it is very rewarding to hack away at an interface and see it come to life, there have been a couple of instances already where I broke something different on the site trying to make changes. Best I take a cautious and structured approach; even if it will require more coding and time.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/733a47b1386483e090370e16c0969f9df8390578&quot; target=&quot;_blank&quot;&gt;setup jekyll docs site; install needed packages&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/64b818822436615a8f3b08acb4989ee563c772cf&quot; target=&quot;_blank&quot;&gt;update readme&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/b85f086d6595411de01803718cfeeb4e3069a245&quot; target=&quot;_blank&quot;&gt;remove license file (can now be found in readme)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e196a9f235a40d3d9166380602cc3340dfae4761&quot; target=&quot;_blank&quot;&gt;test travis-ci configuration&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d5332bb8d91121df5ccc54bf29a9423c2af37a81&quot; target=&quot;_blank&quot;&gt;fix travis database reference&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d20fa490a5c8112e9aebe706d5db589a90bae244&quot; target=&quot;_blank&quot;&gt;require laravel/dusk; tweak travis config&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/08e2bcb65d4dab1435d19fb6b53babffab4687a7&quot; target=&quot;_blank&quot;&gt;make sure dusk works&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;12 failing commits as I try to configure Travis CI correctly.&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/9ceb60cecac6bf5f053498dcf2ad263d3d194daf&quot; target=&quot;_blank&quot;&gt;giving up on laravel dusk, local test will suffice. unit test are most important&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d22785dcd9b5f87e438f5d8ae034bc77a52a50b3&quot; target=&quot;_blank&quot;&gt;temporarily allow register&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/940d71866008f58e10494d56e3835735f2bed4dc&quot; target=&quot;_blank&quot;&gt;force https attempt&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d5374345c9f0e98be09763f1399d22e412e4d272&quot; target=&quot;_blank&quot;&gt;revert allow register&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Wed, 10 May 2017 13:00:00 -0500</pubDate>
         <link>https://roberthamel@github.io/r-doc/2017/05/wednesday-may-10</link>
@@ -76,22 +88,37 @@
     
       <item>
         <title>Tuesday May 9, 2017</title>
-        <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+        <description>&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://roberthamel@github.io/images/week1/05-09-guide-display.png&quot; alt=&quot;Guide Display&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;Spent my time primarily focusing on front-end design and implementation. Today was also the first day that I described my intended user stories and used them as a focus on what to work on.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;It was a nice exercise to pull in external JavaScript libraries to enhance my user interface. I’m finding that CSS is a bit tricky when trying to fix minute detail errors in a page. Good structure and organization is very important.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/aa04449fc4bb327f39608938cfb67c99c0de9e06&quot; target=&quot;_blank&quot;&gt;add simplemde module&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/8883a341e392d787e4e65292978de41bf3205acf&quot; target=&quot;_blank&quot;&gt;configured log entry workflow&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ffa5c0682ca2524e34c200927f345ff86bcf62a6&quot; target=&quot;_blank&quot;&gt;added license and an empty readme&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e4190b2b9de8228bfc8373bb7afc935a8993eb31&quot; target=&quot;_blank&quot;&gt;added simplemde, vue-simplemde, and to-markdown npm modules&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/73c865cc3c6b33eed24b601414f984a093d13273&quot; target=&quot;_blank&quot;&gt;added showdown npm module; added markdown editor to edit introduction page; added ability to both convert from html to markdown and markdown to html&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d6e4a811fd491c9ba90f05bcfb8ba413940968dc&quot; target=&quot;_blank&quot;&gt;implemented markdown editor on guide edit introduction page&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/b5f21183cab9ed75aa7d84027584c9363ddbb98e&quot; target=&quot;_blank&quot;&gt;fix css on edit introduction page&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/59aee815cdaaa215a05fa58f87251915efcaa1b5&quot; target=&quot;_blank&quot;&gt;fix css spacing issues on guide step edit page&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/7efb6c008f306eae4e590563f9818e3f211295fe&quot; target=&quot;_blank&quot;&gt;fixed minor css issue on guide page&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/dfb07ec76a08a8c38be5983dbae095bcc7b1a9ef&quot; target=&quot;_blank&quot;&gt;save, delete step, and insert step buttons added to guide step edit page&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/9d8edd97314b7aa40cecab9b409a610aee5ed0ff&quot; target=&quot;_blank&quot;&gt;bullet popup for edit pages implemented&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Tue, 09 May 2017 13:00:00 -0500</pubDate>
         <link>https://roberthamel@github.io/r-doc/2017/05/tuesday-may-9</link>
@@ -110,7 +137,7 @@
         <title>Monday May 8, 2017</title>
         <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
-&lt;p&gt;A lot of refactoring in my Vue components were needed today. I was able to dynimaclly generate pagination links on the guide step edit page.&lt;/p&gt;
+&lt;p&gt;A lot of refactoring in my Vue components were needed today. I was able to dynamically generate pagination links on the guide step edit page.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -121,16 +148,16 @@
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/274cb4add142058fbc47e261538bd09cea8f683e&quot;&gt;refactoring of vue views&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/2d03cba6920175bfe6d11443334be2d95d82a2cf&quot;&gt;more refactoring and figuring things out&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/e846470fd48f9cf8525d4ab2f17080e1074ac247&quot;&gt;make urls for guide, edit-introduction, and edit-steps pages include ids&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/dbafa5a67706851cb8795be65c58d15b31469fd7&quot;&gt;90% of all links are working&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/3f365c3a1571566f03f18d75eaaa4d1e05858d0e&quot;&gt;some Vue refactoring&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/37473781c7d27d951066c6ae9c5e3d8c38fb3f12&quot;&gt;edit guide steps tab shows correct step when clicking on relative links&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/8284041cd7cf63ce309b4e44f4f1b7ead9595406&quot;&gt;more Vue refactoring&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/50f7331a8851b3aacc30faf11c169fd442d42bfd&quot;&gt;implement previous and next dynamic links&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/274cb4add142058fbc47e261538bd09cea8f683e&quot; target=&quot;_blank&quot;&gt;refactoring of vue views&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/2d03cba6920175bfe6d11443334be2d95d82a2cf&quot; target=&quot;_blank&quot;&gt;more refactoring and figuring things out&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e846470fd48f9cf8525d4ab2f17080e1074ac247&quot; target=&quot;_blank&quot;&gt;make urls for guide, edit-introduction, and edit-steps pages include ids&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/dbafa5a67706851cb8795be65c58d15b31469fd7&quot; target=&quot;_blank&quot;&gt;90% of all links are working&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/3f365c3a1571566f03f18d75eaaa4d1e05858d0e&quot; target=&quot;_blank&quot;&gt;some Vue refactoring&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/37473781c7d27d951066c6ae9c5e3d8c38fb3f12&quot; target=&quot;_blank&quot;&gt;edit guide steps tab shows correct step when clicking on relative links&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/8284041cd7cf63ce309b4e44f4f1b7ead9595406&quot; target=&quot;_blank&quot;&gt;more Vue refactoring&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/50f7331a8851b3aacc30faf11c169fd442d42bfd&quot; target=&quot;_blank&quot;&gt;implement previous and next dynamic links&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Mon, 08 May 2017 13:00:00 -0500</pubDate>
         <link>https://roberthamel@github.io/r-doc/2017/05/monday-may-8</link>
@@ -147,7 +174,24 @@
     
       <item>
         <title>First Entry</title>
-        <description>&lt;p&gt;…&lt;/p&gt;
+        <description>&lt;p&gt;Due to foreseen circumstances, I will initally have a lot of time to devote to this project. The key to completing this project will be seen through consistency, however. It’s possible that my entry quantity will diminish over time, but I am expecting that I will ge a majority of the grunt work out of the way immediately. This will give me more time to work on documentation and research for aspects of the development that will require it.&lt;/p&gt;
+
+&lt;p&gt;Up until this point, I have gotten a three day head start and began sketching out the front end pages. I am using &lt;a href=&quot;https://www.ifixit.com&quot; target=&quot;_blank&quot;&gt;iFixit&lt;/a&gt;’s website as a reference. Once I get all of the visual details into place, I plan on updating the theme to that of Google’s Material Design.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;commits&quot;&gt;Commits&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d95c3ccd51cc789fcbbbcaf64330461c610d87e1&quot; target=&quot;_blank&quot;&gt;created mockup of guide pages; a few tweaks left to do&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/094b6575a56d4de7c34693154c59eae26c5692b9&quot; target=&quot;_blank&quot;&gt;fixed bullet indentation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/454e83c693a033dd3e24393c592ffb4b6345edf3&quot; target=&quot;_blank&quot;&gt;fix thumbnail box-shadows&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/8cadffc58dcbe63f976de37ad560e4c7094bfeb0&quot; target=&quot;_blank&quot;&gt;implement change image on hover&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d686aebe72cd81e51a068e9ca9811dbfc832fcf8&quot; target=&quot;_blank&quot;&gt;cleanup from image hover and fix underlines in page header&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/f2c59cca2cbff3ab0a73e8ba0624b71463c0b979&quot; target=&quot;_blank&quot;&gt;implementing right sidebar on edit page; cannot get mouseover on thumbnails to work…moving on&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/45a6ef85bbb6643e54da4dc41625f38502442149&quot; target=&quot;_blank&quot;&gt;transferred all css to scss files&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/71722f491873905c644881b7d7716a2eba90525c&quot; target=&quot;_blank&quot;&gt;finish introduction mockup&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Sun, 07 May 2017 13:00:00 -0500</pubDate>
         <link>https://roberthamel@github.io/r-doc/2017/05/first-entry</link>
