@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Force HTTPS
+    RewriteCond %{HTTP:X-Forwarded-Port} !=443
+    RewriteRule (.*) https://%{HTTP_HOST}/$1 [R=301,L]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
