@@ -1,38 +1,42 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing these this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
 # Site settings
-title: Paper Theme
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+title: 'r-doc logs'
+email: roberthamel@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  A gentle theme for Jekyll utilising material design.
-baseurl: "/" # the subpath of your site, e.g. /blog/
-# url: "http://yourdomain.com" # the base hostname & protocol for your site you most probably don't need to set it
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+baseurl: "r-doc" # the subpath of your site, e.g. /blog
+url: "https://roberthamel@github.io/" # the base hostname & protocol for your site
+
+# Social
+githubUsername:
+twitterUsername:
+dribbbleUsername:
+codepenUsername:
 
 # Build settings
 markdown: kramdown
-paginate: 5 # pagination based on number of posts
-paginate_path: "page/:num"
-highlighter: pygments
-gems: [jekyll-paginate, jekyll-coffeescript]
 
-# comments
-disqus: # add disqus shortname here
+themeColor: grey #purple # green, blue, orange, purple, grey
+fixedNav: 'true' # true or false
 
-# author info
-# add your appropriate info here
-author: # your name
-bio:    # your bio
-email:
-email_md5: # md5 hash of your email
-twitter_username:
-github_username:
-
-# Theming options
-# These settings are mandatory.
-theme:              'blue-pink'
-# drawer theming
-drawer:
-  text_color:       'grey-600'
-  header_color:     'blue-500'
-  navigation_color: 'grey-200'
-# footer theming
-footer:
-  text_color: 'blue-grey-200'
-  color: 'blue-grey-600'
+permalink: /:year/:month/:title
+markdown: kramdown
+include: [_pages]
+exclude: [_site, CHANGELOG.md, LICENSE, README.md]
+sass:
+  style: compressed

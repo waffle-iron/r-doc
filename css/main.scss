@@ -3,13 +3,37 @@
 ---
 @charset "utf-8";
 
-$primary-color:     #2196F3;
-$accent-color:      #FFEB3B;
-$grey-color:        #828282;
-
-
-// Import partials from `sass_dir` (defaults to `_sass`)
+// Helpers
 @import
-        "layout",
-        "syntax-highlighting"
-;
+  'helpers/variables',
+  'helpers/mixins';
+
+// Base
+@import
+  'base/reset';
+
+// Utilities
+@import
+  'utilities/layout';
+
+// Components
+@import
+  'components/header',
+  'components/navigation',
+  'components/article',
+  'components/archives',
+  'components/social',
+  'components/buttons',
+  'components/footer';
+
+// Themes
+@import
+  'themes/blue',
+  'themes/green',
+  'themes/grey',
+  'themes/orange',
+  'themes/purple';
+
+// Vendor
+@import
+  'vendor/syntax-highlighting';
