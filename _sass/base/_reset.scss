@@ -69,7 +69,9 @@ img {
   max-width: 100%;
   font-style: italic;
   vertical-align: middle;
-  border: 0;
+  margin: 8px;
+  padding: 4px;
+  border: 1px solid #555;
 }
 
 svg:not(:root) { overflow: hidden; }
