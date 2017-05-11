@@ -16,9 +16,10 @@ class ExampleTest extends DuskTestCase
     public function testBasicExample()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                    ->assertSee('Stay Tuned...')
-                    ->assertSee('LOGIN');
+            $test = $browser->visit('/')
+                    ->assertSee('Stay Tuned...');
+//                    ->assertSee('LOGIN');
+          dd($test);
         });
     }
 }
