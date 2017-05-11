@@ -7,9 +7,9 @@ categories: r-doc log entry
 
 ### Screenshots
 
-[![Guide Display]({{site.url}}{{site.baseurl}}/images/week1/05-09-guide-display.png){:width="200" class="img-resonsive"}]({{site.url}}{{site.baseurl}}/images/week1/05-09-guide-display.png){:target="_blank"}
-[![Guide Intro Edit Page]({{site.url}}{{site.baseurl}}/images/week1/05-09-guide-intro-edit.png){:width="200" class="img-responsive"}]({{site.url}}{{site.baseurl}}/images/week1/05-09-guide-intro-edit.png){:target="_blank"}
-[![Guide Step Edit Page]({{site.url}}{{site.baseurl}}/images/week1/05-09-guide-step-edit.png){:width="200" class="img-responsive"}]({{site.url}}{{site.baseurl}}/images/week1/05-09-guide-step-edit.png){:target="_blank"}
+[![Guide Display]({{site.baseurl}}/images/week1/05-09-guide-display.png){:width="200" class="img-resonsive"}]({{site.baseurl}}/images/week1/05-09-guide-display.png){:target="_blank"}
+[![Guide Intro Edit Page]({{site.baseurl}}/images/week1/05-09-guide-intro-edit.png){:width="200" class="img-responsive"}]({{site.baseurl}}/images/week1/05-09-guide-intro-edit.png){:target="_blank"}
+[![Guide Step Edit Page]({{site.baseurl}}/images/week1/05-09-guide-step-edit.png){:width="200" class="img-responsive"}]({{site.baseurl}}/images/week1/05-09-guide-step-edit.png){:target="_blank"}
 
 ### Progress
 

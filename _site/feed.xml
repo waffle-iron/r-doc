@@ -4,10 +4,10 @@
     <title>r-doc</title>
     <description>Log entries for my Summer 2017 Senior Seminar Project at Champlain College.
 </description>
-    <link>https://roberthamel@github.io/r-doc/</link>
-    <atom:link href="https://roberthamel@github.io/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 May 2017 17:22:24 -0500</pubDate>
-    <lastBuildDate>Thu, 11 May 2017 17:22:24 -0500</lastBuildDate>
+    <link>http://localhost:4000/r-doc/</link>
+    <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 11 May 2017 17:28:11 -0500</pubDate>
+    <lastBuildDate>Thu, 11 May 2017 17:28:11 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
@@ -30,8 +30,8 @@
 &lt;/ul&gt;
 </description>
         <pubDate>Thu, 11 May 2017 13:00:00 -0500</pubDate>
-        <link>https://roberthamel@github.io/r-doc/2017/05/thursday-may-11</link>
-        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/thursday-may-11</guid>
+        <link>http://localhost:4000/r-doc/2017/05/thursday-may-11</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/thursday-may-11</guid>
         
         
         <category>r-doc</category>
@@ -74,8 +74,8 @@
 &lt;/ol&gt;
 </description>
         <pubDate>Wed, 10 May 2017 13:00:00 -0500</pubDate>
-        <link>https://roberthamel@github.io/r-doc/2017/05/wednesday-may-10</link>
-        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/wednesday-may-10</guid>
+        <link>http://localhost:4000/r-doc/2017/05/wednesday-may-10</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/wednesday-may-10</guid>
         
         
         <category>r-doc</category>
@@ -90,9 +90,9 @@
         <title>Tuesday May 9, 2017</title>
         <description>&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://roberthamel@github.io//r-doc/images/week1/05-09-guide-display.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://roberthamel@github.io//r-doc/images/week1/05-09-guide-display.png&quot; alt=&quot;Guide Display&quot; width=&quot;200&quot; class=&quot;img-resonsive&quot; /&gt;&lt;/a&gt;
-&lt;a href=&quot;https://roberthamel@github.io//r-doc/images/week1/05-09-guide-intro-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://roberthamel@github.io//r-doc/images/week1/05-09-guide-intro-edit.png&quot; alt=&quot;Guide Intro Edit Page&quot; width=&quot;200&quot; class=&quot;img-responsive&quot; /&gt;&lt;/a&gt;
-&lt;a href=&quot;https://roberthamel@github.io//r-doc/images/week1/05-09-guide-step-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://roberthamel@github.io//r-doc/images/week1/05-09-guide-step-edit.png&quot; alt=&quot;Guide Step Edit Page&quot; width=&quot;200&quot; class=&quot;img-responsive&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/r-doc/images/week1/05-09-guide-display.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-display.png&quot; alt=&quot;Guide Display&quot; width=&quot;200&quot; class=&quot;img-resonsive&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week1/05-09-guide-intro-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-intro-edit.png&quot; alt=&quot;Guide Intro Edit Page&quot; width=&quot;200&quot; class=&quot;img-responsive&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week1/05-09-guide-step-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-step-edit.png&quot; alt=&quot;Guide Step Edit Page&quot; width=&quot;200&quot; class=&quot;img-responsive&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
@@ -123,8 +123,8 @@
 &lt;/ol&gt;
 </description>
         <pubDate>Tue, 09 May 2017 13:00:00 -0500</pubDate>
-        <link>https://roberthamel@github.io/r-doc/2017/05/tuesday-may-9</link>
-        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/tuesday-may-9</guid>
+        <link>http://localhost:4000/r-doc/2017/05/tuesday-may-9</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/tuesday-may-9</guid>
         
         
         <category>r-doc</category>
@@ -162,8 +162,8 @@
 &lt;/ol&gt;
 </description>
         <pubDate>Mon, 08 May 2017 13:00:00 -0500</pubDate>
-        <link>https://roberthamel@github.io/r-doc/2017/05/monday-may-8</link>
-        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/monday-may-8</guid>
+        <link>http://localhost:4000/r-doc/2017/05/monday-may-8</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/monday-may-8</guid>
         
         
         <category>r-doc</category>
@@ -196,8 +196,8 @@
 &lt;/ol&gt;
 </description>
         <pubDate>Sun, 07 May 2017 13:00:00 -0500</pubDate>
-        <link>https://roberthamel@github.io/r-doc/2017/05/first-entry</link>
-        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/first-entry</guid>
+        <link>http://localhost:4000/r-doc/2017/05/first-entry</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/first-entry</guid>
         
         
         <category>r-doc</category>
