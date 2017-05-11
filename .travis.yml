@@ -20,9 +20,9 @@ before_script:
   - php artisan migrate
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - yarn
-  - npm run production
   - phantomjs --webdriver=127.0.0.1:9515 &
   - php artisan serve &
+  - sleep 5
 
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS travis;'
