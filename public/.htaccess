@@ -11,11 +11,11 @@
 
     # Force www
     RewriteCond %{HTTP_HOST} ^r-doc.com [NC]
-    RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [L,R=301]
+    RewriteRule ^(.*)$ https://www.r-doc.com/$1 [L,R=301]
 
     # Force redirect if https://r-doc.com
     RewriteCond %{HTTP_HOST} ^https://r-doc.com [NC]
-    RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [L,R=301]
+    RewriteRule ^(.*)$ https://www.r-doc.com/$1 [R=301,NC]
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
