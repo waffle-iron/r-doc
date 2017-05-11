@@ -7,29 +7,19 @@ php:
   - 7.1
 
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  #- cd ./vendor/laravel/dusk/bin; chmod 775 *
-  #- ./vendor/laravel/dusk/bin/chromedriver-linux &
   - phpenv config-rm xdebug.ini
-  #- cd ../../../..
   - cp .env.travis .env
-  - composer self-update
   - travis_retry composer install --no-interaction --prefer-dist --no-suggest
   - php artisan key:generate
   - php artisan migrate
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - yarn
-  - phantomjs --webdriver=127.0.0.1:9515 &
-  - php artisan serve &
-  - sleep 5
 
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS travis;'
 
 script:
   - vendor/bin/phpunit
-  - php artisan dusk
 
 services:
   - mysql
