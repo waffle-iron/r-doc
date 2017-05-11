@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="t-brown">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Front End User Stories</title>
+  <meta name="description" content="Log entries for my Summer 2017 Senior Seminar Project.
+">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700|Roboto+Mono:400,500' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/r-doc/css/main.css">
+</head>
+
+  <body>
+    <nav class="c-navigation is-fixed">
+  <div class="c-navigation__container u-container">
+    <a class="c-navigation__item " href="/r-doc/">Home</a>
+    <a class="c-navigation__item is-active" href="/r-doc/front-stories/">Front End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/back-stories/">Back End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/logs/">Log Entries</a>
+  </div>
+</nav>
+
+
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <article class="c-article">
+  <header class="c-header c-article__header">
+    <div class="u-container">
+      <h1 class="c-header__title">Front End User Stories</h1>
+    </div>
+  </header>
+
+  <div class="c-article__main">
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <h2 id="viewing-a-guide--guideguideid">Viewing a guide – /guide/{guideid}</h2>
+
+<h3 id="as-a-user">As a user…</h3>
+<ul>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> When I view a guide, where each step number is listed, I should only see the arrow icon when I hover over the step number.</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> When I view a guide, when I click the options dropdown link in the upper right corner and then click the history link, I should be brought to the guide edit history screen (/guide/history/{guideid}).</li>
+</ul>
+
+<hr />
+
+<h3 id="as-an-unauthenticated-user">As an unauthenticated user…</h3>
+<ul>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> When I view a guide, when I click the options dropdown link in the upper right corner and then click the Save to Favorites link, if I am not logged in, I should see a login popup modal.</li>
+</ul>
+
+<hr />
+
+<h3 id="as-an-authenticated-user">As an authenticated user…</h3>
+<ul>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> When I view a guide, then click the options dropdown link in the upper right corner, then click the Save to Favorites link, I should see a success flash message: {guide title} has been added to favorites.</li>
+</ul>
+
+<hr />
+
+<h2 id="editing-a-guide-as-an-authenticated-user">Editing a guide [as an authenticated user]</h2>
+
+<h3 id="when-i-edit-a-guide-introduction--guideintroguideid">When I edit a guide introduction – /guide/intro/{guideid}</h3>
+<ul>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> there should be no css spacing issues.</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> i should see a markdown text editor for the Introduction textarea.</li>
+</ul>
+
+<hr />
+
+<h3 id="when-i-edit-a-guide-step--guidestepsguideidstepid">When I edit a guide Step – /guide/steps/{guideid}/{stepid}</h3>
+<ul>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> there should be no css spacing issues.</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> I should see a save button underneath the list of sub steps.</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> I should see a step delete button.</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> I should see an insert step button.</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> when i click the insert step button, a new step should be inserted after the current one and i should see a blank form.</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> the steps grid should be rearrangeable when i click the Rearrange Steps link.</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> after i rearrange the step icons, i should be able to save or cancel.</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> Clicking the yellow plus icon should allow me to create a new step.</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> I should be able to drag the image icons to rearrange. (dragula)[https://github.com/bevacqua/dragula]</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> when i click a bullet, i should see a popover that allows me to choose: black, red, orange, yellow, green, light-blue, blue, violet, red caution icon, info icon, reminder icon.</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> when i click on the text next to any bullet, i should see a mini markdown editor.
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> There should be a left and right arrow to set the indent level
+        <ul>
+          <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> the first entry cannot be indented</li>
+          <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> there are only three levels of indentation (0, 1, 2)</li>
+        </ul>
+      </li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> there should be a plus icon to add an entry below the current one.</li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> there should be an x icon to delete the entry.</li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> there should be a maximum of 350 characters with a display of characters/characters remaining</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="when-i-view-any-history-page">When I view any history page</h3>
+<ul>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> I should see edits ordered by date sections</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> I should see time of edit, who editied it, a link to the edit and whether it was accepted or denied by an administrator.</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> I should see a section that will link to a changes over time page.</li>
+</ul>
+
+
+    </div>
+  </div>
+</article>
+
+    </div>
+
+  </body>
+</html>

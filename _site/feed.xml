@@ -1,55 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>r-doc logs</title>
-    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+    <title>r-doc</title>
+    <description>Log entries for my Summer 2017 Senior Seminar Project.
 </description>
     <link>https://roberthamel@github.io/r-doc/</link>
     <atom:link href="https://roberthamel@github.io/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 May 2017 12:20:35 -0500</pubDate>
-    <lastBuildDate>Thu, 11 May 2017 12:20:35 -0500</lastBuildDate>
+    <pubDate>Thu, 11 May 2017 14:53:39 -0500</pubDate>
+    <lastBuildDate>Thu, 11 May 2017 14:53:39 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
-        <title>Welcome to Jekyll!</title>
-        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+        <title>Thursday May 11, 2017</title>
+        <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+&lt;p&gt;…&lt;/p&gt;
 
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+&lt;hr /&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;…&lt;/p&gt;
 
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
-        <pubDate>Tue, 01 Dec 2015 17:52:21 -0600</pubDate>
-        <link>https://roberthamel@github.io/r-doc/2015/12/welcome-to-jekyll</link>
-        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2015/12/welcome-to-jekyll</guid>
+        <pubDate>Thu, 11 May 2017 13:00:00 -0500</pubDate>
+        <link>https://roberthamel@github.io/r-doc/2017/05/thursday-may-11</link>
+        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/thursday-may-11</guid>
         
         
-        <category>jekyll</category>
+        <category>r-doc</category>
         
-        <category>update</category>
+        <category>log</category>
+        
+        <category>entry</category>
         
       </item>
     
       <item>
-        <title>Two Thousand Fourteen</title>
-        <description>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
+        <title>Wednesday May 10, 2017</title>
+        <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;…&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;…&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
-        <pubDate>Fri, 03 Jan 2014 12:52:21 -0600</pubDate>
-        <link>https://roberthamel@github.io/r-doc/2014/01/two-thousand-fourteen</link>
-        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2014/01/two-thousand-fourteen</guid>
+        <pubDate>Wed, 10 May 2017 13:00:00 -0500</pubDate>
+        <link>https://roberthamel@github.io/r-doc/2017/05/wednesday-may-10</link>
+        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/wednesday-may-10</guid>
         
         
-        <category>jekyll</category>
+        <category>r-doc</category>
         
-        <category>update</category>
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>Tuesday May 9, 2017</title>
+        <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;…&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;…&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 09 May 2017 13:00:00 -0500</pubDate>
+        <link>https://roberthamel@github.io/r-doc/2017/05/tuesday-may-9</link>
+        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/tuesday-may-9</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>Monday May 8, 2017</title>
+        <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;A lot of refactoring in my Vue components were needed today. I was able to dynimaclly generate pagination links on the guide step edit page.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;VueJS provides a really nice workflow and the debugging capabilities are more impressive than I anticipated. I have not really had to rely on &lt;code class=&quot;highlighter-rouge&quot;&gt;console.log()&lt;/code&gt; very much at all, which is nice.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/274cb4add142058fbc47e261538bd09cea8f683e&quot;&gt;refactoring of vue views&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/2d03cba6920175bfe6d11443334be2d95d82a2cf&quot;&gt;more refactoring and figuring things out&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/e846470fd48f9cf8525d4ab2f17080e1074ac247&quot;&gt;make urls for guide, edit-introduction, and edit-steps pages include ids&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/dbafa5a67706851cb8795be65c58d15b31469fd7&quot;&gt;90% of all links are working&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/3f365c3a1571566f03f18d75eaaa4d1e05858d0e&quot;&gt;some Vue refactoring&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/37473781c7d27d951066c6ae9c5e3d8c38fb3f12&quot;&gt;edit guide steps tab shows correct step when clicking on relative links&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/8284041cd7cf63ce309b4e44f4f1b7ead9595406&quot;&gt;more Vue refactoring&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/rdx/commit/50f7331a8851b3aacc30faf11c169fd442d42bfd&quot;&gt;implement previous and next dynamic links&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 08 May 2017 13:00:00 -0500</pubDate>
+        <link>https://roberthamel@github.io/r-doc/2017/05/monday-may-8</link>
+        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/monday-may-8</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>First Entry</title>
+        <description>&lt;p&gt;…&lt;/p&gt;
+</description>
+        <pubDate>Sun, 07 May 2017 13:00:00 -0500</pubDate>
+        <link>https://roberthamel@github.io/r-doc/2017/05/first-entry</link>
+        <guid isPermaLink="true">https://roberthamel@github.io/r-doc/2017/05/first-entry</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
         
       </item>
     

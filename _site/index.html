@@ -1,72 +1,106 @@
 <!DOCTYPE html>
-<html class="t-grey">
+<html class="t-brown">
   <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Material Jekyll Theme</title>
-  <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+  <title>Welcome to r-doc</title>
+  <meta name="description" content="Log entries for my Summer 2017 Senior Seminar Project.
 ">
 
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700|Roboto+Mono:400,500' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="r-doc/css/main.css">
-  <link rel="canonical" href="https://roberthamel@github.io/r-doc/">
-  <link rel="alternate" type="application/rss+xml" title="r-doc logs" href="https://roberthamel@github.io/r-doc/feed.xml">
+  <link rel="stylesheet" href="/r-doc/css/main.css">
 </head>
 
   <body>
     <nav class="c-navigation is-fixed">
   <div class="c-navigation__container u-container">
-    <a class="c-navigation__item is-active" href="r-doc/">Home</a>
-    <a class="c-navigation__item " href="r-doc/articles/">Articles</a>
-    <a class="c-navigation__item " href="r-doc/about/">About</a>
+    <a class="c-navigation__item is-active" href="/r-doc/">Home</a>
+    <a class="c-navigation__item " href="/r-doc/front-stories/">Front End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/back-stories/">Back End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/logs/">Log Entries</a>
   </div>
 </nav>
 
 
-    <article class="c-article">
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <article class="c-article">
   <header class="c-header c-article__header">
     <div class="u-container">
-      <h1 class="c-header__title">Material Jekyll Theme</h1>
+      <h1 class="c-header__title">Welcome to r-doc</h1>
     </div>
   </header>
 
   <div class="c-article__main">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis <a href="http://alexcarpenter.me">nostrud exercitation</a> ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <h2 id="build-status">Build Status</h2>
 
-<h2 id="heading-level-2">Heading Level 2</h2>
+<p><a href="https://travis-ci.org/roberthamel/rdx"><img src="https://travis-ci.org/roberthamel/rdx.svg?branch=master" alt="Build Status" /></a></p>
 
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<hr />
 
-<figure class="highlight"><pre><code class="language-scss" data-lang="scss">  <span class="nc">.header</span> <span class="p">{</span>
-    <span class="nl">font-size</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span>
-  <span class="p">}</span></code></pre></figure>
+<h2 id="about">About</h2>
 
-<h3 id="heading-level-3">Heading Level 3</h3>
+<p>My goal with <a href="https://www.r-doc.com" target="_blank">r-doc.com</a> is to create a functional technical documentation repository application. Documentation can be accessed without needing to be logged in. Each document will contain a revision ID and the latest approved document revision is what will be displayed. A full administration panel will also available that considered role based permissions to determine what access to document modification functionality is available to the user. An approval process will be required for any saved edits to documents. Anybody who relies heavily on in-house product documentation will benefit from this software.</p>
 
-<blockquote>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-</blockquote>
+<hr />
 
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<h2 id="public-repository">Public Repository</h2>
 
+<p><a href="https://github.com/roberthamel/r-doc" target="_blank">https://github.com/roberthamel/r-doc</a></p>
+
+<hr />
+
+<h2 id="technologies-used">Technologies Used</h2>
+
+<h3 id="hosting">Hosting</h3>
+
+<ul>
+  <li><a href="https://www.hover.com" target="_blank">Hover</a>: Domain name registration.</li>
+  <li><a href="https://www.fortrabbit.com/" target="_blank">Fortrabbit</a>: The host of the application.</li>
+</ul>
+
+<h3 id="server-side">Server Side</h3>
+
+<ul>
+  <li><a href="https://laravel.com" target="_blank">Laravel</a>: The base PHP framework that serves the pages and communicates with the database.</li>
+</ul>
+
+<h3 id="client-side">Client Side</h3>
+
+<ul>
+  <li><a href="https://vuejs.org" target="_blank">VueJS</a>: Dynamic JavaScript framework responsible for display web pages in a component-oriented manner.</li>
+  <li><a href="http://fontawesome.io/" target="_blank">font-awesome</a>: A CSS based icon font library.</li>
+  <li><a href="https://www.npmjs.com/package/gh-pages" target="_blank">gh-pages</a>: A Node.js command-line used to publish this site easily.</li>
+  <li><a href="https://momentjs.com/" target="_blank">moment</a>: JavaScript library for working with time.</li>
+  <li><a href="https://simplemde.com/" target="_blank">simplemde</a>: JavaScript Markdown editor.</li>
+  <li><a href="https://github.com/F-loat/vue-simplemde" target="_blank">vue-simplemde</a>: VueJS wrapper plugin for <em>simplemde</em>.</li>
+  <li><a href="https://github.com/domchristie/to-markdown" target="_blank">to-markdown</a>: Converts HTML into Markdown text.</li>
+  <li><a href="https://github.com/showdownjs/showdown" target="_blank">showdown</a>: Converts Markdown into HTML.</li>
+</ul>
+
+<h3 id="testing-methods">Testing Methods</h3>
+
+<ul>
+  <li><a href="https://laravel.com/docs/5.4/dusk" target="_blank">Laravel Dusk</a>: Provides a browser-based integration testing environment.</li>
+  <li><a href="https://phpunit.de/" target="_blank">PHPUnit</a>: PHP Unit testing environment tightly integrated into Laravel.</li>
+</ul>
+
+<h3 id="source-control">Source Control</h3>
+
+<ul>
+  <li><a href="https://github.com" target="_blank">GitHub</a>: An online git service that allows you to store source code revisions.</li>
+  <li><a href="https://travis-ci.org" target="_blank">Travis CI</a>: When I make a commit to my GitHub repository, all unit and feature tests are run in a container environment. This lets me know that my application is ready for production. Also provides the ability automatically deploy to my hosting provider upon success.</li>
+  <li><a href="https://pages.github.com/" target="_blank">GitHub Pages</a>: How I created the document you are currently viewing.</li>
+</ul>
+
+    </div>
   </div>
 </article>
 
-
-    <footer class="c-footer">
-  <div class="u-container c-footer__container">
-    <p>&copy; r-doc logs 2017</p>
-    <p>
-      
-      
-      
-      
-    </p>
-  </div>
-</footer>
+    </div>
 
   </body>
 </html>

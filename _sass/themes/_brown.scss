@@ -1,0 +1,19 @@
+/* ==========================================================================
+   Brown Theme
+   ========================================================================== */
+
+.t-brown {
+
+  .c-navigation,
+  .c-header {
+    background: $c__brown;
+  }
+
+  .c-article__main a:not(.c-btn) {
+    color: $c__brown;
+  }
+
+  .c-footer a {
+    color: $c__brown;
+  }
+}
