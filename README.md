@@ -1,35 +1,42 @@
-# Researcher
+# Paper for Jekyll
+A new material design utilising theme for your Jekyll blog. Built on [Material Design Lite](http://www.getmdl.io/).
 
-### [Demo Website](https://ankitsultana.com/researcher)
+![screenshot](assets/screenshots/mockup.jpg)
 
-A clean, single column, monospace resume template built for jekyll
+## Demo
+ [dbtek.github.io/paper-demo](http://dbtek.github.io/paper-demo)
 
-### Installation
+### Batteries Included
+There are many cool features bundled with Paper such as:
 
-Simply fork the repository and edit away.
+- Full Github Pages support.
+- Responsive layout.
+- Dynamic search with [jekyll-search](https://github.com/christian-fei/Simple-Jekyll-Search/).
+- Customizable theme colors.
+- Sass variables.
+- RSS feed.
+- Post tags and categories.
+- Pagination.
+- Syntax highlighting with pygments.
+- Disqus comments.
 
-### Customization
+### Tech
+Under the hood Paper contains:  
+- Material Design Lite.
+- CoffeeScript.
+- Sass.
 
-* You can edit the `.md` (markdown) files as you see fit. You can also add some other markdown file, say `foo.md` in the root directory of the repository. It will then be accessible like so `{{ url of your website }}/foo`.
+### Install
+Easiest way of getting Paper work is forking.
 
-* You can of course remove `contact.md` if you don't want it
+- Fork the [repo](https://github.com/dbtek/paper).
+- Rename forked repo as `username.github.io`.
+- Set up blog by editing `_config.yml`.
+- Enjoy.
 
-* To set the heading, edit the `title` variable in `_config.yml`
-
-* To edit the `links` mentioned on the navigation bar, edit the file `_data/nav.yml`
-
-* You can change the accent (color of hyperlinks) by editing the `accent` variable in `_sass/vars.scss`
-
-* You can setup google analytics, by setting `tracking_id` in `_config.yml`
-
-* To add a profile picture, make sure to give the image tag the class `profile-picture`. In other words,do it like so:
-
-```html
-<img class="profile-picture" src="sherlock.jpg">
-```
-
-**Note:** Customizing the accent color might cause merge conflicts if you later try to merge from `bk2dcradle/researcher` to fetch updates/patches etc. (applicable only if you have forked).
+### Author
+Ismail Demirbilek
+[@dbtek](https://twitter.com/dbtek)
 
 ### License
-
-[GNU GPL v3](https://github.com/bk2dcradle/researcher/blob/gh-pages/LICENSE)
+[MIT](http://opensource.org/licenses/MIT)
