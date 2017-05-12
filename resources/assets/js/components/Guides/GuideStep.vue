@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-md-10">
             <div class="step-title">
-              <a :href="getStepId(step.stepid)" class="fragment-link">
+              <a :href="getStepHref(step.stepid)" class="fragment-link">
                 <i class="fa fa-slack anchor"></i>
                 <strong class="step-value">Step {{ index + 1 }}</strong>
                 <span class="step-title-title"
@@ -229,6 +229,9 @@
         }
       },
       getStepId(stepid) {
+        return `s${stepid}`;
+      },
+      getStepHref(stepid) {
         return `#s${stepid}`;
       },
       getBulletColor(bullet) {

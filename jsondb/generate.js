@@ -6,7 +6,7 @@ const guideId = Faker.random.number();
 const isPublic = true;
 const generatedTypes = Helpers.generateTypes(8);
 const generatedAuthors = Helpers.generateAuthors(5);
-const generatedSteps = Helpers.generateSteps(Helpers.randomRange(8, 15), guideId);
+const generatedSteps = Helpers.generateSteps(Helpers.randomRange(8, 12), guideId);
 
 // NEED TO GENERATE STEPS
 
@@ -31,7 +31,7 @@ module.exports = function() {
         summary: Faker.lorem.sentence(),
         title: Faker.lorem.words(),
         type: Helpers.pickType(generatedTypes),
-        revisionid: Faker.random.number(),
+        published_date: Helpers.randomUnixDate(),
         public: isPublic,
         author: Helpers.pickAuthor(generatedAuthors),
         types: generatedTypes

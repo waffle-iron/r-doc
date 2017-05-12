@@ -15,6 +15,7 @@
   "dependencies": {
     "faker": "^4.1.0",
     "json-server": "^0.10.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1"
   }
 }

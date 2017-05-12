@@ -21,9 +21,6 @@
       GuideStep,
       GuideCompleted
     },
-    created() {
-      console.log(GuideData.guides[0]);
-    },
     data() {
       return {
         imageData: {

@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const Faker = require('faker');
+const Moment = require('moment');
 
 module.exports = {
   randomRange: function(from, to) {
@@ -83,7 +84,7 @@ module.exports = {
 
   generateMedia: function(qty) {
     let media = [];
-    let numberOfObjects = this.randomRange(1, qty);
+    let numberOfObjects = this.randomRange(2, qty-1);
 
     _.times(numberOfObjects, function(index) {
       let randomImage = Faker.image.image();
@@ -146,5 +147,10 @@ module.exports = {
     });
 
     return steps;
+  },
+
+  randomUnixDate: function() {
+    let date = Faker.date.recent();
+    return Moment(date).unix();
   }
-}
+};

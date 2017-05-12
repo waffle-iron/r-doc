@@ -5,7 +5,7 @@
         <li class="page-navigation-link back-link">
           <a href="#" class="nav-link">
             <i class="glyphicon glyphicon-chevron-left icon"></i>
-            <span>{{data.title}}</span>
+            <span>{{data.title}}</span><span style="color: red;">&nbsp;(not implmented)</span>
           </a>
         </li>
         <li class="page-navigation-link">
@@ -22,8 +22,8 @@
               <i class="glyphicon glyphicon-option-vertical"></i>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#">History</a></li>
-              <li><a href="#">Save to Favorites</a></li>
+              <li><a href="#" style="color: red;">History</a></li>
+              <li><a href="#" style="color: red;">Save to Favorites</a></li>
             </ul>
           </div>
         </li>

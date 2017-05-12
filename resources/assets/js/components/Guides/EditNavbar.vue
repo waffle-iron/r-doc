@@ -9,7 +9,7 @@
           <a href="#">Edit</a>
         </li>
         <li>
-          <a href="#">History</a>
+          <a href="#" style="color: red;">History</a>
         </li>
       </ul>
       <div id="breadcrumb">
