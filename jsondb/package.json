@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "json-server generate.js",
-    "watch": "json-server generate.js -w"
+    "generate": "json-server generate.js --port 3004",
+    "watch": "json-server --watch generate.js --port 3004",
+    "example": "json-server generate-example.js --port 3004"
   },
   "keywords": [],
   "author": "",
