@@ -6,12 +6,12 @@
 </description>
     <link>http://localhost:4000/r-doc/</link>
     <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 May 2017 18:05:17 -0500</pubDate>
-    <lastBuildDate>Thu, 11 May 2017 18:05:17 -0500</lastBuildDate>
+    <pubDate>Fri, 12 May 2017 16:29:20 -0500</pubDate>
+    <lastBuildDate>Fri, 12 May 2017 16:29:20 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
-        <title>Thursday May 11, 2017</title>
+        <title>Friday May 12, 2017</title>
         <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
 &lt;p&gt;…&lt;/p&gt;
@@ -25,9 +25,73 @@
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+</description>
+        <pubDate>Fri, 12 May 2017 13:00:00 -0500</pubDate>
+        <link>http://localhost:4000/r-doc/2017/05/friday-may-12</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/friday-may-12</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>Thursday May 11, 2017</title>
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/r-doc/images/week1/05-11-guide-display.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-11-guide-display.png&quot; alt=&quot;Guide Display&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week1/05-11-guide-intro-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-11-guide-intro-edit.png&quot; alt=&quot;Guide Intro Edit&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week1/05-11-guide-step-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-11-guide-step-edit.png&quot; alt=&quot;Guide Step Edit&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;I did a lot of behind the scenes work today. I overhauled this site with a better theme and constructed most of the content. I then configured my &lt;code class=&quot;highlighter-rouge&quot;&gt;.htaccess&lt;/code&gt; file so that my webhost will handle all of the various different combinations of urls a user might type into the browsers address bar. I then shifted focus to creating dynamic mock back-end api using a NodeJS package known as &lt;a href=&quot;https://github.com/typicode/json-server&quot; target=&quot;_blank&quot;&gt;json-server&lt;/a&gt;. I created a new &lt;a href=&quot;https://github.com/roberthamel/json-server-starter&quot; target=&quot;_blank&quot;&gt;repository&lt;/a&gt; to sketch this out since it is a separate entity.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;json-server&lt;/code&gt; allows you to save your db schema to a &lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt; file, which I as easily able to convert to a JavaScript object much like the placeholder data I was already using. I no longer want to use data that I grabbed from an existing site. I then had to modify some of the front-end code to use this new data. This also helped me to iron out any logic errors that I had created in my api generator. I now have the ability to view pages with this new data.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I’m not sure that it was the wisest utilization of my time to explore the &lt;code class=&quot;highlighter-rouge&quot;&gt;json-server&lt;/code&gt; implementation. Since it is just a placeholder, I still need to do all of the work to get the actual database setup and communicating with the front-end. But for the purposes of moving away from using somebody else’s data as an example, this was worth the effort.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+
+&lt;h4 id=&quot;r-doc-repo&quot;&gt;r-doc repo&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e3e3d8f0e10c06213f0209602ea4d9e8a9ffb83b&quot; target=&quot;_blank&quot;&gt;reworking docs; moved all npm dependencies to dev&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/065f47044d35e393e7aeed06265585828177adcb&quot; target=&quot;_blank&quot;&gt;change htaccess to force r-doc.com to redirect to www.r-doc.com&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/25e086d65816de99d75fdd4775b499a3b75e3768&quot; target=&quot;_blank&quot;&gt;server redirect from https://r-doc.com to https://www.r-doc.com&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/83dc3f6a070bfbe43b32a3696d61c68fb056d5d1&quot; target=&quot;_blank&quot;&gt;one last try&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/7f5f0fdf6da943f13a38f51dacbf3bcde3e639e4&quot; target=&quot;_blank&quot;&gt;specify domain in htaccess&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;json-server-starter-repo&quot;&gt;json-server-starter repo&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/b0ccf82dd47d645d6d1e604172ae6d522d8d7f41&quot; target=&quot;_blank&quot;&gt;initial commit&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/66af9c7000d6d54053cb323561269f56f152713f&quot; target=&quot;_blank&quot;&gt;add readme&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/c8252bfbfa17a9207049d0c20687c0f480118b25&quot; target=&quot;_blank&quot;&gt;Fix readme&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/42c5a7c7ffb80cd20c4780f41fa9604c71e3ce5e&quot; target=&quot;_blank&quot;&gt;Fix type&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/778aa50a0ebfdefa6fcecf59228d566cb850cd23&quot; target=&quot;_blank&quot;&gt;Create example&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/d6859967438af13266914dc72cf1bbe66ce6f19e&quot; target=&quot;_blank&quot;&gt;add watch command; update readme&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/65e12cf7821e3b64b6e57a32c4e9a570a2867426&quot; target=&quot;_blank&quot;&gt;Finish initial db&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/0d63e29016d254b135be322f8bb1487683b33e0f&quot; target=&quot;_blank&quot;&gt;Corrected data structure mistake&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/json-server-starter/commit/2a0e61588698fc89c189bc8345a6ea70210ab447&quot; target=&quot;_blank&quot;&gt;Teaking minor details&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Thu, 11 May 2017 13:00:00 -0500</pubDate>
         <link>http://localhost:4000/r-doc/2017/05/thursday-may-11</link>
@@ -44,7 +108,9 @@
     
       <item>
         <title>Wednesday May 10, 2017</title>
-        <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
 &lt;p&gt;I took a break from front-end implementation today. I setup this Jekyll site as a document of my progress. I purchased a domain name and subscribed to a hosting service. Finally, I integrated my git repository with Travis CI to ensure that my site is working as expected.&lt;/p&gt;
 
@@ -88,7 +154,9 @@
     
       <item>
         <title>Tuesday May 9, 2017</title>
-        <description>&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&quot;/r-doc/images/week1/05-09-guide-display.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-display.png&quot; alt=&quot;Guide Display&quot; width=&quot;200&quot; class=&quot;img-resonsive img-border&quot; /&gt;&lt;/a&gt;
 &lt;a href=&quot;/r-doc/images/week1/05-09-guide-intro-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-intro-edit.png&quot; alt=&quot;Guide Intro Edit Page&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
@@ -137,7 +205,9 @@
     
       <item>
         <title>Monday May 8, 2017</title>
-        <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
 &lt;p&gt;A lot of refactoring in my Vue components were needed today. I was able to dynamically generate pagination links on the guide step edit page.&lt;/p&gt;
 
@@ -176,7 +246,9 @@
     
       <item>
         <title>First Entry</title>
-        <description>&lt;p&gt;Due to foreseen circumstances, I will initally have a lot of time to devote to this project. The key to completing this project will be seen through consistency, however. It’s possible that my entry quantity will diminish over time, but I am expecting that I will ge a majority of the grunt work out of the way immediately. This will give me more time to work on documentation and research for aspects of the development that will require it.&lt;/p&gt;
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Due to foreseen circumstances, I will initally have a lot of time to devote to this project. The key to completing this project will be seen through consistency, however. It’s possible that my entry quantity will diminish over time, but I am expecting that I will ge a majority of the grunt work out of the way immediately. This will give me more time to work on documentation and research for aspects of the development that will require it.&lt;/p&gt;
 
 &lt;p&gt;Up until this point, I have gotten a three day head start and began sketching out the front end pages. I am using &lt;a href=&quot;https://www.ifixit.com&quot; target=&quot;_blank&quot;&gt;iFixit&lt;/a&gt;’s website as a reference. Once I get all of the visual details into place, I plan on updating the theme to that of Google’s Material Design.&lt;/p&gt;
 

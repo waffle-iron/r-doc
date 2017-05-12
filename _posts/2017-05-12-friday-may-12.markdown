@@ -1,11 +1,9 @@
 ---
 layout: post
-title:  "Monday May 8, 2017"
-date:   2017-05-08 18:00:00
+title:  "Friday May 12, 2017"
+date:   2017-05-12 18:00:00
 categories: r-doc log entry
 ---
-
-[back](/r-doc/summaries)
 
 ### Progress
 

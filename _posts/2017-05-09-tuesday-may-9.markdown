@@ -5,6 +5,8 @@ date:   2017-05-09 18:00:00
 categories: r-doc log entry
 ---
 
+[back](/r-doc/summaries)
+
 ### Screenshots
 
 [![Guide Display]({{site.baseurl}}/images/week1/05-09-guide-display.png){:width="200" class="img-resonsive img-border"}]({{site.baseurl}}/images/week1/05-09-guide-display.png){:target="_blank"}

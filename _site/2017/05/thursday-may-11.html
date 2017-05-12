@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Thursday May 11, 2017</title>
-  <meta name="description" content="Progress">
+  <meta name="description" content="back">
 
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700|Roboto+Mono:400,500' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -36,22 +36,53 @@
   <div class="c-article__main">
     <div class="post-content markdown-body" itemprop="articleBody">
       <div class="post-content markdown-body" itemprop="articleBody">
-  <h3 id="progress">Progress</h3>
+  <p><a href="/r-doc/summaries">back</a></p>
 
-<p>…</p>
+<h3 id="screenshots">Screenshots</h3>
+
+<p><a href="/r-doc/images/week1/05-11-guide-display.png" target="_blank"><img src="/r-doc/images/week1/05-11-guide-display.png" alt="Guide Display" width="200" class="img-responsive img-border" /></a>
+<a href="/r-doc/images/week1/05-11-guide-intro-edit.png" target="_blank"><img src="/r-doc/images/week1/05-11-guide-intro-edit.png" alt="Guide Intro Edit" width="200" class="img-responsive img-border" /></a>
+<a href="/r-doc/images/week1/05-11-guide-step-edit.png" target="_blank"><img src="/r-doc/images/week1/05-11-guide-step-edit.png" alt="Guide Step Edit" width="200" class="img-responsive img-border" /></a></p>
+
+<h3 id="progress">Progress</h3>
+
+<p>I did a lot of behind the scenes work today. I overhauled this site with a better theme and constructed most of the content. I then configured my <code class="highlighter-rouge">.htaccess</code> file so that my webhost will handle all of the various different combinations of urls a user might type into the browsers address bar. I then shifted focus to creating dynamic mock back-end api using a NodeJS package known as <a href="https://github.com/typicode/json-server" target="_blank">json-server</a>. I created a new <a href="https://github.com/roberthamel/json-server-starter" target="_blank">repository</a> to sketch this out since it is a separate entity.</p>
+
+<p><code class="highlighter-rouge">json-server</code> allows you to save your db schema to a <code class="highlighter-rouge">json</code> file, which I as easily able to convert to a JavaScript object much like the placeholder data I was already using. I no longer want to use data that I grabbed from an existing site. I then had to modify some of the front-end code to use this new data. This also helped me to iron out any logic errors that I had created in my api generator. I now have the ability to view pages with this new data.</p>
 
 <hr />
 
 <h3 id="thoughts">Thoughts</h3>
 
-<p>…</p>
+<p>I’m not sure that it was the wisest utilization of my time to explore the <code class="highlighter-rouge">json-server</code> implementation. Since it is just a placeholder, I still need to do all of the work to get the actual database setup and communicating with the front-end. But for the purposes of moving away from using somebody else’s data as an example, this was worth the effort.</p>
 
 <hr />
 
 <h3 id="daily-commits">Daily Commits</h3>
-<ul>
-  <li><a href="">…</a></li>
-</ul>
+
+<h4 id="r-doc-repo">r-doc repo</h4>
+
+<ol>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/e3e3d8f0e10c06213f0209602ea4d9e8a9ffb83b" target="_blank">reworking docs; moved all npm dependencies to dev</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/065f47044d35e393e7aeed06265585828177adcb" target="_blank">change htaccess to force r-doc.com to redirect to www.r-doc.com</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/25e086d65816de99d75fdd4775b499a3b75e3768" target="_blank">server redirect from https://r-doc.com to https://www.r-doc.com</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/83dc3f6a070bfbe43b32a3696d61c68fb056d5d1" target="_blank">one last try</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/7f5f0fdf6da943f13a38f51dacbf3bcde3e639e4" target="_blank">specify domain in htaccess</a></li>
+</ol>
+
+<h4 id="json-server-starter-repo">json-server-starter repo</h4>
+
+<ol>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/b0ccf82dd47d645d6d1e604172ae6d522d8d7f41" target="_blank">initial commit</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/66af9c7000d6d54053cb323561269f56f152713f" target="_blank">add readme</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/c8252bfbfa17a9207049d0c20687c0f480118b25" target="_blank">Fix readme</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/42c5a7c7ffb80cd20c4780f41fa9604c71e3ce5e" target="_blank">Fix type</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/778aa50a0ebfdefa6fcecf59228d566cb850cd23" target="_blank">Create example</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/d6859967438af13266914dc72cf1bbe66ce6f19e" target="_blank">add watch command; update readme</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/65e12cf7821e3b64b6e57a32c4e9a570a2867426" target="_blank">Finish initial db</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/0d63e29016d254b135be322f8bb1487683b33e0f" target="_blank">Corrected data structure mistake</a></li>
+  <li><a href="https://github.com/roberthamel/json-server-starter/commit/2a0e61588698fc89c189bc8345a6ea70210ab447" target="_blank">Teaking minor details</a></li>
+</ol>
 
 </div>
 

@@ -5,6 +5,8 @@ date:   2017-05-10 18:00:00
 categories: r-doc log entry
 ---
 
+[back](/r-doc/summaries)
+
 ### Progress
 
 I took a break from front-end implementation today. I setup this Jekyll site as a document of my progress. I purchased a domain name and subscribed to a hosting service. Finally, I integrated my git repository with Travis CI to ensure that my site is working as expected.

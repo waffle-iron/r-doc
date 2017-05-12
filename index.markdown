@@ -6,13 +6,19 @@ title: Welcome to r-doc
 ## Build Status
 
 
-[![Build Status](https://travis-ci.org/roberthamel/rdx.svg?branch=master)](https://travis-ci.org/roberthamel/rdx)
+[![Build Status](https://travis-ci.org/roberthamel/r-doc.svg?branch=master)](https://travis-ci.org/roberthamel/r-doc)
 
 ---
 
 ## About
 
 My goal with [r-doc.com](https://www.r-doc.com){:target="_blank"} is to create a functional technical documentation repository application. Documentation can be accessed without needing to be logged in. Each document will contain a revision ID and the latest approved document revision is what will be displayed. A full administration panel will also available that considered role based permissions to determine what access to document modification functionality is available to the user. An approval process will be required for any saved edits to documents. Anybody who relies heavily on in-house product documentation will benefit from this software.
+
+---
+
+## Site
+
+[r-doc.com](https://www.r-doc.com){:target="_blank"}
 
 ---
 
@@ -43,6 +49,8 @@ My goal with [r-doc.com](https://www.r-doc.com){:target="_blank"} is to create a
 - [vue-simplemde](https://github.com/F-loat/vue-simplemde){:target="_blank"}: VueJS wrapper plugin for _simplemde_.
 - [to-markdown](https://github.com/domchristie/to-markdown){:target="_blank"}: Converts HTML into Markdown text.
 - [showdown](https://github.com/showdownjs/showdown){:target="_blank"}: Converts Markdown into HTML.
+- [json-server](https://github.com/typicode/json-server){:target="_blank"}: NodeJS CLI for creating a mock rest api server.
+- [json-server-start](https://github.com/roberthamel/json-server-starter){:target="_blank"}: A repo that I built to help me quickly get started mocking out my `json-server` implementation.
 
 ### Testing Methods
 

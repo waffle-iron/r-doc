@@ -5,6 +5,8 @@ date:   2017-05-07 18:00:00
 categories: r-doc log entry
 ---
 
+[back](/r-doc/summaries)
+
  Due to foreseen circumstances, I will initally have a lot of time to devote to this project. The key to completing this project will be seen through consistency, however. It's possible that my entry quantity will diminish over time, but I am expecting that I will ge a majority of the grunt work out of the way immediately. This will give me more time to work on documentation and research for aspects of the development that will require it.
 
 Up until this point, I have gotten a three day head start and began sketching out the front end pages. I am using [iFixit](https://www.ifixit.com){:target="_blank"}'s website as a reference. Once I get all of the visual details into place, I plan on updating the theme to that of Google's Material Design.
