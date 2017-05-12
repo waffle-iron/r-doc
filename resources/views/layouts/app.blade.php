@@ -36,7 +36,7 @@
 
         <!-- Branding Image -->
         <a class="navbar-brand" href="{{ url('/') }}">
-          {{ config('app.name', 'Laravel') }}
+          r-doc
         </a>
       </div>
 
@@ -53,7 +53,7 @@
               <li><a href="{{route('mockup-guide-step-edit', ['guideid' => 0, 'stepid' => 75270])}}">Edit Guide Steps</a></li>
             </ul>
           </li>&nbsp;
-        </ul> 
+        </ul>
 
         <!-- Right Side Of Navbar -->
         <ul class="nav navbar-nav navbar-right">

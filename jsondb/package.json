@@ -1,0 +1,19 @@
+{
+  "name": "jsondb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "json-server generate.js",
+    "watch": "json-server generate.js -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "faker": "^4.1.0",
+    "json-server": "^0.10.0",
+    "lodash": "^4.17.4"
+  }
+}
