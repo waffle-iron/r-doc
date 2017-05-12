@@ -1,4 +1,10 @@
-[![Build Status](https://travis-ci.org/roberthamel/rdx.svg?branch=master)](https://travis-ci.org/roberthamel/rdx)
+[![Build Status](https://travis-ci.org/roberthamel/r-doc.svg?branch=master)](https://travis-ci.org/roberthamel/r-doc)
+
+---
+
+[r-doc.com](https://www.r-doc.com)
+
+---
 
 ## License
 Copyright 2017 Robert Hamel
