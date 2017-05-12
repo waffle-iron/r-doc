@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import GuideData from './../data';
+  import GuideData from './../testdb';
   import EditContainer from './Guides/EditContainer.vue';
   import EditNavbar from './Guides/EditNavbar.vue';
   import EditLeft from './Guides/EditLeft.vue';
@@ -30,26 +30,26 @@
     data() {
       return {
         editIntroData: {
-          category: GuideData.category,
-          type: GuideData.type,
-          types: GuideData.types,
-          title: GuideData.title,
-          summary: GuideData.summary,
-          introduction: GuideData.introduction,
-          stepsid: GuideData.steps[0].stepid,
-          guideid: GuideData.guideid
+          category: GuideData.guides[0].category,
+          type: GuideData.guides[0].type,
+          types: GuideData.guides[0].types,
+          title: GuideData.guides[0].title,
+          summary: GuideData.guides[0].summary,
+          introduction: GuideData.guides[0].introduction,
+          stepsid: GuideData.guides[0].steps[0].stepid,
+          guideid: GuideData.guides[0].guideid
         },
         editNavbarData: {
-          previousText: GuideData.previous_text,
-          guideid: GuideData.guideid
+          previousText: GuideData.guides[0].previous_text,
+          guideid: GuideData.guides[0].guideid
         },
-        imageData: GuideData.image.medium,
+        imageData: GuideData.guides[0].image.medium,
         stepsData: {
-          steps: GuideData.steps,
-          guideid: GuideData.guideid
+          steps: GuideData.guides[0].steps,
+          guideid: GuideData.guides[0].guideid
         },
         editStepsData: {
-          guideid: GuideData.steps[0].stepid
+          guideid: GuideData.guides[0].steps[0].stepid
         }
       }
     },

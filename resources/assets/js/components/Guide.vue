@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import GuideData from './../data.js';
+  import GuideData from './../testdb.js';
   import GuideHeaderNavigation from './Guides/GuideHeaderNavigation.vue';
   import GuideImage from './Guides/GuideImage.vue';
   import GuideStep from './Guides/GuideStep.vue';
@@ -21,25 +21,29 @@
       GuideStep,
       GuideCompleted
     },
+    created() {
+      console.log(GuideData.guides[0]);
+    },
     data() {
       return {
         imageData: {
-          title: GuideData.title,
-          type: GuideData.type,
-          revision: GuideData.revision,
-          published: GuideData.published_date,
-          mainImage: GuideData.image.huge,
-          intro: GuideData.introduction
+          title: GuideData.guides[0].title,
+          type: GuideData.guides[0].type,
+          revision: GuideData.guides[0].revision,
+          published: GuideData.guides[0].published_date,
+          mainImage: GuideData.guides[0].image.huge,
+          intro: GuideData.guides[0].introduction
         },
         navbarData: {
-          title: GuideData.previous_text,
-          guideid: GuideData.guideid
+          title: GuideData.guides[0].previous_text,
+          guideid: GuideData.guides[0].guideid
         },
         stepsData: {
-          steps: GuideData.steps,
-          guideid: GuideData.guideid
+          steps: GuideData.guides[0].steps,
+          guideid: GuideData.guides[0].guideid,
+          title: GuideData.guides[0].title
         },
-        completedData: GuideData.conclusion
+        completedData: GuideData.guides[0].conclusion
       }
     }
   }

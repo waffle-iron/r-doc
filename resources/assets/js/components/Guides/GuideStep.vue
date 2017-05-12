@@ -9,7 +9,7 @@
                 <i class="fa fa-slack anchor"></i>
                 <strong class="step-value">Step {{ index + 1 }}</strong>
                 <span class="step-title-title"
-                      v-if="index+1 === 1">iMac Intel 27" Retina 5K Display Teardown</span>
+                      v-if="index+1 === 1">{{data.title}}</span>
               </a>
             </div>
           </div>
@@ -243,17 +243,25 @@
         } else {
           return {
             'fa': true,
-            'fa-circle': bullet !== 'icon_note',
+            'fa-circle': this.isNotAnIcon(bullet),
             'bullet': true,
-            'fa-info': bullet === 'icon_note',
+            'fa-info': bullet === 'info-icon',
             'bullet-red': bullet === 'red',
             'bullet-orange': bullet === 'orange',
             'bullet-yellow': bullet === 'yellow',
             'bullet-green': bullet === 'green',
             'bullet-blue': bullet === 'blue',
+            'fa-exclamation-triangle': bullet === 'red-caution',
+            'fa-bell': bullet === 'reminder-icon',
             'bullet-selector': this.edit === true ? true : false
           }
         }
+      },
+      isNotAnIcon(bullet) {
+        if(bullet === 'info-icon') return false;
+        if(bullet === 'red-caution') return false;
+        if(bullet === 'reminder-icon') return false;
+        return true;
       },
       createImageObject() {
         let steps = this.data.steps;

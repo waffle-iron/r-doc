@@ -48,9 +48,9 @@
               Mockups <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="{{route('mockup-guide', ['guideid' => 30260])}}">Guide</a></li>
-              <li><a href="{{route('mockup-guide-intro-edit', ['guideid' => 30260])}}">Edit Guide Introduction</a></li>
-              <li><a href="{{route('mockup-guide-step-edit', ['guideid' => 30260, 'stepid' => 70934])}}">Edit Guide Steps</a></li>
+              <li><a href="{{route('mockup-guide', ['guideid' => 0])}}">Guide</a></li>
+              <li><a href="{{route('mockup-guide-intro-edit', ['guideid' => 0])}}">Edit Guide Introduction</a></li>
+              <li><a href="{{route('mockup-guide-step-edit', ['guideid' => 0, 'stepid' => 75270])}}">Edit Guide Steps</a></li>
             </ul>
           </li>&nbsp;
         </ul>
