@@ -6,28 +6,33 @@
 </description>
     <link>http://localhost:4000/r-doc/</link>
     <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 12 May 2017 18:36:05 -0500</pubDate>
-    <lastBuildDate>Fri, 12 May 2017 18:36:05 -0500</lastBuildDate>
+    <pubDate>Sun, 14 May 2017 13:11:29 -0500</pubDate>
+    <lastBuildDate>Sun, 14 May 2017 13:11:29 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
         <title>Friday May 12, 2017</title>
         <description>&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;Today was another day dedicated to behind the scenes details. A lot more updating to this page. I also moved the &lt;code class=&quot;highlighter-rouge&quot;&gt;json-server&lt;/code&gt; implementation that I created into this repository to help keep things unified. Once I corrected all of the irregularities with the data that was being created, I pushed the changes to my web host and made the work that I have done so far available without user authentication credentials.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;While there is a lot of work still to be done with the front-end logic, the time that I spent creating test data made me realize that now is the ideal time for me to focus on implementing the database on the back end. I would like to sketch out an ORM diagram and begin creating the migrations. Then it would be appropriate for me to begin writing unit tests to ensure that all of my url endpoints are talking to the database and outputting the correct data.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/9a952d4a45496d91b550e0c208981e29dedc8f9e&quot; target=&quot;_blank&quot;&gt;Added a test db with fake data; configured views to read new data&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/bb955280fd14b4a31c1aa750db95c6f007cca094&quot; target=&quot;_blank&quot;&gt;Fix&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/53fdb4bd8a082cfcac1dbfc69f6947810ee76c13&quot; target=&quot;_blank&quot;&gt;Migrate json server to this repo; remove dynamic name rendering in navbar&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/bc98a7a1522e2200140fd664b84cd9d7a7edc572&quot; target=&quot;_blank&quot;&gt;Update jsondb package&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ea28e6e1bcf565026fb6072eeaa58921ac172070&quot; target=&quot;_blank&quot;&gt;Update readme&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ea1f5ef8e5db06bb3619f0b24602450d6c3e930f&quot; target=&quot;_blank&quot;&gt;Corrected test db; made pages available without login&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 12 May 2017 13:00:00 -0500</pubDate>
