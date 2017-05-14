@@ -1,0 +1,28 @@
+---
+layout: post
+title:  "Sunday May 14, 2017"
+date:   2017-05-14 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Screenshots
+
+[![DB Diagram]({{site.baseurl}}/images/week1/05-14-db.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week1/05-14-db.png){:target="_blank"}
+
+### Progress
+
+- [x] initial design of database
+
+---
+
+### Thoughts 
+
+...
+
+---
+
+### Daily Commits
+
+- [...]()

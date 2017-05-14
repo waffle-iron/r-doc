@@ -6,9 +6,50 @@
 </description>
     <link>http://localhost:4000/r-doc/</link>
     <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 14 May 2017 13:11:29 -0500</pubDate>
-    <lastBuildDate>Sun, 14 May 2017 13:11:29 -0500</lastBuildDate>
+    <pubDate>Sun, 14 May 2017 15:09:49 -0500</pubDate>
+    <lastBuildDate>Sun, 14 May 2017 15:09:49 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Sunday May 14, 2017</title>
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/r-doc/images/week1/05-14-db.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-14-db.png&quot; alt=&quot;DB Diagram&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;[x] initial design of database&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;…&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 14 May 2017 13:00:00 -0500</pubDate>
+        <link>http://localhost:4000/r-doc/2017/05/sunday-may-14</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/sunday-may-14</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
     
       <item>
         <title>Friday May 12, 2017</title>

@@ -30,5 +30,6 @@ Next up for me is to implement a new front-end theme using a yet to be determine
 - [Wednesday](/r-doc/2017/05/wednesday-may-10)
 - [Thursday](/r-doc/2017/05/thursday-may-11)
 - [Friday](/r-doc/2017/05/friday-may-12)
+- [Sunday](/r-doc/2017/05/sunday-may-14)
 
 ---
