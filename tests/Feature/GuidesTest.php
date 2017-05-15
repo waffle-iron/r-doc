@@ -31,14 +31,14 @@ class GuidesTest extends TestCase
   /** @test */
   public function redirects_to_login_page_when_trying_to_visit_non_mockup_related_urls()
   {
+    $this->withExceptionHandling();
     $response1 = $this->get('/mockups');
+    $response1->assertRedirect('/login');
     $response2 = $this->get('/mockups/guide');
+    $response2->assertRedirect('/login');
     $response3 = $this->get('/mockups/guide/1');
+    $response3->assertRedirect('/login');
     $response4 = $this->get('/adfasdfasd');
-
-    $response1->withExceptionHandling()->assertRedirect('/login');
-    $response2->withExceptionHandling()->assertRedirect('/login');
-    $response3->withExceptionHandling()->assertRedirect('/login');
-    $response4->withExceptionHandling()->assertRedirect('/login');
+    $response4->assertRedirect('/login');
   }
 }
