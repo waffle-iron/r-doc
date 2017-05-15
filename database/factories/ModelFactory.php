@@ -13,12 +13,29 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\User::class, function (Faker\Generator $faker) {
-    static $password;
+  static $password;
 
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
-    ];
+  return [
+      'name' => $faker->name,
+      'email' => $faker->unique()->safeEmail,
+      'password' => $password ?: $password = bcrypt('secret'),
+      'remember_token' => str_random(10),
+  ];
+});
+
+$factory->define(App\Guide::class, function (Faker\Generator $faker) {
+
+  return [
+      'dataType' => 'guide',
+      'url' => $faker->url(),
+    //category_id
+    //type_id
+    //device_id
+      'title' => $faker->sentence(),
+      'summary' => $faker->paragraph(),
+      'introduction' => $faker->paragraph(),
+    //image_id
+      'previous_text' => $faker->sentence(),
+      'conclusion' => $faker->paragraph(),
+  ];
 });
