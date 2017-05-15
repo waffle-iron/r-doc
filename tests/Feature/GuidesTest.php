@@ -21,34 +21,24 @@ class GuidesTest extends TestCase
   }
 
   /** @test */
-  public function will_redirect_to_guides_when_visiting_the_homepage()
+  public function will_redirect_to_mockup_when_visiting_the_homepage()
   {
     $response = $this->get('/');
 
-    $response->assertRedirect('/mockups/guides/0');
+    $response->assertRedirect('/mockups/guide/0');
   }
 
   /** @test */
-  public function the_database_should_have_the_correct_data()
+  public function redirects_to_login_page_when_trying_to_visit_non_mockup_related_urls()
   {
-    $guide = factory(App\Guide::class)->create();
+    $response1 = $this->get('/mockups');
+    $response2 = $this->get('/mockups/guide');
+    $response3 = $this->get('/mockups/guide/1');
+    $response4 = $this->get('/adfasdfasd');
 
-    $this->assertDatabaseHas('guides', [
-      'id' => $guide->id,
-      'dataType' => 'guide',
-      'url' => $guide->url,
-      'title' => $guide->title,
-      'summary' => $guide->summary,
-      'introduction' => $guide->introduction,
-      'previous_text' => $guide->previous_text,
-      'conclusion' => $guide->conclusion,
-      'revised_at' => null,
-      'revision' => '-',
-    ]);     
-  }
-
-  private function getGuide()
-  {
-    return $this->get('/guides');
+    $response1->withExceptionHandling()->assertRedirect('/login');
+    $response2->withExceptionHandling()->assertRedirect('/login');
+    $response3->withExceptionHandling()->assertRedirect('/login');
+    $response4->withExceptionHandling()->assertRedirect('/login');
   }
 }

@@ -12,11 +12,10 @@
 */
 
 Route::get('/', function () {
-  return redirect()->route('guides');
+  return redirect()->route('mockup-guide', ['guideid' => 0]);
 });
 
 Route::group(['prefix' => 'mockups'], function () {
-  Route::get('guides', function () { return view('guide.index'); });
   Route::get('guide/{guideid}', 'MockupsController@guide')->name('mockup-guide');
   Route::get('guide/intro/{guideid}', 'MockupsController@edit')->name('mockup-guide-intro-edit');
   Route::get('guide/steps/{guideid}/{stepid}', 'MockupsController@editSteps')->name('mockup-guide-step-edit');
