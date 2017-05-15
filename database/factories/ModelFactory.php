@@ -28,14 +28,20 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
   return [
       'dataType' => 'guide',
       'url' => $faker->url(),
-    //category_id
-    //type_id
-    //device_id
+      //category_id
+      //type_id
+      //device_id
       'title' => $faker->sentence(),
       'summary' => $faker->paragraph(),
       'introduction' => $faker->paragraph(),
-    //image_id
+      //image_id
       'previous_text' => $faker->sentence(),
       'conclusion' => $faker->paragraph(),
+  ];
+});
+
+$factory->define(App\Image::class, function (Faker\Generator $faker) {
+  return [
+      'original' => $faker->imageUrl(),
   ];
 });
