@@ -15,7 +15,7 @@ class GuidesTest extends TestCase
   /** @test */
   public function can_view_a_list_of_guides()
   {
-    $response = $this->get('/guides');
+    $response = $this->get('/mockups/guide/0');
 
     $response->assertStatus(200);
   }
@@ -25,7 +25,7 @@ class GuidesTest extends TestCase
   {
     $response = $this->get('/');
 
-    $response->assertRedirect('/guides');
+    $response->assertRedirect('/mockups/guides/0');
   }
 
   /** @test */
