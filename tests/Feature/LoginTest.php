@@ -13,16 +13,25 @@ class LoginTest extends TestCase
     /** @test */
     public function a_user_can_login()
     {
-      Passport::actingAs(create(\App\User::class));
+      $this->signIn();
 
       $response = $this->get('/home');
 
       $response->assertStatus(200);
+      $response->assertHeader('Authenticate');
     }
     
     /** @test */
     public function a_user_can_logout()
     {
-      
+      $this->withExceptionHandling();
+
+      $this->signIn();
+
+      $response = $this->post('/logout');
+
+      $response->assertStatus(302);
+      $response->assertRedirect('/');
+
     }
 }
