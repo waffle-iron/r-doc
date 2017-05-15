@@ -12,8 +12,20 @@ class UserTest extends TestCase
   use DatabaseMigrations;
 
   /** @test */
-  public function database_is_correctly_configured()
+  public function users_table_is_correctly_configured()
   {
-    
+    $user = create('App\User');
+
+    $this->assertDatabaseHas('users', [
+        'id' => 1,
+        'name' => $user->name,
+        'username' => $user->username,
+        'email' => $user->email,
+//      //'team_id'
+        'image_id' => $user->id,
+        'url' => $user->url,
+        'last_read_announcement_at' => null,
+        'deleted_at' => null,
+    ]);
   }
 }

@@ -6,30 +6,37 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('users', function (Blueprint $table) {
+      $table->increments('id');
+      $table->string('name');
+      $table->string('username')->nullable()->default(null);
+      $table->string('email')->unique();
+      $table->string('password');
+      $table->integer('image_id')->unsigned()->nullable()->default(null);
+      $table->string('url')->nullable()->default(null);
+      $table->rememberToken();
+      $table->timestamp('last_read_announcement_at')->nullable()->default(null);
+      $table->timestamp('deleted_at')->nullable()->default(null);
+      $table->timestamps();
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('users');
-    }
+//      $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
+    });
+  }
+
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('users');
+  }
 }

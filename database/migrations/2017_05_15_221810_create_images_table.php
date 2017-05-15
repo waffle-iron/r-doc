@@ -14,7 +14,7 @@ class CreateImagesTable extends Migration
   public function up()
   {
     Schema::create('images', function (Blueprint $table) {
-      $table->increments('id');
+      $table->increments('id')->unsigned();
       $table->string('original');
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

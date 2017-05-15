@@ -6,7 +6,6 @@ use Exception;
 use App\Exceptions\Handler;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Laravel\Passport\Passport;
 
 /**
  * @property ExceptionHandler|mixed oldExceptionHandler
@@ -24,7 +23,7 @@ abstract class TestCase extends BaseTestCase
   protected function signIn($user = null)
   {
     $user = $user ?: create('App\User');
-    Passport::actingAs($user);
+    $this->actingAs($user);
     return $this;
   }
 
