@@ -179,6 +179,7 @@ return [
 
         Spatie\Fractal\FractalServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
 
     ],
 
