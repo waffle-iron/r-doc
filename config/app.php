@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Spatie\Fractal\FractalServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
     ],
 
