@@ -33,4 +33,10 @@ class UserTest extends TestCase
     $this->relationship->testManyToMany('User', 'Invitation');
   }
 
+  /** @test */
+  public function a_user_can_belong_to_many_teams()
+  {
+    $this->relationship->testManyToMany('User', 'Team');
+  }
+
 }

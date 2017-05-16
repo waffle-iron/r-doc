@@ -33,7 +33,7 @@ class User extends Authenticatable
    * @return \Illuminate\Database\Eloquent\Relations\HasOne
    */
   public function image() {
-    return $this->hasOne('App\Image');
+    return $this->hasOne(Image::class);
   }
 
   public function notifications() {
@@ -46,5 +46,10 @@ class User extends Authenticatable
 
   public function invitations() {
     return $this->belongsToMany(Invitation::class);
+  }
+
+  public function teams()
+  {
+    return $this->belongsToMany(Team::class);
   }
 }
