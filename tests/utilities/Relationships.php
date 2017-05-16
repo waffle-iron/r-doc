@@ -15,6 +15,7 @@ trait Relationships
     $two = create("App\\$second", ["{$lowerFirst}_id" => 1]);
 
     $this->assertInstanceOf("App\\$second", $one->$lowerSecond);
+    $this->assertCount(count($first->$lowerSecond), 1);
   }
 
   public function manyToOne($many, $one)
@@ -26,7 +27,10 @@ trait Relationships
     $first = create("App\\$one");
     $second = create("App\\$many", ["{$lowerOne}_id" => $first->id], 10);
 
-    $this->assertCount(10, $first->$pluralMany);
+    $second->each(function($s, $key) use ($lowerMany, $lowerOne, $one, $second) {
+      $this->assertInstanceOf("App\\$one", $s->$lowerOne);
+    });
+    $this->assertEquals(count($first->$pluralMany), 10);
   }
 
   private function lower($string)
