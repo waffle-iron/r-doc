@@ -50,3 +50,18 @@ $factory->define(App\Image::class, function (Faker\Generator $faker) {
       'original' => $faker->imageUrl(),
   ];
 });
+
+$factory->define(App\Notification::class, function (Faker\Generator $faker) {
+  return [
+      'user_id' => function () {
+        return factory('App\User')->create()->id;
+      },
+      'created_by' => function () {
+        return factory('App\User')->create()->id;
+      },
+      'icon' => $faker->word,
+      'body' => $faker->paragraphs(1, true),
+      'action_text' => $faker->words(4, true),
+      'action_url' => $faker->url,
+  ];
+});
