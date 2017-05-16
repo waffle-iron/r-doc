@@ -28,4 +28,10 @@ class UserTest extends TestCase
         'deleted_at' => null,
     ]);
   }
+
+  /** @test */
+  public function image_user_relationship_is_correct()
+  {
+
+  }
 }

@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2017-05-15.
+    * Generated on 2017-05-16.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -44,7 +44,12 @@ namespace PHPSTORM_META {
             'command.ide-helper.generate' instanceof \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand,
             'command.ide-helper.models' instanceof \Barryvdh\LaravelIdeHelper\Console\ModelsCommand,
             'command.ide-helper.meta' instanceof \Barryvdh\LaravelIdeHelper\Console\MetaCommand,
+            'command.laracasts.seed' instanceof \Laracasts\Generators\Commands\SeedMakeCommand,
+            'command.laracasts.migrate' instanceof \Laracasts\Generators\Commands\MigrationMakeCommand,
+            'command.laracasts.migrate.pivot' instanceof \Laracasts\Generators\Commands\PivotMigrationMakeCommand,
             'laravel-fractal' instanceof \Spatie\Fractal\Fractal,
+            'League\OAuth2\Server\AuthorizationServer' instanceof \League\OAuth2\Server\AuthorizationServer,
+            'League\OAuth2\Server\ResourceServer' instanceof \League\OAuth2\Server\ResourceServer,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'cache' instanceof \Illuminate\Cache\CacheManager,
             'cache.store' instanceof \Illuminate\Cache\Repository,
@@ -167,7 +172,12 @@ namespace PHPSTORM_META {
             'command.ide-helper.generate' instanceof \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand,
             'command.ide-helper.models' instanceof \Barryvdh\LaravelIdeHelper\Console\ModelsCommand,
             'command.ide-helper.meta' instanceof \Barryvdh\LaravelIdeHelper\Console\MetaCommand,
+            'command.laracasts.seed' instanceof \Laracasts\Generators\Commands\SeedMakeCommand,
+            'command.laracasts.migrate' instanceof \Laracasts\Generators\Commands\MigrationMakeCommand,
+            'command.laracasts.migrate.pivot' instanceof \Laracasts\Generators\Commands\PivotMigrationMakeCommand,
             'laravel-fractal' instanceof \Spatie\Fractal\Fractal,
+            'League\OAuth2\Server\AuthorizationServer' instanceof \League\OAuth2\Server\AuthorizationServer,
+            'League\OAuth2\Server\ResourceServer' instanceof \League\OAuth2\Server\ResourceServer,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'cache' instanceof \Illuminate\Cache\CacheManager,
             'cache.store' instanceof \Illuminate\Cache\Repository,
@@ -290,7 +300,12 @@ namespace PHPSTORM_META {
             'command.ide-helper.generate' instanceof \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand,
             'command.ide-helper.models' instanceof \Barryvdh\LaravelIdeHelper\Console\ModelsCommand,
             'command.ide-helper.meta' instanceof \Barryvdh\LaravelIdeHelper\Console\MetaCommand,
+            'command.laracasts.seed' instanceof \Laracasts\Generators\Commands\SeedMakeCommand,
+            'command.laracasts.migrate' instanceof \Laracasts\Generators\Commands\MigrationMakeCommand,
+            'command.laracasts.migrate.pivot' instanceof \Laracasts\Generators\Commands\PivotMigrationMakeCommand,
             'laravel-fractal' instanceof \Spatie\Fractal\Fractal,
+            'League\OAuth2\Server\AuthorizationServer' instanceof \League\OAuth2\Server\AuthorizationServer,
+            'League\OAuth2\Server\ResourceServer' instanceof \League\OAuth2\Server\ResourceServer,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'cache' instanceof \Illuminate\Cache\CacheManager,
             'cache.store' instanceof \Illuminate\Cache\Repository,
@@ -413,7 +428,12 @@ namespace PHPSTORM_META {
             'command.ide-helper.generate' instanceof \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand,
             'command.ide-helper.models' instanceof \Barryvdh\LaravelIdeHelper\Console\ModelsCommand,
             'command.ide-helper.meta' instanceof \Barryvdh\LaravelIdeHelper\Console\MetaCommand,
+            'command.laracasts.seed' instanceof \Laracasts\Generators\Commands\SeedMakeCommand,
+            'command.laracasts.migrate' instanceof \Laracasts\Generators\Commands\MigrationMakeCommand,
+            'command.laracasts.migrate.pivot' instanceof \Laracasts\Generators\Commands\PivotMigrationMakeCommand,
             'laravel-fractal' instanceof \Spatie\Fractal\Fractal,
+            'League\OAuth2\Server\AuthorizationServer' instanceof \League\OAuth2\Server\AuthorizationServer,
+            'League\OAuth2\Server\ResourceServer' instanceof \League\OAuth2\Server\ResourceServer,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'cache' instanceof \Illuminate\Cache\CacheManager,
             'cache.store' instanceof \Illuminate\Cache\Repository,
