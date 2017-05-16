@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
@@ -31,7 +32,11 @@ class User extends Authenticatable
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasOne
    */
-  protected function image() {
+  public function image() {
     return $this->hasOne('App\Image');
+  }
+
+  public function notifications() {
+    return $this->hasMany(Notification::class);
   }
 }

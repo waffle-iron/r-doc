@@ -19,4 +19,13 @@ class UserTest extends TestCase
     $this->assertInstanceOf('App\Image', $user->image);
   }
 
+  /** @test */
+  public function a_user_can_have_many_notifications()
+  {
+    $user = create('App\User');
+    $notifications = create('App\Notification', ['user_id' => $user->id], 10);
+
+    $this->assertCount(10, $user->notifications);
+  }
+
 }
