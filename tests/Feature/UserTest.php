@@ -21,7 +21,7 @@ class UserTest extends TestCase
         'name' => $user->name,
         'username' => $user->username,
         'email' => $user->email,
-        'team_id' => $user->team_id,
+        'team_id' => null,
         'image_id' => $user->image_id,
         'url' => $user->url,
         'last_read_announcement_at' => null,
@@ -29,4 +29,14 @@ class UserTest extends TestCase
     ]);
   }
 
+  /** @test */
+  public function user_has_one_image()
+  {
+    $user = make('App\User');
+    $image = make('App\Image', ['id' => 5]);
+
+    $user->setRelation('images', $image);
+
+    $this->assertEquals($user->image_id, $image->id);
+  }
 }
