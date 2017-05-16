@@ -66,10 +66,6 @@ class TestsRelationships
 
     $one->$secondPlural()->saveMany($two);
 
-    $this->test->assertDatabaseHas($this->alphebetize($lowerFirst, $lowerSecond), ["{$lowerFirst}_id" => $one->id]);
-    $two->each(function($t) use ($lowerFirst, $lowerSecond) {
-      $this->test->assertDatabaseHas($this->alphebetize($lowerFirst, $lowerSecond), ["{$lowerSecond}_id" => $t->id]);
-    });
     $this->test->assertInstanceOf("App\\$second", $one->$secondPlural->first());
     $this->test->assertEquals(count($one->$secondPlural), 10);
   }
@@ -82,14 +78,5 @@ class TestsRelationships
   private function plural($string, $suffix = 's')
   {
     return "$string$suffix";
-  }
-
-  private function alphebetize($first, $second)
-  {
-    $arr = [$first, $second];
-
-    sort($arr);
-
-    return "$arr[0]_$arr[1]";
   }
 }
