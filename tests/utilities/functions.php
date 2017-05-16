@@ -13,3 +13,8 @@ function make($class, $attributes = [], $times = null)
 function ddjson($obj) {
   dd(json_decode($obj));
 }
+
+function createOneToOne($first, $second)
+{
+
+}

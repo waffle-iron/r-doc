@@ -5,10 +5,11 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Utilities\Relationships;
 
 class UserTest extends TestCase
 {
-  use DatabaseMigrations;
+  use DatabaseMigrations, Relationships;
 
   /** @test */
   public function a_user_has_an_image()
@@ -22,10 +23,7 @@ class UserTest extends TestCase
   /** @test */
   public function a_user_can_have_many_notifications()
   {
-    $user = create('App\User');
-    $notifications = create('App\Notification', ['user_id' => $user->id], 10);
-
-    $this->assertCount(10, $user->notifications);
+    $this->manyToOne('Notification', 'User');
   }
 
 }
