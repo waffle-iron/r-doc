@@ -46,5 +46,23 @@ class GuidesTest extends TestCase
   {
     $guide = create('App\Guide');
 
+    $this->assertDatabaseHas('guides', [
+      'id' => $guide->id,
+      'datatype' => $guide->datatype,
+      'can_edit' => true,
+      'url' => $guide->url,
+      'category_id' => $guide->category_id,
+      'revision' => $guide->revision,
+      'type_id' => $guide->type_id,
+      'device_id' => $guide->device_id,
+      'title' => $guide->title,
+      'summary' => $guide->summary,
+      'introduction' => $guide->introduction,
+      'image_id' => $guide->image_id,
+      'previous_text' => $guide->previous_text,
+      'conclusion' => $guide->conclusion,
+      'obsolete' => false,
+      'deleted_at' => null,
+    ]);
   }
 }

@@ -142,3 +142,9 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
       'name' => $faker->name,
   ];
 });
+
+$factory->define(App\Datatype::class, function (Faker\Generator $faker) {
+  return [
+      'name' => $faker->name,
+  ];
+});
