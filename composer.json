@@ -35,7 +35,7 @@
     "psr-4": {
       "Tests\\": "tests/"
     },
-    "files": ["tests/utilities/functions.php", "tests/utilities/Relationships.php"]
+    "files": ["tests/utilities/functions.php"]
   },
   "scripts": {
     "post-root-package-install": [

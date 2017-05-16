@@ -1,5 +1,7 @@
 <?php
 
+use Monolog\TestCase;
+
 function create($class, $attributes = [], $times = null)
 {
   return factory($class, $times)->create($attributes);
@@ -14,7 +16,5 @@ function ddjson($obj) {
   dd(json_decode($obj));
 }
 
-function createOneToOne($first, $second)
-{
 
-}
+

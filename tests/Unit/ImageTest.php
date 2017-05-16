@@ -11,7 +11,7 @@ class ImageTest extends TestCase
   use DatabaseMigrations;
 
   /** @test */
-  public function an_image_can_have_one_users()
+  public function an_image_can_have_one_user()
   {
     $users = create('App\User');
     $image = create('App\Image', ['user_id' => 1]);

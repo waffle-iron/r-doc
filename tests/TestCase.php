@@ -6,6 +6,7 @@ use Exception;
 use App\Exceptions\Handler;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\Utilities\TestsRelationships;
 
 /**
  * @property ExceptionHandler|mixed oldExceptionHandler
@@ -13,6 +14,14 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
   use CreatesApplication;
+
+  protected $relationship;
+
+  public function __construct($name = null, array $data = [], $dataName = '')
+  {
+    parent::__construct($name, $data, $dataName);
+    $this->relationship = new TestsRelationships($this);
+  }
 
   protected function setUp()
   {
