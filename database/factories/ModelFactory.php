@@ -109,3 +109,18 @@ $factory->define(App\Status::class, function (Faker\Generator $faker) {
       'name' => $faker->word,
   ];
 });
+
+$factory->define(App\Revision::class, function (Faker\Generator $faker) {
+  return [
+      'description' => $faker->sentence,
+      'editor_id' => function () {
+        return factory('App\User')->create()->id;
+      },
+      'owner_id' => function () {
+        return factory('App\User')->create()->id;
+      },
+      'status_id' => function () {
+        return factory('App\Status')->create()->id;
+      },
+  ];
+});
