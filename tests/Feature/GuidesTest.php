@@ -48,7 +48,7 @@ class GuidesTest extends TestCase
 
     $this->assertDatabaseHas('guides', [
       'id' => $guide->id,
-      'datatype' => $guide->datatype,
+      'datatype_id' => $guide->datatype_id,
       'can_edit' => true,
       'url' => $guide->url,
       'category_id' => $guide->category_id,

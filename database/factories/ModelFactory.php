@@ -32,7 +32,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Guide::class, function (Faker\Generator $faker) {
 
   return [
-//      'datatype' => "guide",
+      'datatype_id' => 1,
       'url' => $faker->url(),
       'category_id' => function () {
         return factory('App\Category')->create()->id;
