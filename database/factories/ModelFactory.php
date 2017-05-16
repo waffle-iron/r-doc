@@ -31,17 +31,30 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Guide::class, function (Faker\Generator $faker) {
 
   return [
-      'dataType' => 'guide',
+      'datatype' => function () {
+        return factory('App\Datatype')->create()->id;
+      },
       'url' => $faker->url(),
-    //category_id
-    //type_id
-    //device_id
-      'title' => $faker->sentence(),
-      'summary' => $faker->paragraph(),
-      'introduction' => $faker->paragraph(),
-    //image_id
-      'previous_text' => $faker->sentence(),
-      'conclusion' => $faker->paragraph(),
+      'category_id' => function () {
+        return factory('App\Category')->create()->id;
+      },
+      'revision_id' => function () {
+        return factory('App\Revision')->create()->id;
+      },
+      'type_id' => function () {
+        return factory('App\Type')->create()->id;
+      },
+      'device_id' => function () {
+        return factory('App\Device')->create()->id;
+      },
+      'title' => $faker->words(5, true),
+      'summary' => $faker->paragraph(1, true),
+      'introduction' => $faker->paragraph(1, true),
+      'image_id' => function () {
+        return factory('App\Image')->create()->id;
+      },
+      'previous_text' => $faker->sentence(1, true),
+      'conclusion' => $faker->paragraph(1, true),
   ];
 });
 

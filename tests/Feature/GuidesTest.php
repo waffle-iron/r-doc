@@ -52,7 +52,8 @@ class GuidesTest extends TestCase
       'can_edit' => true,
       'url' => $guide->url,
       'category_id' => $guide->category_id,
-      'revision' => $guide->revision,
+      'revision' => '-',
+      'revision_id' => $guide->revision_id,
       'type_id' => $guide->type_id,
       'device_id' => $guide->device_id,
       'title' => $guide->title,
@@ -62,6 +63,7 @@ class GuidesTest extends TestCase
       'previous_text' => $guide->previous_text,
       'conclusion' => $guide->conclusion,
       'obsolete' => false,
+      'revised_at' => null,
       'deleted_at' => null,
     ]);
   }
