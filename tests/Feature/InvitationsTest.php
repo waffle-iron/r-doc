@@ -17,7 +17,12 @@ class InvitationsTest extends TestCase
     $invitations = create('App\Invitation');
 
     $this->assertDatabaseHas('invitations', [
-      'id' => 1,
+      'id' => $invitations->id,
+      'team_id' => $invitations->team_id,
+      'user_id' => $invitations->user_id,
+      'email' => $invitations->email,
+      'token' => $invitations->token,
+      'deleted_at' => null,
     ]);
   }
 }
