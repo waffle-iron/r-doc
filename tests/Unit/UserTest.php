@@ -27,4 +27,10 @@ class UserTest extends TestCase
       $this->relationship->testManyToMany('User', 'Announcement');
   }
 
+  /** @test */
+  public function a_user_has_many_invitations()
+  {
+    $this->relationship->testManyToMany('User', 'Invitation');
+  }
+
 }

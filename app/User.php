@@ -43,4 +43,8 @@ class User extends Authenticatable
   public function announcements() {
     return $this->belongsToMany(Announcement::class);
   }
+
+  public function invitations() {
+    return $this->belongsToMany(Invitation::class);
+  }
 }
