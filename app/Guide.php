@@ -15,4 +15,9 @@ class Guide extends Model
   {
     return $this->hasOne(Datatype::class);
   }
+
+  public function category()
+  {
+    return $this->hasOne(Category::class);
+  }
 }
