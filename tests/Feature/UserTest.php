@@ -21,17 +21,12 @@ class UserTest extends TestCase
         'name' => $user->name,
         'username' => $user->username,
         'email' => $user->email,
-//      //'team_id'
-        'image_id' => $user->id,
+        'team_id' => $user->team_id,
+        'image_id' => $user->image_id,
         'url' => $user->url,
         'last_read_announcement_at' => null,
         'deleted_at' => null,
     ]);
   }
 
-  /** @test */
-  public function image_user_relationship_is_correct()
-  {
-
-  }
 }

@@ -19,9 +19,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
       'name' => $faker->name,
       'username' => $faker->userName,
       'image_id' => function () {
-        return factory(App\Image::class)->create()->id;
+        return factory('App\Image')->create()->id;
       },
       'email' => $faker->unique()->safeEmail,
+      'team_id' => function () {
+//        return factory('App\Team')->create()->owner_id;
+      },
       'password' => $password ?: $password = bcrypt('secret'),
       'remember_token' => str_random(10),
       'url' => $faker->url,
@@ -180,9 +183,9 @@ $factory->define(App\Line::class, function (Faker\Generator $faker) {
       'steps_id' => function () {
         return factory('App\Step')->create()->id;
       },
-    'text' => $faker->paragraph(1, true),
-    'bullet' => $faker->word,
-    'level' => 0,
-    'orderby' => 1,
+      'text' => $faker->paragraph(1, true),
+      'bullet' => $faker->word,
+      'level' => 0,
+      'orderby' => 1,
   ];
 });
