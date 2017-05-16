@@ -65,3 +65,14 @@ $factory->define(App\Notification::class, function (Faker\Generator $faker) {
       'action_url' => $faker->url,
   ];
 });
+
+$factory->define(App\Announcement::class, function (Faker\Generator $faker) {
+  return [
+      'user_id' => function () {
+        return factory('App\User')->create()->id;
+      },
+      'body' => $faker->paragraphs(1, true),
+      'action_text' => $faker->words(4, true),
+      'action_url' => $faker->url,
+  ];
+});
