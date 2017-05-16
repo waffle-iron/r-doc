@@ -9,7 +9,7 @@ class Image extends Model
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
-  protected function user() {
+  public function user() {
       return $this->belongsTo('App\User');
     }
 }

@@ -92,6 +92,4 @@ class TestsRelationships
 
     return "$arr[0]_$arr[1]";
   }
-
-
 }

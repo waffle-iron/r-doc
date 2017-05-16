@@ -6,13 +6,14 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ImageTest extends TestCase
+class AnnouncementTest extends TestCase
 {
   use DatabaseMigrations;
 
   /** @test */
-  public function an_image_can_have_one_user()
+  public function an_announcement_has_many_users()
   {
-    $this->relationship->testBelongsTo('Image', 'User');
+    $this->relationship->testManyToMany('Announcement', 'User');
   }
+
 }
