@@ -76,3 +76,16 @@ $factory->define(App\Announcement::class, function (Faker\Generator $faker) {
       'action_url' => $faker->url,
   ];
 });
+$factory->define(App\Team::class, function (Faker\Generator $faker) {
+  $name = $faker->words(2, true);
+  return [
+      'owner_id' => function () {
+        return factory('App\User')->create()->id;
+      },
+    'name' => $name,
+    'slug' => str_slug($name),
+    'image_id' => function() {
+      return factory('App\Image')->create()->id;
+    },
+  ];
+});
