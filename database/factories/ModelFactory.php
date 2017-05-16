@@ -130,3 +130,9 @@ $factory->define(App\Type::class, function (Faker\Generator $faker) {
       'name' => $faker->name,
   ];
 });
+
+$factory->define(App\Device::class, function (Faker\Generator $faker) {
+  return [
+      'name' => $faker->name,
+  ];
+});

@@ -40,4 +40,11 @@ class GuidesTest extends TestCase
     $response4 = $this->get('/adfasdfasd');
     $response4->assertRedirect('/login');
   }
+
+  /** @test */
+  public function guides_table_is_configured()
+  {
+    $guide = create('App\Guide');
+
+  }
 }
