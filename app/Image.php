@@ -18,4 +18,9 @@ class Image extends Model
   {
     return $this->belongsTo(Team::class);
   }
+
+  public function guide()
+  {
+    return $this->belongsTo(Guide::class);
+  }
 }

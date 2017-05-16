@@ -15,7 +15,7 @@ class CreateGuidesTable extends Migration
   {
     Schema::create('guides', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('datatype')->unsigned();
+      $table->integer('datatype_id')->unsigned();
       $table->boolean('can_edit')->default(true);
       $table->string('url')->nullable()->default(null);
       $table->integer('category_id')->unsigned()->nullable();

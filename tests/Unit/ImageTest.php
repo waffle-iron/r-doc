@@ -20,4 +20,10 @@ class ImageTest extends TestCase
   {
     $this->relationship->testBelongsTo('Image', 'Team');
   }
+
+  /** @test */
+  public function an_image_belongs_to_guides()
+  {
+    $this->relationship->testBelongsTo('Image', 'Guide');
+  }
 }
