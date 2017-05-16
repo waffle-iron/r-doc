@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ImageTest extends TestCase
 {
@@ -14,5 +13,11 @@ class ImageTest extends TestCase
   public function an_image_can_have_one_user()
   {
     $this->relationship->testBelongsTo('Image', 'User');
+  }
+
+  /** @test */
+  public function an_image_can_have_many_teams()
+  {
+    $this->relationship->testBelongsTo('Image', 'Team');
   }
 }

@@ -18,7 +18,7 @@ class CreateTeamsTable extends Migration
       $table->integer('owner_id')->unsigned();
       $table->string('name');
       $table->string('slug');
-      $table->integer('image_id')->unsigned();
+      $table->integer('image_id')->unsigned()->nullable()->default(null);
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();
     });

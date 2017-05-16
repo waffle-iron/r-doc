@@ -96,9 +96,7 @@ $factory->define(App\Team::class, function (Faker\Generator $faker) {
       },
       'name' => $name,
       'slug' => str_slug($name),
-      'image_id' => function () {
-        return factory('App\Image')->create()->id;
-      },
+      'image_id' => null,
   ];
 });
 
