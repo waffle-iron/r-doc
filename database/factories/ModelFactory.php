@@ -103,3 +103,9 @@ $factory->define(App\Invitation::class, function (Faker\Generator $faker) {
       'token' => str_random(10),
   ];
 });
+
+$factory->define(App\Status::class, function (Faker\Generator $faker) {
+  return [
+      'name' => $faker->word,
+  ];
+});
