@@ -174,3 +174,15 @@ $factory->define(App\Step::class, function (Faker\Generator $faker) {
       },
   ];
 });
+
+$factory->define(App\Line::class, function (Faker\Generator $faker) {
+  return [
+      'steps_id' => function () {
+        return factory('App\Step')->create()->id;
+      },
+    'text' => $faker->paragraph(1, true),
+    'bullet' => $faker->word,
+    'level' => 0,
+    'orderby' => 1,
+  ];
+});
