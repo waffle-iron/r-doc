@@ -161,3 +161,16 @@ $factory->define(App\Datatype::class, function (Faker\Generator $faker) {
       'name' => $faker->name,
   ];
 });
+
+$factory->define(App\Step::class, function (Faker\Generator $faker) {
+  return [
+      'guide_id' => function () {
+        return factory('App\Guide')->create()->id;
+      },
+      'title' => $faker->sentence(1, true),
+      'orderby' => 1,
+      'revision_id' => function () {
+        return factory('App\Revision')->create()->id;
+      },
+  ];
+});
