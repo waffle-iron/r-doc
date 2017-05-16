@@ -10,4 +10,9 @@ class Team extends Model
   {
     return $this->belongsToMany(User::class);
   }
+
+  public function image()
+  {
+    return $this->hasOne(Image::class);
+  }
 }

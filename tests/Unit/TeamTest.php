@@ -14,4 +14,10 @@ class TeamTest extends TestCase
   {
     $this->relationship->testManyToMany('Team', 'User');
   }
+
+  /** @test */
+  public function a_team_has_one_image()
+  {
+    $this->relationship->testHasOne('Team', 'Image');
+  }
 }
