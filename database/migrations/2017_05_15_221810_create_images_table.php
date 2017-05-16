@@ -15,6 +15,7 @@ class CreateImagesTable extends Migration
   {
     Schema::create('images', function (Blueprint $table) {
       $table->increments('id')->unsigned();
+      $table->integer('user_id')->unsigned()->nullable()->default(null);
       $table->string('original');
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

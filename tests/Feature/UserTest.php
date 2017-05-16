@@ -28,15 +28,4 @@ class UserTest extends TestCase
         'deleted_at' => null,
     ]);
   }
-
-  /** @test */
-  public function user_has_one_image()
-  {
-    $user = make('App\User');
-    $image = make('App\Image', ['id' => 5]);
-
-    $user->setRelation('images', $image);
-
-    $this->assertEquals($user->image_id, $image->id);
-  }
 }

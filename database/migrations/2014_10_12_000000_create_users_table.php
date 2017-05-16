@@ -26,8 +26,6 @@ class CreateUsersTable extends Migration
       $table->timestamp('last_read_announcement_at')->nullable()->default(null);
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();
-
-//      $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
     });
   }
 

@@ -22,9 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         return factory('App\Image')->create()->id;
       },
       'email' => $faker->unique()->safeEmail,
-      'team_id' => function () {
-//        return factory('App\Team')->create()->owner_id;
-      },
+      'team_id' => null,
       'password' => $password ?: $password = bcrypt('secret'),
       'remember_token' => str_random(10),
       'url' => $faker->url,
