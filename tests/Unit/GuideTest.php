@@ -26,4 +26,10 @@ class GuideTest extends TestCase
   {
     $this->relationship->testHasOne('Guide', 'Category');
   }
+
+  /** @test */
+  public function a_guide_has_one_type()
+  {
+    $this->relationship->testHasOne('Guide', 'Type');
+  }
 }

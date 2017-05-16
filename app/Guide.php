@@ -20,4 +20,9 @@ class Guide extends Model
   {
     return $this->hasOne(Category::class);
   }
+
+  public function type()
+  {
+    return $this->hasOne(Type::class);
+  }
 }
