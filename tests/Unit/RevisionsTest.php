@@ -20,4 +20,10 @@ class RevisionsTest extends TestCase
   {
     $this->relationship->testBelongsTo('Revision', 'Step');
   }
+
+  /** @test */
+  public function a_revision_has_one_status()
+  {
+    $this->relationship->testHasOne('Revision', 'Status');
+  }
 }

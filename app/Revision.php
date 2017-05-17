@@ -15,4 +15,9 @@ class Revision extends Model
   {
     return $this->belongsTo(Step::class);
   }
+
+  public function status()
+  {
+    return $this->hasOne(Status::class);
+  }
 }
