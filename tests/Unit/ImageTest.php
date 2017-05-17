@@ -26,4 +26,10 @@ class ImageTest extends TestCase
   {
     $this->relationship->testBelongsTo('Image', 'Guide');
   }
+
+  /** @test */
+  public function an_image_can_have_many_steps()
+  {
+    $this->relationship->testBelongsTo('Image', 'Step');
+  }
 }

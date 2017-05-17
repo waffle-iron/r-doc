@@ -14,4 +14,10 @@ class StepsTest extends TestCase
   {
     $this->relationship->testOneToMany('Step', 'Revision');
   }
+
+  /** @test */
+  public function a_step_has_many_images()
+  {
+    $this->relationship->testOneToMany('Step', 'Image');
+  }
 }

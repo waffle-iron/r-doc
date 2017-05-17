@@ -44,12 +44,11 @@ class TestsRelationships
     $pluralMany = $this->plural($lowerMany);
 
     $first = create("App\\$one");
-    $second = create("App\\$many", [], 10);
+    $second = make("App\\$many", [], 10);
 
     $first->$pluralMany()->saveMany($second);
 
-    $second->each(function($s, $key) use ($lowerMany, $lowerOne, $one, $second) {
-//      ddjson($s->$lowerOne);
+    $second->each(function($s) use ($lowerOne, $one) {
       $this->test->assertInstanceOf("App\\$one", $s->$lowerOne);
     });
     $this->test->assertEquals(count($first->$pluralMany), 10);

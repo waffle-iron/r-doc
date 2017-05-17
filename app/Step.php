@@ -10,4 +10,9 @@ class Step extends Model
   {
     return $this->hasMany(Revision::class);
   }
+
+  public function images()
+  {
+    return $this->hasMany(Image::class);
+  }
 }
