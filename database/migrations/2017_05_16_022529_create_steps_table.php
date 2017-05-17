@@ -15,11 +15,11 @@ class CreateStepsTable extends Migration
   {
     Schema::create('steps', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('guide_id')->unsigned();
+      $table->integer('guide_id')->unsigned()->nullable();
       $table->string('title')->nullable();
       $table->integer('orderby')->unsigned();
-      $table->integer('revision_id')->unsigned();
-      $table->integer('image_id')->unsigned();
+      $table->integer('revision_id')->unsigned()->nullable();
+      $table->integer('image_id')->unsigned()->nullable();
       $table->timestamp('revised_at')->nullable()->default(null);
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

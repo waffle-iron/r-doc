@@ -15,7 +15,7 @@ class CreateLinesTable extends Migration
   {
     Schema::create('lines', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('step_id')->unsigned();
+      $table->integer('step_id')->unsigned()->nullable();
       $table->text('text')->nullable();
       $table->string('bullet')->default('black');
       $table->integer('level')->unsigned()->default(0);

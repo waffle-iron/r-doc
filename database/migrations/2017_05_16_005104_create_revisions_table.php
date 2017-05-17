@@ -16,11 +16,11 @@ class CreateRevisionsTable extends Migration
     Schema::create('revisions', function (Blueprint $table) {
       $table->increments('id');
       $table->string('description');
-      $table->integer('guide_id')->unsigned();
-      $table->integer('step_id')->unsigned();
-      $table->integer('editor_id')->unsigned();
-      $table->integer('owner_id')->unsigned();
-      $table->integer('status_id')->unsigned();
+      $table->integer('guide_id')->unsigned()->nullable();
+      $table->integer('step_id')->unsigned()->nullable();
+      $table->integer('editor_id')->unsigned()->nullable();
+      $table->integer('owner_id')->unsigned()->nullable();
+      $table->integer('status_id')->unsigned()->nullable();
       $table->timestamps();
     });
   }
