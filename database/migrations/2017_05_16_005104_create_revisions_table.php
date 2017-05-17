@@ -17,6 +17,7 @@ class CreateRevisionsTable extends Migration
       $table->increments('id');
       $table->string('description');
       $table->integer('guide_id')->unsigned();
+      $table->integer('step_id')->unsigned();
       $table->integer('editor_id')->unsigned();
       $table->integer('owner_id')->unsigned();
       $table->integer('status_id')->unsigned();

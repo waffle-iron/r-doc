@@ -14,4 +14,10 @@ class RevisionsTest extends TestCase
   {
     $this->relationship->testBelongsTo('Revision', 'Guide');
   }
+
+  /** @test */
+  public function a_revision_can_belong_to_one_step()
+  {
+    $this->relationship->testBelongsTo('Revision', 'Step');
+  }
 }

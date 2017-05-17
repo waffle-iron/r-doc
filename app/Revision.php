@@ -10,4 +10,9 @@ class Revision extends Model
   {
     return $this->belongsTo(Guide::class);
   }
+
+  public function step()
+  {
+    return $this->belongsTo(Step::class);
+  }
 }

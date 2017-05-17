@@ -160,9 +160,6 @@ $factory->define(App\Step::class, function (Faker\Generator $faker) {
       },
       'title' => $faker->sentence(1, true),
       'orderby' => 1,
-      'revision_id' => function () {
-        return factory('App\Revision')->create()->id;
-      },
   ];
 });
 
