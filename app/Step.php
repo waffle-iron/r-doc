@@ -15,4 +15,9 @@ class Step extends Model
   {
     return $this->hasMany(Image::class);
   }
+
+  public function lines()
+  {
+    return $this->hasMany(Line::class);
+  }
 }

@@ -20,4 +20,10 @@ class StepsTest extends TestCase
   {
     $this->relationship->testOneToMany('Step', 'Image');
   }
+
+  /** @test */
+  public function a_step_can_have_many_lines()
+  {
+    $this->relationship->testOneToMany('Step', 'Line');
+  }
 }
