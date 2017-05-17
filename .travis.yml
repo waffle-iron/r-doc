@@ -9,8 +9,7 @@ php:
 before_script:
   - phpenv config-rm xdebug.ini
   - cp .env.travis .env
-  - rm phpunit.xml
-  - cp .travis-test phpunit.xml
+  - cp -rf .travis-tests phpunit.xml
   - travis_retry composer install --no-interaction --prefer-dist --no-suggest
   - php artisan key:generate
   - php artisan migrate
