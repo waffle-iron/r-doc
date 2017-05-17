@@ -11,10 +11,15 @@
 |
 */
 
-Route::get('/', function () { return view('guide.index'); });
-Route::get('/mockups/guide/{guideid}', 'MockupsController@guide')->name('mockup-guide');
-Route::get('/mockups/guide/intro/{guideid}', 'MockupsController@edit')->name('mockup-guide-intro-edit');
-Route::get('/mockups/guide/steps/{guideid}/{stepid}', 'MockupsController@editSteps')->name('mockup-guide-step-edit');
+Route::get('/', function () {
+  return redirect()->route('mockup-guide', ['guideid' => 0]);
+});
+
+Route::group(['prefix' => 'mockups'], function () {
+  Route::get('guide/{guideid}', 'MockupsController@guide')->name('mockup-guide');
+  Route::get('guide/intro/{guideid}', 'MockupsController@edit')->name('mockup-guide-intro-edit');
+  Route::get('guide/steps/{guideid}/{stepid}', 'MockupsController@editSteps')->name('mockup-guide-step-edit');
+});
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
