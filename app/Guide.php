@@ -30,4 +30,9 @@ class Guide extends Model
   {
     return $this->hasOne(Device::class);
   }
+
+  public function revisions()
+  {
+    return $this->belongsToMany(Revision::class);
+  }
 }

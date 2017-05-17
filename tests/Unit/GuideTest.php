@@ -38,4 +38,10 @@ class GuideTest extends TestCase
   {
     $this->relationship->testHasOne('Guide', 'Device');
   }
+
+  /** @test */
+  public function a_guide_has_many_revisions()
+  {
+    $this->relationship->testManyToMany('Guide', 'Revision');
+  }
 }

@@ -55,7 +55,6 @@ class TestsRelationships
   }
 
   public function testManyToMany($first, $second) {
-    $lowerFirst = $this->lower($first);
     $lowerSecond = $this->lower($second);
     $secondPlural = $this->plural($lowerSecond);
 
@@ -65,6 +64,7 @@ class TestsRelationships
     $this->test->assertEquals(count($two), 10);
 
     $one->$secondPlural()->saveMany($two);
+
 
     $this->test->assertInstanceOf("App\\$second", $one->$secondPlural->first());
     $this->test->assertEquals(count($one->$secondPlural), 10);
