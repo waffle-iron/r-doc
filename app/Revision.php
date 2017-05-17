@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Revision extends Model
 {
-  public function guides()
+  public function guide()
   {
-    return $this->belongsToMany(Guide::class);
+    return $this->belongsTo(Guide::class);
   }
 }

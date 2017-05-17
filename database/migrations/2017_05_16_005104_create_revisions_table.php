@@ -16,6 +16,7 @@ class CreateRevisionsTable extends Migration
     Schema::create('revisions', function (Blueprint $table) {
       $table->increments('id');
       $table->string('description');
+      $table->integer('guide_id')->unsigned();
       $table->integer('editor_id')->unsigned();
       $table->integer('owner_id')->unsigned();
       $table->integer('status_id')->unsigned();

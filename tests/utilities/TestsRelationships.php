@@ -37,7 +37,7 @@ class TestsRelationships
     $this->test->assertEquals(count($one->$lowerSecond), 1);
   }
 
-  public function testManyToOne($many, $one)
+  public function testOneToMany($one, $many)
   {
     $lowerMany = $this->lower($many);
     $lowerOne = $this->lower($one);
@@ -49,6 +49,7 @@ class TestsRelationships
     $first->$pluralMany()->saveMany($second);
 
     $second->each(function($s, $key) use ($lowerMany, $lowerOne, $one, $second) {
+//      ddjson($s->$lowerOne);
       $this->test->assertInstanceOf("App\\$one", $s->$lowerOne);
     });
     $this->test->assertEquals(count($first->$pluralMany), 10);

@@ -18,7 +18,7 @@ class UserTest extends TestCase
   /** @test */
   public function a_user_can_have_many_notifications()
   {
-    $this->relationship->testManyToOne('Notification', 'User');
+    $this->relationship->testOneToMany('User', 'Notification');
   }
 
   /** @test */

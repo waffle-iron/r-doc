@@ -65,9 +65,6 @@ $factory->define(App\Image::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Notification::class, function (Faker\Generator $faker) {
   return [
-      'user_id' => function () {
-        return factory('App\User')->create()->id;
-      },
       'created_by' => function () {
         return factory('App\User')->create()->id;
       },

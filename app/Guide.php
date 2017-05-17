@@ -33,6 +33,6 @@ class Guide extends Model
 
   public function revisions()
   {
-    return $this->belongsToMany(Revision::class);
+    return $this->hasMany(Revision::class);
   }
 }
