@@ -17,13 +17,12 @@ class StepsTest extends TestCase
     $step = create('App\Step');
 
     $this->assertDatabaseHas('steps', [
-      'id' => $step->id,
-    'guide_id' => $step->guide_id,
-      'title' => $step->title,
-      'orderby' => $step->orderby,
-      'revision_id' => $step->revision_id,
-      'revised_at' => null,
-      'deleted_at' => null,
+        'id' => $step->id,
+        'guide_id' => $step->guide_id,
+        'title' => $step->title,
+        'orderby' => $step->orderby,
+        'revised_at' => null,
+        'deleted_at' => null,
     ]);
   }
 

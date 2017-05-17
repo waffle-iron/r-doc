@@ -18,7 +18,6 @@ class NotificationsTest extends TestCase
 
       $this->assertDatabaseHas('notifications', [
          'id' => 1,
-        'user_id' => $notification->user_id,
         'created_by' => $notification->created_by,
         'icon' => $notification->icon,
         'body' => $notification->body,
