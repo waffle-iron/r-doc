@@ -4,6 +4,20 @@ title: Weekly Summaries
 permalink: /summaries/
 ---
 
+## Week 2
+
+...
+
+---
+
+### Log Entries
+
+- [Monday](/r-doc/2017/05/monday-may-15)
+- [Tuesday](/r-doc/2017/05/tuesday-may-16)
+- [Wednesday](/r-doc/2017/05/wednesday-may-17)
+
+---
+
 ## Week 1
 
 ### Summary

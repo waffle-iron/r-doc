@@ -77,53 +77,98 @@
       <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create steps migration and test db</li>
   <li class="box_done task-list-item">
       <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create lines migration and test db</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test relationships
-    <ul>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> user has one image (image belongs to many users)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> user has many notifications (notification belongs to one user)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> user has many announcements (announcements belong to many users)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> user has many invitations (invitations belong to many users)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> team has many users (users belong to many teams)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> team has one image (image can belong to many teams)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> guide has one image (image can belong to many guides)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> guide has one datatype (datatype belongs to many guides)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> guide has one image (image can belong to many guides)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> guide has one category (categories belong to many guides)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> guide has one type (type belongs to many guides)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> guide has one device (device belongs to many guides)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> guide has many revisions (revision belongs to many guides)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> step has many revisions (revision belongs to many steps)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> step has many images (image can belong to many steps)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> step has many lines (line belongs to one step)</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> revision has one status (status belongs to many revisions)</li>
-    </ul>
-  </li>
 </ul>
 
 <hr />
 
-<h4 id="api-tests">Api Tests</h4>
+<h4 id="database-relationships">Database Relationships</h4>
+<ul>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> user has one image (image belongs to one user)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> user has many notifications (notification belongs to one user)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> user has many announcements (announcements belong to many users)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> user has many invitations (invitations belong to many users)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> team has many users (users belong to many teams)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> team has one image (image can belong to many teams)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guide has one image (image can belong to many guides)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guide has one datatype (datatype belongs to many guides)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guide has one category (categories belong to many guides)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guide has one type (type belongs to many guides)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guide has one device (device belongs to many guides)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guide has many revisions (revision belongs to one guides)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> step has many revisions (revision belongs to one steps)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> step has many images (image can belong to many steps)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> step has many lines (line belongs to one step)</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> revision has one status (status belongs to many revisions)</li>
+</ul>
+
+<hr />
+
+<h4 id="database-seeds">Database Seeds</h4>
+
 <ul>
   <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test guides resource</li>
+      <input type="checkbox" class="task-list-item-checkbox" disabled> set up database seeds so that I can visually test against a real database.</li>
+</ul>
+
+<hr />
+
+<h4 id="crud-tests">CRUD Tests</h4>
+<ul>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test images (do i want to use dropzone?; need image resizing library)</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test users</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test notifications</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test announcements</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test teams</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test invitations</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test statuses</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test revisions</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test types</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test devices</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test categories</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test datatypes</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test guides</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test steps</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test lines</li>
+</ul>
+
+<hr />
+
+<h4 id="api-tests">API Tests</h4>
+
+<ul>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> configure all API endpoints</li>
 </ul>
 
     </div>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html class="t-brown">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Tuesday May 16</title>
+  <meta name="description" content="back">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700|Roboto+Mono:400,500' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/r-doc/css/main.css">
+</head>
+
+  <body>
+    <nav class="c-navigation is-fixed">
+  <div class="c-navigation__container u-container">
+    <a class="c-navigation__item " href="/r-doc/">Home</a>
+    <a class="c-navigation__item " href="/r-doc/front-stories/">Front End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/back-stories/">Back End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/summaries/">Weekly Summaries</a>
+    <a class="c-navigation__item " href="/r-doc/logs/">Log Index</a>
+  </div>
+</nav>
+
+
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <article class="c-article">
+  <header class="c-header c-article__header">
+    <div class="u-container">
+      <h1 class="c-header__title">Tuesday May 16</h1>
+    </div>
+  </header>
+
+  <div class="c-article__main">
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <div class="post-content markdown-body" itemprop="articleBody">
+  <p><a href="/r-doc/summaries">back</a></p>
+
+<h3 id="screenshots">Screenshots</h3>
+
+<p target="_blank"><a href="/r-doc/images/week2/05-16-custom-helper-class.png" target="_blank"><img src="/r-doc/images/week2/05-16-custom-helper-class.png" alt="Custom Helper Class" width="200" class="img-responsive img-border" /></a>
+<a href="/r-doc/images/week2/05-16-example-test.png" target="_blank"><img src="/r-doc/images/week2/05-16-example-test.png" alt="Example Test" width="200" class="img-responsive img-border" /></a>
+<a href="/r-doc/images/week2/05-16-misleading-commit-message.png"><img src="/r-doc/images/week2/05-16-misleading-commit-message.png" alt="Misleading Commit Message" width="200" class="img-responsive img-border" /></a></p>
+
+<hr />
+
+<h3 id="progress">Progress</h3>
+
+<p>Today involved a ton more testing. I was able to successfully test and implement all of the different relationships between the different database tables. This entailed some refactoring as I went. Shown in the first screenshot above, I was able to implement a class that made writing repetitive tests a bit easier (an example in the second screenshot). Not only did this save having to write the same code over and over again, but I believe that it is much cleaner and makes more sense as to what I’m doing. The third screenshot was thrown in there because I find that the commit message contradicts itself. More about that in the Thoughts section.</p>
+
+<hr />
+
+<h3 id="thoughts">Thoughts</h3>
+
+<p>I’m finding that tests really help even though it seems like a lot of extra work. For example, when I was testing my database relationships, I had found that I needed to alter my database structure a little bit. Since I had already tested this aspect, I often found that writing new tests broke old tests. This is really good because I never would have caught them if I was simply hacking away at the code and using a change code/refresh page technique. Thankfully when it comes to tests, you don’t even need to have the browser open since the tests are all working in the background to do all of the work that you would have to do manually otherwise.</p>
+
+<p>The third screenshot that I included was an example where I had all tests passing on my computer, but when I pushed my code to the repository, the tests that were running on Travis were failing. Unfortunately, this has happened a few times. Generally, it has to do with me making small tweaks to the configuration files to help make my local development smoother. It’s good to have this kind of feedback available.</p>
+
+<hr />
+
+<h3 id="daily-commits">Daily Commits</h3>
+
+<ul>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/84599fdf7319d94469cb96b807824570608bd029" target="_blank">All test passing</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/2bca3c734339682f0ff5cb86d58b84c7290bcd58" target="_blank">Something is wrong with travis</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/f79f85451fa3b5d0010951ecab0345489c9101e4" target="_blank">user_has_one_image</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/d93aa4e274ccf7baa8d2aeb0846d86f4cd68149a" target="_blank">a_user_has_an_image</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/c9d81fa38856410cf50ac50afcce181c8b529238" target="_blank">an_image_can_have_one_user</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/ceea444f5818842a8d1722baeb44696aeca1b3f3" target="_blank">a_user_can_have_many_notifications</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/901e881acf02c34bd0386ffc1a59fc9cd9a803da" target="_blank">Refactor many to one relationship test</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/ceb9ae0e72500b4b39498dfbbc66e4fe179a2316" target="_blank">Refactor one to one relationship</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/585d9eb142a584294d8bac83c52c91a253576749" target="_blank">refactor one to one test</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/ac51915e070d84115f7b27fb8419b7a0e93a5692" target="_blank">Major refactoring needed; all tests passing</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/863c76471ba5b5e2f108238f0fc72a3cc5eb3882" target="_blank">an_announcement_has_many_users</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/3b7773c2df7bf076c4b0eb2555e156bc023baa26" target="_blank">a_user_has_many_invitations</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/a89df61f54bfa5f8c745b8c5ad73b5f042bd88c7" target="_blank">an_invitation_has_many_users</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/ca576b98984ab4ff14ffb4554e26b276da0267de" target="_blank">a_user_can_belong_to_many_teams; a_team_has_many_users</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/0c8bac04490135efeb236c248611f5e1ee3aa9d1" target="_blank">a_team_has_one_image</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/25c3ab23643cab886a28f09a62f6c8c1ee5d3cc6" target="_blank">an_image_can_have_many_teams</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/bb05d590ce1f3a3588e6dc44859e43b5cc11012f" target="_blank">Guides and datatypes tests passing.</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/1606e203d47a2e732ca2b465a87bb1b829f7080a" target="_blank">All tests pass</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/e10b1418f0cb1946ec452659f0e9b9bcb2c05045" target="_blank">a_guide_has_one_category</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/abb97907a9eef98634b57cfbca982978d48b3770" target="_blank">a_category_belongs_to_many_guides</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/41ec6d264af30884db3afaedec1c665be03ee326" target="_blank">a_guide_has_one_type</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/d15d3261a074c9d3a5dba08725a213d41156d431" target="_blank">a_type_belongs_to_many_guides</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/1b3c95aaba98a22dd8ad039177fa820090f6b41a" target="_blank">Fix for travis errors</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/9affd564194ef10c67777036dca65de9ffb15075" target="_blank">a_guide_has_one_device</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/e43308f4a7ba8210ec916ee632ca03d9a002d997" target="_blank">a_device_belongs_to_many_guides</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/e33906f67ec67af5937ea5ab8e804e05f8a09c78" target="_blank">a_guide_has_many_revisions</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/45ca5f44893316df75c911305c9c68ff437a7417" target="_blank">a_guide_has_many_revisions</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/70c8d18e1be7690c1e7edafb840b70c21a3ee5d5" target="_blank">a_revision_can_belong_to_one_guide</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/2a537499fe2de2e5dfd0012c5c8a96f507e620ca" target="_blank">a_step_has_many_revisions; a_revision_can_belong_to_one_step</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/58f7f10315aa31fad7a449bb008d0483d1a5c90a" target="_blank">a_step_has_many_images; an_image_can_have_many_steps</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/0c96aa51b112d3186f4c978d526cddaa583818e1" target="_blank">Test fixes</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/1df835a0c5d1d4e149dd5dbf064bee94f630bb23" target="_blank">a_step_can_have_many_lines; a_line_belongs_to_one_step</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/ce508c3a75bcf556a7ef91a0374cff58d07c6819" target="_blank">a_revision_has_one_status; a_status_belongs_to_a_revision</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/715d0edddcbfbe3d7b625e5eaa3da0f613c451ac" target="_blank">Fixed not null errors</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/a6121282541a46a011804916abd7de18aa5af2fb" target="_blank">travis fix</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/1bfda92fe03bd7ea28bbe65069f2584783872ba5" target="_blank">Merge pull request #1 from roberthamel/create-database </a></li>
+</ul>
+
+</div>
+
+    </div>
+  </div>
+</article>
+
+    </div>
+
+  </body>
+</html>

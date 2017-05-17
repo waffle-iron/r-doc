@@ -1,0 +1,49 @@
+---
+layout: post
+title:  "Monday May 15"
+date:   2017-05-15 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Progress
+
+A LOT of commits today. I was able to successfully set up and test the database tables. I also installed a few composer packages that will help when I implement features down the road.
+
+---
+
+### Thoughts 
+
+As a rule of thumb, it seems like the best practice for me to make a commit after each test is written and all tests in the suite are passing. I'm finding that the whole process of test-driven development is very time consuming. It is, however, quite rewarding to know that everything I am trying to implement is working correctly.
+
+---
+
+### Daily Commits
+
+- [Install composer packages](https://github.com/roberthamel/r-doc/commit/426de5f6350a7344e8e642a5c959b7ba1ad4db5a){:target="_blank"}
+- [Configure fractal](https://github.com/roberthamel/r-doc/commit/d734ce0dc185ed3645edd281576594ddf74537a9){:target="_blank"}
+- [Configure ide-helper](https://github.com/roberthamel/r-doc/commit/1766f0d5d23da5c48df59dd7aab608b74d45cc29){:target="_blank"}
+- [Configure passport](https://github.com/roberthamel/r-doc/commit/1783a175ac94620be397d9df1b3a973fb03d08b3){:target="_blank"}
+- [can_view_a_list_of_guides passing](https://github.com/roberthamel/r-doc/commit/fb123588c2029c161ea30735e396a11149edd492){:target="_blank"}
+- [will_redirect_to_mockup_when_visiting_the_homepage test passes](https://github.com/roberthamel/r-doc/commit/35c4bd96ea522b833b619fb6f5aac10162870b29){:target="_blank"}
+- [redirects_to_login_page_when_trying_to_visit_non_mockup_related_urls ](https://github.com/roberthamel/r-doc/commit/b761a284e86266c145a18b0725cdf3a2cd0f0326){:target="_blank"}
+- [a_user_can_login test passes](https://github.com/roberthamel/r-doc/commit/3ba7fcd22efc73b82cacffc2f0b6b76e9a4e3776){:target="_blank"}
+- [a_user_can_logout test passes](https://github.com/roberthamel/r-doc/commit/06e2a26a549e5cababf13d0be70d9de94e16bdaf){:target="_blank"}
+- [i_can_log_in & i_can_logout tests pass](https://github.com/roberthamel/r-doc/commit/b490a835798f0143ba2bc9bd669c9db27bdf8df0){:target="_blank"}
+- [images_table_is_cofigured_correctly test passes](https://github.com/roberthamel/r-doc/commit/c9986dfda795964341a2ae0671164b4eeada584f){:target="_blank"}
+- [users_table_is_correctly_configured test passes](https://github.com/roberthamel/r-doc/commit/b9a6e68e848e78ecd9562eb8b7b96c1ef3a8e937){:target="_blank"}
+- [notifications_table_is_configured_correctly test passes](https://github.com/roberthamel/r-doc/commit/e4babe37f039e7c158d213019c8770ed5e374d74){:target="_blank"}
+- [announcements_table_is_configured test passes](https://github.com/roberthamel/r-doc/commit/051ac1585f1d5215cb4a3cb182f9be6d949400f2){:target="_blank"}
+- [teams_table_is_configured](https://github.com/roberthamel/r-doc/commit/488357d5d7da658b103cb12464107c07481e39b5){:target="_blank"}
+- [invitations_table_is_configured](https://github.com/roberthamel/r-doc/commit/d1eed361dab4e89fd347f8da9a6d49fae5481059){:target="_blank"}
+- [statuses_table_is_configured](https://github.com/roberthamel/r-doc/commit/00b930827d03a9c833fd8429e5b05f8244e3cf55){:target="_blank"}
+- [revisions_table_is_configured](https://github.com/roberthamel/r-doc/commit/475e29d44fdc3c676740227ec49b6fab9fe61abd){:target="_blank"}
+- [tests_table_is_configured](https://github.com/roberthamel/r-doc/commit/8fa25bde713ac0ddf184a3dd812214f4d346bacf){:target="_blank"}
+- [devices_table_is_configured](https://github.com/roberthamel/r-doc/commit/cbc2ae8a8ef73ad6a32b3b8e37c8bcade46a750b){:target="_blank"}
+- [categories_table_is_configured](https://github.com/roberthamel/r-doc/commit/0b7182df5b98dd19f610669dc6d107d59b9105c7){:target="_blank"}
+- [datatypes_table_is_configured](https://github.com/roberthamel/r-doc/commit/486c355a74f7fda771158c0f8d7a962f223b9bd1){:target="_blank"}
+- [guides_table_is_configured](https://github.com/roberthamel/r-doc/commit/bac5a2814d4395cd5a5b7943bb6707da84908d14){:target="_blank"}
+- [steps_table_is_configured](https://github.com/roberthamel/r-doc/commit/6307e3be66817f87721afa892f39d4f626d79ccb){:target="_blank"}
+- [lines_table_is_configured](https://github.com/roberthamel/r-doc/commit/74c1a52f81535559b26556b1089781a4bc9a352a){:target="_blank"}
+- [Install laracasts/generators to help create pivot tables](https://github.com/roberthamel/r-doc/commit/6cb89d1b3f05ba7761db5885a2a84bfebeb76678){:target="_blank"}

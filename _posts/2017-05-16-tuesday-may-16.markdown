@@ -1,0 +1,70 @@
+---
+layout: post
+title:  "Tuesday May 16"
+date:   2017-05-16 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Screenshots
+
+[![Custom Helper Class]({{site.baseurl}}/images/week2/05-16-custom-helper-class.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week2/05-16-custom-helper-class.png){:target="_blank"}
+[![Example Test]({{site.baseurl}}/images/week2/05-16-example-test.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week2/05-16-example-test.png){:target="_blank"}
+[![Misleading Commit Message]({{site.baseurl}}/images/week2/05-16-misleading-commit-message.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week2/05-16-misleading-commit-message.png)
+{:target="_blank"}
+
+---
+
+### Progress
+
+Today involved a ton more testing. I was able to successfully test and implement all of the different relationships between the different database tables. This entailed some refactoring as I went. Shown in the first screenshot above, I was able to implement a class that made writing repetitive tests a bit easier (an example in the second screenshot). Not only did this save having to write the same code over and over again, but I believe that it is much cleaner and makes more sense as to what I'm doing. The third screenshot was thrown in there because I find that the commit message contradicts itself. More about that in the Thoughts section.
+
+---
+
+### Thoughts 
+
+I'm finding that tests really help even though it seems like a lot of extra work. For example, when I was testing my database relationships, I had found that I needed to alter my database structure a little bit. Since I had already tested this aspect, I often found that writing new tests broke old tests. This is really good because I never would have caught them if I was simply hacking away at the code and using a change code/refresh page technique. Thankfully when it comes to tests, you don't even need to have the browser open since the tests are all working in the background to do all of the work that you would have to do manually otherwise.
+
+The third screenshot that I included was an example where I had all tests passing on my computer, but when I pushed my code to the repository, the tests that were running on Travis were failing. Unfortunately, this has happened a few times. Generally, it has to do with me making small tweaks to the configuration files to help make my local development smoother. It's good to have this kind of feedback available.
+
+---
+
+### Daily Commits
+
+- [All test passing](https://github.com/roberthamel/r-doc/commit/84599fdf7319d94469cb96b807824570608bd029){:target="_blank"}
+- [Something is wrong with travis](https://github.com/roberthamel/r-doc/commit/2bca3c734339682f0ff5cb86d58b84c7290bcd58){:target="_blank"}
+- [user_has_one_image](https://github.com/roberthamel/r-doc/commit/f79f85451fa3b5d0010951ecab0345489c9101e4){:target="_blank"}
+- [a_user_has_an_image](https://github.com/roberthamel/r-doc/commit/d93aa4e274ccf7baa8d2aeb0846d86f4cd68149a){:target="_blank"}
+- [an_image_can_have_one_user](https://github.com/roberthamel/r-doc/commit/c9d81fa38856410cf50ac50afcce181c8b529238){:target="_blank"}
+- [a_user_can_have_many_notifications](https://github.com/roberthamel/r-doc/commit/ceea444f5818842a8d1722baeb44696aeca1b3f3){:target="_blank"}
+- [Refactor many to one relationship test](https://github.com/roberthamel/r-doc/commit/901e881acf02c34bd0386ffc1a59fc9cd9a803da){:target="_blank"}
+- [Refactor one to one relationship](https://github.com/roberthamel/r-doc/commit/ceb9ae0e72500b4b39498dfbbc66e4fe179a2316){:target="_blank"}
+- [refactor one to one test](https://github.com/roberthamel/r-doc/commit/585d9eb142a584294d8bac83c52c91a253576749){:target="_blank"}
+- [Major refactoring needed; all tests passing](https://github.com/roberthamel/r-doc/commit/ac51915e070d84115f7b27fb8419b7a0e93a5692){:target="_blank"}
+- [an_announcement_has_many_users](https://github.com/roberthamel/r-doc/commit/863c76471ba5b5e2f108238f0fc72a3cc5eb3882){:target="_blank"}
+- [a_user_has_many_invitations](https://github.com/roberthamel/r-doc/commit/3b7773c2df7bf076c4b0eb2555e156bc023baa26){:target="_blank"}
+- [an_invitation_has_many_users](https://github.com/roberthamel/r-doc/commit/a89df61f54bfa5f8c745b8c5ad73b5f042bd88c7){:target="_blank"}
+- [a_user_can_belong_to_many_teams; a_team_has_many_users](https://github.com/roberthamel/r-doc/commit/ca576b98984ab4ff14ffb4554e26b276da0267de){:target="_blank"}
+- [a_team_has_one_image](https://github.com/roberthamel/r-doc/commit/0c8bac04490135efeb236c248611f5e1ee3aa9d1){:target="_blank"}
+- [an_image_can_have_many_teams](https://github.com/roberthamel/r-doc/commit/25c3ab23643cab886a28f09a62f6c8c1ee5d3cc6){:target="_blank"}
+- [Guides and datatypes tests passing.](https://github.com/roberthamel/r-doc/commit/bb05d590ce1f3a3588e6dc44859e43b5cc11012f){:target="_blank"}
+- [All tests pass](https://github.com/roberthamel/r-doc/commit/1606e203d47a2e732ca2b465a87bb1b829f7080a){:target="_blank"}
+- [a_guide_has_one_category](https://github.com/roberthamel/r-doc/commit/e10b1418f0cb1946ec452659f0e9b9bcb2c05045){:target="_blank"}
+- [a_category_belongs_to_many_guides](https://github.com/roberthamel/r-doc/commit/abb97907a9eef98634b57cfbca982978d48b3770){:target="_blank"}
+- [a_guide_has_one_type](https://github.com/roberthamel/r-doc/commit/41ec6d264af30884db3afaedec1c665be03ee326){:target="_blank"}
+- [a_type_belongs_to_many_guides](https://github.com/roberthamel/r-doc/commit/d15d3261a074c9d3a5dba08725a213d41156d431){:target="_blank"}
+- [Fix for travis errors](https://github.com/roberthamel/r-doc/commit/1b3c95aaba98a22dd8ad039177fa820090f6b41a){:target="_blank"}
+- [a_guide_has_one_device](https://github.com/roberthamel/r-doc/commit/9affd564194ef10c67777036dca65de9ffb15075){:target="_blank"}
+- [a_device_belongs_to_many_guides](https://github.com/roberthamel/r-doc/commit/e43308f4a7ba8210ec916ee632ca03d9a002d997){:target="_blank"}
+- [a_guide_has_many_revisions](https://github.com/roberthamel/r-doc/commit/e33906f67ec67af5937ea5ab8e804e05f8a09c78){:target="_blank"}
+- [a_guide_has_many_revisions](https://github.com/roberthamel/r-doc/commit/45ca5f44893316df75c911305c9c68ff437a7417){:target="_blank"}
+- [a_revision_can_belong_to_one_guide](https://github.com/roberthamel/r-doc/commit/70c8d18e1be7690c1e7edafb840b70c21a3ee5d5){:target="_blank"}
+- [a_step_has_many_revisions; a_revision_can_belong_to_one_step](https://github.com/roberthamel/r-doc/commit/2a537499fe2de2e5dfd0012c5c8a96f507e620ca){:target="_blank"}
+- [a_step_has_many_images; an_image_can_have_many_steps](https://github.com/roberthamel/r-doc/commit/58f7f10315aa31fad7a449bb008d0483d1a5c90a){:target="_blank"}
+- [Test fixes](https://github.com/roberthamel/r-doc/commit/0c96aa51b112d3186f4c978d526cddaa583818e1){:target="_blank"}
+- [a_step_can_have_many_lines; a_line_belongs_to_one_step](https://github.com/roberthamel/r-doc/commit/1df835a0c5d1d4e149dd5dbf064bee94f630bb23){:target="_blank"}
+- [a_revision_has_one_status; a_status_belongs_to_a_revision](https://github.com/roberthamel/r-doc/commit/ce508c3a75bcf556a7ef91a0374cff58d07c6819){:target="_blank"}
+- [Fixed not null errors](https://github.com/roberthamel/r-doc/commit/715d0edddcbfbe3d7b625e5eaa3da0f613c451ac){:target="_blank"}
+- [travis fix](https://github.com/roberthamel/r-doc/commit/a6121282541a46a011804916abd7de18aa5af2fb){:target="_blank"}
+- [Merge pull request #1 from roberthamel/create-database ](https://github.com/roberthamel/r-doc/commit/1bfda92fe03bd7ea28bbe65069f2584783872ba5){:target="_blank"}

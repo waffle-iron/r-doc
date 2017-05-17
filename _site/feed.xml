@@ -6,23 +6,22 @@
 </description>
     <link>http://localhost:4000/r-doc/</link>
     <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 15 May 2017 21:52:57 -0500</pubDate>
-    <lastBuildDate>Mon, 15 May 2017 21:52:57 -0500</lastBuildDate>
+    <pubDate>Wed, 17 May 2017 15:50:04 -0500</pubDate>
+    <lastBuildDate>Wed, 17 May 2017 15:50:04 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
-        <title>Sunday May 14, 2017</title>
+        <title>Wednesday May 17</title>
         <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;something is broken with my host&lt;/li&gt;
+  &lt;li&gt;time to think about database seeding&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/r-doc/images/week1/05-14-db.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-14-db.png&quot; alt=&quot;DB Diagram&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;[x] initial design of database&lt;/li&gt;
-&lt;/ul&gt;
 
 &lt;hr /&gt;
 
@@ -36,6 +35,186 @@
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 17 May 2017 13:00:00 -0500</pubDate>
+        <link>http://localhost:4000/r-doc/2017/05/wednesday-may-17</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/wednesday-may-17</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>Tuesday May 16</title>
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+
+&lt;p target=&quot;_blank&quot;&gt;&lt;a href=&quot;/r-doc/images/week2/05-16-custom-helper-class.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week2/05-16-custom-helper-class.png&quot; alt=&quot;Custom Helper Class&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week2/05-16-example-test.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week2/05-16-example-test.png&quot; alt=&quot;Example Test&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week2/05-16-misleading-commit-message.png&quot;&gt;&lt;img src=&quot;/r-doc/images/week2/05-16-misleading-commit-message.png&quot; alt=&quot;Misleading Commit Message&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;Today involved a ton more testing. I was able to successfully test and implement all of the different relationships between the different database tables. This entailed some refactoring as I went. Shown in the first screenshot above, I was able to implement a class that made writing repetitive tests a bit easier (an example in the second screenshot). Not only did this save having to write the same code over and over again, but I believe that it is much cleaner and makes more sense as to what I’m doing. The third screenshot was thrown in there because I find that the commit message contradicts itself. More about that in the Thoughts section.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I’m finding that tests really help even though it seems like a lot of extra work. For example, when I was testing my database relationships, I had found that I needed to alter my database structure a little bit. Since I had already tested this aspect, I often found that writing new tests broke old tests. This is really good because I never would have caught them if I was simply hacking away at the code and using a change code/refresh page technique. Thankfully when it comes to tests, you don’t even need to have the browser open since the tests are all working in the background to do all of the work that you would have to do manually otherwise.&lt;/p&gt;
+
+&lt;p&gt;The third screenshot that I included was an example where I had all tests passing on my computer, but when I pushed my code to the repository, the tests that were running on Travis were failing. Unfortunately, this has happened a few times. Generally, it has to do with me making small tweaks to the configuration files to help make my local development smoother. It’s good to have this kind of feedback available.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/84599fdf7319d94469cb96b807824570608bd029&quot; target=&quot;_blank&quot;&gt;All test passing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/2bca3c734339682f0ff5cb86d58b84c7290bcd58&quot; target=&quot;_blank&quot;&gt;Something is wrong with travis&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/f79f85451fa3b5d0010951ecab0345489c9101e4&quot; target=&quot;_blank&quot;&gt;user_has_one_image&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d93aa4e274ccf7baa8d2aeb0846d86f4cd68149a&quot; target=&quot;_blank&quot;&gt;a_user_has_an_image&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/c9d81fa38856410cf50ac50afcce181c8b529238&quot; target=&quot;_blank&quot;&gt;an_image_can_have_one_user&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ceea444f5818842a8d1722baeb44696aeca1b3f3&quot; target=&quot;_blank&quot;&gt;a_user_can_have_many_notifications&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/901e881acf02c34bd0386ffc1a59fc9cd9a803da&quot; target=&quot;_blank&quot;&gt;Refactor many to one relationship test&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ceb9ae0e72500b4b39498dfbbc66e4fe179a2316&quot; target=&quot;_blank&quot;&gt;Refactor one to one relationship&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/585d9eb142a584294d8bac83c52c91a253576749&quot; target=&quot;_blank&quot;&gt;refactor one to one test&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ac51915e070d84115f7b27fb8419b7a0e93a5692&quot; target=&quot;_blank&quot;&gt;Major refactoring needed; all tests passing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/863c76471ba5b5e2f108238f0fc72a3cc5eb3882&quot; target=&quot;_blank&quot;&gt;an_announcement_has_many_users&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/3b7773c2df7bf076c4b0eb2555e156bc023baa26&quot; target=&quot;_blank&quot;&gt;a_user_has_many_invitations&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/a89df61f54bfa5f8c745b8c5ad73b5f042bd88c7&quot; target=&quot;_blank&quot;&gt;an_invitation_has_many_users&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ca576b98984ab4ff14ffb4554e26b276da0267de&quot; target=&quot;_blank&quot;&gt;a_user_can_belong_to_many_teams; a_team_has_many_users&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/0c8bac04490135efeb236c248611f5e1ee3aa9d1&quot; target=&quot;_blank&quot;&gt;a_team_has_one_image&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/25c3ab23643cab886a28f09a62f6c8c1ee5d3cc6&quot; target=&quot;_blank&quot;&gt;an_image_can_have_many_teams&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/bb05d590ce1f3a3588e6dc44859e43b5cc11012f&quot; target=&quot;_blank&quot;&gt;Guides and datatypes tests passing.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/1606e203d47a2e732ca2b465a87bb1b829f7080a&quot; target=&quot;_blank&quot;&gt;All tests pass&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e10b1418f0cb1946ec452659f0e9b9bcb2c05045&quot; target=&quot;_blank&quot;&gt;a_guide_has_one_category&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/abb97907a9eef98634b57cfbca982978d48b3770&quot; target=&quot;_blank&quot;&gt;a_category_belongs_to_many_guides&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/41ec6d264af30884db3afaedec1c665be03ee326&quot; target=&quot;_blank&quot;&gt;a_guide_has_one_type&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d15d3261a074c9d3a5dba08725a213d41156d431&quot; target=&quot;_blank&quot;&gt;a_type_belongs_to_many_guides&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/1b3c95aaba98a22dd8ad039177fa820090f6b41a&quot; target=&quot;_blank&quot;&gt;Fix for travis errors&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/9affd564194ef10c67777036dca65de9ffb15075&quot; target=&quot;_blank&quot;&gt;a_guide_has_one_device&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e43308f4a7ba8210ec916ee632ca03d9a002d997&quot; target=&quot;_blank&quot;&gt;a_device_belongs_to_many_guides&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e33906f67ec67af5937ea5ab8e804e05f8a09c78&quot; target=&quot;_blank&quot;&gt;a_guide_has_many_revisions&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/45ca5f44893316df75c911305c9c68ff437a7417&quot; target=&quot;_blank&quot;&gt;a_guide_has_many_revisions&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/70c8d18e1be7690c1e7edafb840b70c21a3ee5d5&quot; target=&quot;_blank&quot;&gt;a_revision_can_belong_to_one_guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/2a537499fe2de2e5dfd0012c5c8a96f507e620ca&quot; target=&quot;_blank&quot;&gt;a_step_has_many_revisions; a_revision_can_belong_to_one_step&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/58f7f10315aa31fad7a449bb008d0483d1a5c90a&quot; target=&quot;_blank&quot;&gt;a_step_has_many_images; an_image_can_have_many_steps&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/0c96aa51b112d3186f4c978d526cddaa583818e1&quot; target=&quot;_blank&quot;&gt;Test fixes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/1df835a0c5d1d4e149dd5dbf064bee94f630bb23&quot; target=&quot;_blank&quot;&gt;a_step_can_have_many_lines; a_line_belongs_to_one_step&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ce508c3a75bcf556a7ef91a0374cff58d07c6819&quot; target=&quot;_blank&quot;&gt;a_revision_has_one_status; a_status_belongs_to_a_revision&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/715d0edddcbfbe3d7b625e5eaa3da0f613c451ac&quot; target=&quot;_blank&quot;&gt;Fixed not null errors&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/a6121282541a46a011804916abd7de18aa5af2fb&quot; target=&quot;_blank&quot;&gt;travis fix&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/1bfda92fe03bd7ea28bbe65069f2584783872ba5&quot; target=&quot;_blank&quot;&gt;Merge pull request #1 from roberthamel/create-database &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 16 May 2017 13:00:00 -0500</pubDate>
+        <link>http://localhost:4000/r-doc/2017/05/tuesday-may-16</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/tuesday-may-16</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>Monday May 15</title>
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;A LOT of commits today. I was able to successfully set up and test the database tables. I also installed a few composer packages that will help when I implement features down the road.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;As a rule of thumb, it seems like the best practice for me to make a commit after each test is written and all tests in the suite are passing. I’m finding that the whole process of test-driven development is very time consuming. It is, however, quite rewarding to know that everything I am trying to implement is working correctly.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/426de5f6350a7344e8e642a5c959b7ba1ad4db5a&quot; target=&quot;_blank&quot;&gt;Install composer packages&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d734ce0dc185ed3645edd281576594ddf74537a9&quot; target=&quot;_blank&quot;&gt;Configure fractal&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/1766f0d5d23da5c48df59dd7aab608b74d45cc29&quot; target=&quot;_blank&quot;&gt;Configure ide-helper&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/1783a175ac94620be397d9df1b3a973fb03d08b3&quot; target=&quot;_blank&quot;&gt;Configure passport&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/fb123588c2029c161ea30735e396a11149edd492&quot; target=&quot;_blank&quot;&gt;can_view_a_list_of_guides passing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/35c4bd96ea522b833b619fb6f5aac10162870b29&quot; target=&quot;_blank&quot;&gt;will_redirect_to_mockup_when_visiting_the_homepage test passes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/b761a284e86266c145a18b0725cdf3a2cd0f0326&quot; target=&quot;_blank&quot;&gt;redirects_to_login_page_when_trying_to_visit_non_mockup_related_urls &lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/3ba7fcd22efc73b82cacffc2f0b6b76e9a4e3776&quot; target=&quot;_blank&quot;&gt;a_user_can_login test passes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/06e2a26a549e5cababf13d0be70d9de94e16bdaf&quot; target=&quot;_blank&quot;&gt;a_user_can_logout test passes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/b490a835798f0143ba2bc9bd669c9db27bdf8df0&quot; target=&quot;_blank&quot;&gt;i_can_log_in &amp;amp; i_can_logout tests pass&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/c9986dfda795964341a2ae0671164b4eeada584f&quot; target=&quot;_blank&quot;&gt;images_table_is_cofigured_correctly test passes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/b9a6e68e848e78ecd9562eb8b7b96c1ef3a8e937&quot; target=&quot;_blank&quot;&gt;users_table_is_correctly_configured test passes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e4babe37f039e7c158d213019c8770ed5e374d74&quot; target=&quot;_blank&quot;&gt;notifications_table_is_configured_correctly test passes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/051ac1585f1d5215cb4a3cb182f9be6d949400f2&quot; target=&quot;_blank&quot;&gt;announcements_table_is_configured test passes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/488357d5d7da658b103cb12464107c07481e39b5&quot; target=&quot;_blank&quot;&gt;teams_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d1eed361dab4e89fd347f8da9a6d49fae5481059&quot; target=&quot;_blank&quot;&gt;invitations_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/00b930827d03a9c833fd8429e5b05f8244e3cf55&quot; target=&quot;_blank&quot;&gt;statuses_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/475e29d44fdc3c676740227ec49b6fab9fe61abd&quot; target=&quot;_blank&quot;&gt;revisions_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/8fa25bde713ac0ddf184a3dd812214f4d346bacf&quot; target=&quot;_blank&quot;&gt;tests_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/cbc2ae8a8ef73ad6a32b3b8e37c8bcade46a750b&quot; target=&quot;_blank&quot;&gt;devices_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/0b7182df5b98dd19f610669dc6d107d59b9105c7&quot; target=&quot;_blank&quot;&gt;categories_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/486c355a74f7fda771158c0f8d7a962f223b9bd1&quot; target=&quot;_blank&quot;&gt;datatypes_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/bac5a2814d4395cd5a5b7943bb6707da84908d14&quot; target=&quot;_blank&quot;&gt;guides_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/6307e3be66817f87721afa892f39d4f626d79ccb&quot; target=&quot;_blank&quot;&gt;steps_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/74c1a52f81535559b26556b1089781a4bc9a352a&quot; target=&quot;_blank&quot;&gt;lines_table_is_configured&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/6cb89d1b3f05ba7761db5885a2a84bfebeb76678&quot; target=&quot;_blank&quot;&gt;Install laracasts/generators to help create pivot tables&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 15 May 2017 13:00:00 -0500</pubDate>
+        <link>http://localhost:4000/r-doc/2017/05/monday-may-15</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/monday-may-15</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>Sunday May 14, 2017</title>
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/r-doc/images/week1/05-14-db.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-14-db.png&quot; alt=&quot;DB Diagram&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;A bit of behind the scenes work today as I try to figure out how to approach setting up and configuring the database. I composed an entity-relationship diagram (seen in the image above) that is a work in progress as I begin determinging what tables and relationships I am going to need in order to keep the database as normalized as possible without duplication. I also installed a couple of helpful tools that will help me when I begin reworking the front-end. That won’t be for a little while though. Finally, I began writing tests to make sure that what I am building does in fact work as I am anticipating.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I realized that it is now time to begin shifting fully to the back-end implementation. It is also imperative that my production environment always be in a presentable state. I will now begin development changes on separate git branches.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/4a2e846cb968180942d02641cd0b1990eb11bce5&quot; target=&quot;_blank&quot;&gt;Add support for stylus and pug&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/acea74097cc1814212a42e1d71573e569f8d19c3&quot; target=&quot;_blank&quot;&gt;Homepage redirect and guide database should have correct data test implemented&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 14 May 2017 13:00:00 -0500</pubDate>

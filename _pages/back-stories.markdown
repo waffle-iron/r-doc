@@ -26,25 +26,54 @@ permalink: /back-stories/
 - [x] create guides migration and test db
 - [x] create steps migration and test db
 - [x] create lines migration and test db
-- [x] test relationships
-  - [x] user has one image (image belongs to one user)
-  - [x] user has many notifications (notification belongs to one user)
-  - [x] user has many announcements (announcements belong to many users)
-  - [x] user has many invitations (invitations belong to many users)
-  - [x] team has many users (users belong to many teams)
-  - [x] team has one image (image can belong to many teams)
-  - [x] guide has one image (image can belong to many guides)
-  - [x] guide has one datatype (datatype belongs to many guides)
-  - [x] guide has one category (categories belong to many guides)
-  - [x] guide has one type (type belongs to many guides)
-  - [x] guide has one device (device belongs to many guides)
-  - [x] guide has many revisions (revision belongs to one guides)
-  - [x] step has many revisions (revision belongs to one steps)
-  - [x] step has many images (image can belong to many steps)
-  - [x] step has many lines (line belongs to one step)
-  - [x] revision has one status (status belongs to many revisions)
 
 ---
 
-#### Api Tests
-- [ ] test guides resource
+#### Database Relationships
+- [x] user has one image (image belongs to one user)
+- [x] user has many notifications (notification belongs to one user)
+- [x] user has many announcements (announcements belong to many users)
+- [x] user has many invitations (invitations belong to many users)
+- [x] team has many users (users belong to many teams)
+- [x] team has one image (image can belong to many teams)
+- [x] guide has one image (image can belong to many guides)
+- [x] guide has one datatype (datatype belongs to many guides)
+- [x] guide has one category (categories belong to many guides)
+- [x] guide has one type (type belongs to many guides)
+- [x] guide has one device (device belongs to many guides)
+- [x] guide has many revisions (revision belongs to one guides)
+- [x] step has many revisions (revision belongs to one steps)
+- [x] step has many images (image can belong to many steps)
+- [x] step has many lines (line belongs to one step)
+- [x] revision has one status (status belongs to many revisions)
+
+---
+
+#### Database Seeds
+
+- [ ] set up database seeds so that I can visually test against a real database.
+
+---
+
+#### CRUD Tests
+- [ ] test images (do i want to use dropzone?; need image resizing library)
+- [ ] test users
+- [ ] test notifications
+- [ ] test announcements
+- [ ] test teams
+- [ ] test invitations
+- [ ] test statuses
+- [ ] test revisions
+- [ ] test types
+- [ ] test devices
+- [ ] test categories
+- [ ] test datatypes
+- [ ] test guides
+- [ ] test steps
+- [ ] test lines
+
+---
+
+#### API Tests
+
+- [ ] configure all API endpoints
