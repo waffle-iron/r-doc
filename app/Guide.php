@@ -25,4 +25,9 @@ class Guide extends Model
   {
     return $this->hasOne(Type::class);
   }
+
+  public function device()
+  {
+    return $this->hasOne(Device::class);
+  }
 }

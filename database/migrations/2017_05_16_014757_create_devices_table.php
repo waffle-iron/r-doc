@@ -15,6 +15,7 @@ class CreateDevicesTable extends Migration
   {
     Schema::create('devices', function (Blueprint $table) {
       $table->increments('id');
+      $table->integer('guide_id')->unsigend()->nullable()->default(null);
       $table->string('name');
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();
