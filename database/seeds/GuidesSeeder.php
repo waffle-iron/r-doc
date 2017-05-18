@@ -30,6 +30,12 @@ class GuidesSeeder extends Seeder
           'previous_text' => $faker->title,
           'conclusion' => $faker->paragraph,
       ]);
+      $revision = factory(App\Revision::class)->create([
+          'owner_id' => $faker->numberBetween(1, 50),
+      ]);
+      $status = App\Status::find(1);
+      $revision->status()->associate($status);
+      $revision->guides()->save($g);
     });
   }
 }

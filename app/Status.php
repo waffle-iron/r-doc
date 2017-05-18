@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-  public function revision()
+  public function revisions()
   {
-    return $this->belongsTo(Revision::class);
+    return $this->HasMany(Revision::class);
   }
 }

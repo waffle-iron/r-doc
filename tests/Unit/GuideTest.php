@@ -40,9 +40,9 @@ class GuideTest extends TestCase
   }
 
   /** @test */
-  public function a_guide_has_many_revisions()
+  public function a_guide_belongs_to_revisions()
   {
-    $this->relationship->testOneToMany('Guide', 'Revision');
+    $this->relationship->testBelongsTo('Guide', 'Revision');
   }
   
   /** @test */

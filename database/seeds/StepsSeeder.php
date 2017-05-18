@@ -27,7 +27,8 @@ class StepsSeeder extends Seeder
 
     for ($i = 1; $i <= 200; $i++) {
       $steps = factory(App\Step::class, $faker->numberBetween(7, 15))->create();
-      $steps->each(function ($s) use ($i, $faker, $bullets) {
+      $steps->each(function ($s, $key) use ($i, $faker, $bullets) {
+        $s->update(['orderby' => $key+1]);
         $images = factory(App\Image::class, $faker->numberBetween(2, 3))->create();
         $images->each(function ($img, $key) use ($s) {
           $img->update(['orderby' => $key + 1]);
@@ -53,6 +54,12 @@ class StepsSeeder extends Seeder
           }
         });
         $s->lines()->saveMany($lines);
+        $revision = factory(App\Revision::class)->create([
+            'owner_id' => $faker->numberBetween(1, 50),
+        ]);
+        $status = App\Status::find(1);
+        $revision->status()->associate($status);
+        $revision->steps()->save($s);
       });
 
     }
