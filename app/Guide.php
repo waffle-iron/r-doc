@@ -35,4 +35,9 @@ class Guide extends Model
   {
     return $this->hasMany(Revision::class);
   }
+
+  public function steps()
+  {
+    return $this->hasMany(Step::class);
+  }
 }

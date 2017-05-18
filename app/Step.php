@@ -20,4 +20,9 @@ class Step extends Model
   {
     return $this->hasMany(Line::class);
   }
+
+  public function guide()
+  {
+    return $this->belongsTo(Guide::class);
+  }
 }

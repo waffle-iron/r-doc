@@ -26,4 +26,10 @@ class StepsTest extends TestCase
   {
     $this->relationship->testOneToMany('Step', 'Line');
   }
+
+  /** @test */
+  public function a_step_belongs_to_a_guide()
+  {
+    $this->relationship->testBelongsTo('Step', 'Guide');
+  }
 }

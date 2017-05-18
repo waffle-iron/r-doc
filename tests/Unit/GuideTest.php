@@ -44,4 +44,10 @@ class GuideTest extends TestCase
   {
     $this->relationship->testOneToMany('Guide', 'Revision');
   }
+  
+  /** @test */
+  public function a_guide_has_many_steps()
+  {
+    $this->relationship->testOneToMany('Guide', 'Step');
+  }
 }
