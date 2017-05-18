@@ -59,7 +59,6 @@ class GuidesTest extends TestCase
       'title' => $guide->title,
       'summary' => $guide->summary,
       'introduction' => $guide->introduction,
-      'image_id' => $guide->image_id,
       'previous_text' => $guide->previous_text,
       'conclusion' => $guide->conclusion,
       'obsolete' => false,

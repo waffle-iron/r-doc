@@ -15,7 +15,6 @@ class CreateDatatypesTable extends Migration
   {
     Schema::create('datatypes', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('guide_id')->unsigned()->nullable();
       $table->string('name');
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

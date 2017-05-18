@@ -29,26 +29,8 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
   return [
       'datatype_id' => 1,
       'url' => $faker->url(),
-      'category_id' => function () {
-        return factory('App\Category')->create()->id;
-      },
-      'revision_id' => function () {
-        return factory('App\Revision')->create()->id;
-      },
-      'type_id' => function () {
-        return factory('App\Type')->create()->id;
-      },
-      'device_id' => function () {
-        return factory('App\Device')->create()->id;
-      },
-      'title' => $faker->words(5, true),
-      'summary' => $faker->paragraph(1, true),
-      'introduction' => $faker->paragraph(1, true),
-      'image_id' => function () {
-        return factory('App\Image')->create()->id;
-      },
-      'previous_text' => $faker->sentence(1, true),
-      'conclusion' => $faker->paragraph(1, true),
+      'revision_id' => 1,
+      'type_id' => 1,
   ];
 });
 

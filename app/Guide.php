@@ -13,12 +13,12 @@ class Guide extends Model
 
   public function datatype()
   {
-    return $this->hasOne(Datatype::class);
+    return $this->belongsTo(Datatype::class);
   }
 
   public function category()
   {
-    return $this->hasOne(Category::class);
+    return $this->belongsTo(Category::class);
   }
 
   public function type()
@@ -28,7 +28,7 @@ class Guide extends Model
 
   public function device()
   {
-    return $this->hasOne(Device::class);
+    return $this->belongsTo(Device::class);
   }
 
   public function revisions()

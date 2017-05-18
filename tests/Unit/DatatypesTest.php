@@ -12,6 +12,6 @@ class DatatypesTest extends TestCase
   /** @test */
   public function a_datatype_belongs_to_many_guides()
   {
-    $this->relationship->testBelongsTo('Datatype', 'Guide');
+    $this->relationship->testOneToMany('Datatype', 'Guide');
   }
 }

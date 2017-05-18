@@ -12,6 +12,6 @@ class DevicesTest extends TestCase
   /** @test */
   public function a_device_belongs_to_many_guides()
   {
-    $this->relationship->testBelongsTo('Device', 'Guide');
+    $this->relationship->testOneToMany('Device', 'Guide');
   }
 }
