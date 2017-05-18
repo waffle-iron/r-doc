@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Step extends Model
 {
-  public function revisions()
+  public function revision()
   {
-    return $this->hasMany(Revision::class);
+    return $this->belongsTo(Revision::class);
   }
 
   public function images()
@@ -19,5 +19,10 @@ class Step extends Model
   public function lines()
   {
     return $this->hasMany(Line::class);
+  }
+
+  public function guide()
+  {
+    return $this->belongsTo(Guide::class);
   }
 }

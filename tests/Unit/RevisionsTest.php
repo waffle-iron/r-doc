@@ -10,20 +10,20 @@ class RevisionsTest extends TestCase
   use DatabaseMigrations;
 
   /** @test */
-  public function a_revision_can_belong_to_one_guide()
+  public function a_revision_has_many_guides()
   {
-    $this->relationship->testBelongsTo('Revision', 'Guide');
+    $this->relationship->testOneToMany('Revision', 'Guide');
   }
 
   /** @test */
-  public function a_revision_can_belong_to_one_step()
+  public function a_revision_has_many_steps()
   {
-    $this->relationship->testBelongsTo('Revision', 'Step');
+    $this->relationship->testOneToMany('Revision', 'Step');
   }
 
   /** @test */
-  public function a_revision_has_one_status()
+  public function a_revision_belongs_to_status()
   {
-    $this->relationship->testHasOne('Revision', 'Status');
+    $this->relationship->testBelongsTo('Revision', 'Status');
   }
 }

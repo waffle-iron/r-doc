@@ -6,18 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Revision extends Model
 {
-  public function guide()
+  public function guides()
   {
-    return $this->belongsTo(Guide::class);
+    return $this->hasMany(Guide::class);
   }
 
-  public function step()
+  public function steps()
   {
-    return $this->belongsTo(Step::class);
+    return $this->hasMany(Step::class);
   }
 
   public function status()
   {
-    return $this->hasOne(Status::class);
+    return $this->belongsTo(Status::class);
   }
 }

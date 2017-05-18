@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model
 {
-  public function guide()
+  public function guides()
   {
-    return $this->belongsTo(Guide::class);
+    return $this->hasMany(Guide::class);
   }
 }

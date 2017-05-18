@@ -10,9 +10,9 @@ class StepsTest extends TestCase
   use DatabaseMigrations;
 
   /** @test */
-  public function a_step_has_many_revisions()
+  public function a_step_belongs_to_a_revision()
   {
-    $this->relationship->testOneToMany('Step', 'Revision');
+    $this->relationship->testBelongsTo('Step', 'Revision');
   }
 
   /** @test */
@@ -25,5 +25,11 @@ class StepsTest extends TestCase
   public function a_step_can_have_many_lines()
   {
     $this->relationship->testOneToMany('Step', 'Line');
+  }
+
+  /** @test */
+  public function a_step_belongs_to_a_guide()
+  {
+    $this->relationship->testBelongsTo('Step', 'Guide');
   }
 }

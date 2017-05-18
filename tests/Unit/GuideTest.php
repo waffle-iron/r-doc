@@ -18,30 +18,36 @@ class GuideTest extends TestCase
   /** @test */
   public function a_guide_has_one_datatype()
   {
-    $this->relationship->testHasOne('Guide', 'Datatype');
+    $this->relationship->testBelongsTo('Guide', 'Datatype');
   }
 
   /** @test */
   public function a_guide_has_one_category()
   {
-    $this->relationship->testHasOne('Guide', 'Category');
+    $this->relationship->testBelongsTo('Guide', 'Category');
   }
 
   /** @test */
   public function a_guide_has_one_type()
   {
-    $this->relationship->testHasOne('Guide', 'Type');
+    $this->relationship->testBelongsTo('Guide', 'Type');
   }
 
   /** @test */
   public function a_guide_has_one_device()
   {
-    $this->relationship->testHasOne('Guide', 'Device');
+    $this->relationship->testBelongsTo('Guide', 'Device');
   }
 
   /** @test */
-  public function a_guide_has_many_revisions()
+  public function a_guide_belongs_to_revisions()
   {
-    $this->relationship->testOneToMany('Guide', 'Revision');
+    $this->relationship->testBelongsTo('Guide', 'Revision');
+  }
+  
+  /** @test */
+  public function a_guide_has_many_steps()
+  {
+    $this->relationship->testOneToMany('Guide', 'Step');
   }
 }

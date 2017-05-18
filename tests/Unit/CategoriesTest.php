@@ -12,6 +12,6 @@ class CategoriesTest extends TestCase
   /** @test */
   public function a_category_belongs_to_many_guides()
   {
-    $this->relationship->testBelongsTo('Category', 'Guide');
+    $this->relationship->testOneToMany('Category', 'Guide');
   }
 }

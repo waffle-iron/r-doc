@@ -13,26 +13,31 @@ class Guide extends Model
 
   public function datatype()
   {
-    return $this->hasOne(Datatype::class);
+    return $this->belongsTo(Datatype::class);
   }
 
   public function category()
   {
-    return $this->hasOne(Category::class);
+    return $this->belongsTo(Category::class);
   }
 
   public function type()
   {
-    return $this->hasOne(Type::class);
+    return $this->belongsTo(Type::class);
   }
 
   public function device()
   {
-    return $this->hasOne(Device::class);
+    return $this->belongsTo(Device::class);
   }
 
-  public function revisions()
+  public function revision()
   {
-    return $this->hasMany(Revision::class);
+    return $this->belongsTo(Revision::class);
+  }
+
+  public function steps()
+  {
+    return $this->hasMany(Step::class);
   }
 }

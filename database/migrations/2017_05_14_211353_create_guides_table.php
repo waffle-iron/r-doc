@@ -17,7 +17,7 @@ class CreateGuidesTable extends Migration
       $table->increments('id');
       $table->integer('datatype_id')->unsigned();
       $table->boolean('can_edit')->default(true);
-      $table->string('url')->nullable()->default(null);
+      $table->string('url');
       $table->integer('category_id')->unsigned()->nullable();
       $table->string('revision')->default('-');
       $table->integer('revision_id')->unsigned();
@@ -26,7 +26,7 @@ class CreateGuidesTable extends Migration
       $table->string('title')->nullable();
       $table->text('summary')->nullable();
       $table->text('introduction')->nullable();
-      $table->integer('image_id')->nullable(); //TODO: implement
+//      $table->integer('image_id')->nullable(); //TODO: implement
       $table->string('previous_text')->nullable();
       $table->text('conclusion')->nullable();
       $table->boolean('obsolete')->default(false);

@@ -10,8 +10,8 @@ class StatusesTest extends TestCase
   use DatabaseMigrations;
 
   /** @test */
-  public function a_status_belongs_to_a_revision()
+  public function a_status_has_many_revisions()
   {
-    $this->relationship->testBelongsTo('Status', 'Revision');
+    $this->relationship->testOneToMany('Status', 'Revision');
   }
 }

@@ -12,6 +12,6 @@ class TypesTest extends TestCase
   /** @test */
   public function a_type_belongs_to_many_guides()
   {
-    $this->relationship->testBelongsTo('Type', 'Guide');
+    $this->relationship->testOneToMany('Type', 'Guide');
   }
 }
