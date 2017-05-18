@@ -16,24 +16,6 @@ class UserTest extends TestCase
   }
 
   /** @test */
-  public function a_user_can_have_many_notifications()
-  {
-    $this->relationship->testOneToMany('User', 'Notification');
-  }
-
-  /** @test */
-  public function a_user_can_have_many_announcements()
-  {
-      $this->relationship->testManyToMany('User', 'Announcement');
-  }
-
-  /** @test */
-  public function a_user_has_many_invitations()
-  {
-    $this->relationship->testManyToMany('User', 'Invitation');
-  }
-
-  /** @test */
   public function a_user_can_belong_to_many_teams()
   {
     $this->relationship->testManyToMany('User', 'Team');
