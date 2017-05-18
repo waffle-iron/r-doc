@@ -21,7 +21,6 @@ class TeamsTest extends TestCase
       'owner_id' => $team->owner_id,
       'name' => $team->name,
       'slug' => $team->slug,
-      'image_id' => $team->image_id,
       'deleted_at' => null,
     ]);
   }

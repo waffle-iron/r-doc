@@ -19,6 +19,7 @@ class CreateImagesTable extends Migration
       $table->integer('team_id')->unsigned()->nullable()->default(null);
       $table->integer('guide_id')->unsigned()->nullable()->default(null);
       $table->integer('step_id')->unsigned()->nullable();
+      $table->integer('orderby')->unsigned()->nullable()->default(null);
       $table->string('original');
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

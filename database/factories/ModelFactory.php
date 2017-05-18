@@ -19,9 +19,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
       'name' => $faker->name,
       'username' => $faker->userName,
       'email' => $faker->unique()->safeEmail,
-      'team_id' => null,
       'password' => $password ?: $password = bcrypt('secret'),
-      'remember_token' => str_random(10),
       'url' => $faker->url,
   ];
 });
@@ -83,12 +81,9 @@ $factory->define(App\Announcement::class, function (Faker\Generator $faker) {
 $factory->define(App\Team::class, function (Faker\Generator $faker) {
   $name = $faker->name;
   return [
-      'owner_id' => function () {
-        return factory('App\User')->create()->id;
-      },
+      'owner_id' => 1,
       'name' => $name,
       'slug' => str_slug($name),
-      'image_id' => null,
   ];
 });
 
@@ -134,19 +129,19 @@ $factory->define(App\Type::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Device::class, function (Faker\Generator $faker) {
   return [
-      'name' => $faker->name,
+      'name' => $faker->words(2, true),
   ];
 });
 
 $factory->define(App\Category::class, function (Faker\Generator $faker) {
   return [
-      'name' => $faker->name,
+      'name' => $faker->word,
   ];
 });
 
 $factory->define(App\Datatype::class, function (Faker\Generator $faker) {
   return [
-      'name' => $faker->name,
+      'name' => $faker->word,
   ];
 });
 

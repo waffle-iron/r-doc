@@ -16,6 +16,7 @@ class CreateStatusesTable extends Migration
     Schema::create('statuses', function (Blueprint $table) {
       $table->increments('id');
       $table->string('name');
+      $table->integer('orderby')->nullable()->default(null);
       $table->integer('revision_id')->unsigned()->nullable()->default(null);
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

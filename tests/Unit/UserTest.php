@@ -38,5 +38,4 @@ class UserTest extends TestCase
   {
     $this->relationship->testManyToMany('User', 'Team');
   }
-
 }

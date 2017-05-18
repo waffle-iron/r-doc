@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
       $table->integer('team_id')->unsigned()->nullable()->default(null);
       $table->string('url');
       $table->rememberToken();
-      $table->timestamp('last_read_announcement_at')->nullable()->default(null);
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();
     });

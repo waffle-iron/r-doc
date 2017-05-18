@@ -9,12 +9,12 @@ class TeamsSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(Faker\Generator $faker)
     {
-        factory(App\Team::class, 15)->create([
-            'owner_id' => random_int(1, 50)
-        ])->each(function ($t) {
+        factory(App\Team::class, 15)->create()->each(function ($t) use ($faker) {
+          $t->users()->save(App\User::find($faker->numberBetween(1, 50)));
           $t->image()->save(factory(App\Image::class)->make());
+          $t->update(['owner_id' => $faker->numberBetween(1, 50)]);
         });
     }
 }
