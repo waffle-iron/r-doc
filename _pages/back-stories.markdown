@@ -51,19 +51,28 @@ permalink: /back-stories/
 
 #### Database Seeds
 
-- [ ] set up database seeds so that I can visually test against a real database.
+- [x] users
+- [x] teams
+- [x] images
+- [x] statuses
+- [x] types
+- [x] devices
+- [x] categories
+- [x] datatypes
+- [x] guides
+- [x] steps
+- [x] lines
+- [x] revisions
 
 ---
 
 #### CRUD Tests
 - [ ] test images (do i want to use dropzone?; need image resizing library)
 - [ ] test users
-- [ ] test notifications
-- [ ] test announcements
+    - [ ] add username to be required
+    - [ ] test all optional fields
 - [ ] test teams
-- [ ] test invitations
 - [ ] test statuses
-- [ ] test revisions
 - [ ] test types
 - [ ] test devices
 - [ ] test categories
@@ -71,9 +80,4 @@ permalink: /back-stories/
 - [ ] test guides
 - [ ] test steps
 - [ ] test lines
-
----
-
-#### API Tests
-
-- [ ] configure all API endpoints
+- [ ] test revisions

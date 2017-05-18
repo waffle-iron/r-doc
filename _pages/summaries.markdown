@@ -15,6 +15,7 @@ permalink: /summaries/
 - [Monday](/r-doc/2017/05/monday-may-15)
 - [Tuesday](/r-doc/2017/05/tuesday-may-16)
 - [Wednesday](/r-doc/2017/05/wednesday-may-17)
+- [Thursday](/r-doc/2017/05/thursday-may-18)
 
 ---
 
