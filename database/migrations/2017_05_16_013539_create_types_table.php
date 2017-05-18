@@ -15,7 +15,7 @@ class CreateTypesTable extends Migration
   {
     Schema::create('types', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('guide_id')->unsigned()->nullable()->default(null);
+//      $table->integer('guide_id')->unsigned()->nullable()->default(null);
       $table->string('name');
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

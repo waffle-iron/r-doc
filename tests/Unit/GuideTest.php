@@ -30,7 +30,7 @@ class GuideTest extends TestCase
   /** @test */
   public function a_guide_has_one_type()
   {
-    $this->relationship->testHasOne('Guide', 'Type');
+    $this->relationship->testBelongsTo('Guide', 'Type');
   }
 
   /** @test */

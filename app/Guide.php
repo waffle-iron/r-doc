@@ -23,7 +23,7 @@ class Guide extends Model
 
   public function type()
   {
-    return $this->hasOne(Type::class);
+    return $this->belongsTo(Type::class);
   }
 
   public function device()
