@@ -45,7 +45,7 @@ class StepsSeeder extends Seeder
             ]);
           } else {
             $level = 1;
-            $key-1 === 1 ?: $level = $faker->numberBetween(0,2);
+            $key-1 === 1 ? $level = $faker->numberBetween(0,2) : $faker->numberBetween(1, 2);
             $l->update([
                 'bullet' => $faker->randomElement($bullets),
                 'orderby' => $key+1,
