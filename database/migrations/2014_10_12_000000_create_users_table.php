@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
       $table->string('username');
       $table->string('email')->unique();
       $table->string('password');
-      $table->integer('image_id')->unsigned()->nullable()->default(null);
       $table->integer('team_id')->unsigned()->nullable()->default(null);
       $table->string('url');
       $table->rememberToken();

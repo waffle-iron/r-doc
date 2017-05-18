@@ -22,7 +22,6 @@ class UserTest extends TestCase
         'username' => $user->username,
         'email' => $user->email,
         'team_id' => null,
-        'image_id' => $user->image_id,
         'url' => $user->url,
         'last_read_announcement_at' => null,
         'deleted_at' => null,

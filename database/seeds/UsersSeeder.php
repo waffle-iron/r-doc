@@ -9,10 +9,11 @@ class UsersSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(Faker\Generator $faker)
     {
-        factory(App\User::class, 50)->create()->each(function ($u) {
+        factory(App\User::class, 50)->create()->each(function ($u) use ($faker) {
           $u->image()->save(factory(App\Image::class)->make());
+          $u->team_id = $faker->numberBetween(1, 15);
         });
     }
 }
