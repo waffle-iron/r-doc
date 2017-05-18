@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
     $this->call(CategoriesSeeder::class);
     $this->call(DatatypesSeeder::class);
     $this->call(GuidesSeeder::class);
+    $this->call(StepsSeeder::class);
   }
 }
