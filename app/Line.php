@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Line extends Model
 {
   protected $fillable = [
-    'bullet'
+    'bullet',
+    'orderby',
+    'level'
   ];
 
   public function step()

@@ -43,9 +43,17 @@ abstract class TestCase extends BaseTestCase
 
     $this->app->instance(ExceptionHandler::class, new class extends Handler
     {
-      public function __construct() { }
-      public function report(Exception $e) { }
-      public function render($request, Exception $e) { throw $e;
+      public function __construct()
+      {
+      }
+
+      public function report(Exception $e)
+      {
+      }
+
+      public function render($request, Exception $e)
+      {
+        throw $e;
       }
     });
   }
@@ -76,10 +84,8 @@ abstract class TestCase extends BaseTestCase
       $status = create('App\Status');
       $revision->status()->associate($status);
       $revision->guides()->save($g);
-//      $this->createSteps($g);
       $g->steps()->saveMany($this->createSteps($g));
     });
-//    dd($guide->steps);
     return $guide;
   }
 
@@ -91,79 +97,53 @@ abstract class TestCase extends BaseTestCase
    */
   private function createSteps($guide)
   {
+    $bullets = [
+        'black',
+        'red',
+        'orange',
+        'yellow',
+        'green',
+        'light-blue',
+        'blue',
+        'violet',
+        'caution',
+        'info',
+        'reminder'
+    ];
+
     $steps = factory('App\Step', random_int(7, 15))->create();
-    $steps->each(function ($s, $key) use ($guide) {
+    $status = make('App\Status');
+    $steps->each(function ($s, $key) use ($guide, $bullets, $status) {
       $s->update(['orderby' => $key + 1]);
-      $this->createAndSaveImages($s);
-      $this->saveLines($s);
-      $this->createAndSaveRevision($s);
+      $images = factory('App\Image', random_int(2, 3))->create();
+      $images->each(function ($img, $key) use ($s) {
+        $img->update(['orderby' => $key + 1]);
+        $s->images()->save($img);
+      });
+      $lines = factory('App\Line', random_int(3, 8))->create();
+      $lines->each(function ($l, $key) use ($bullets) {
+            if ($key === 0) {
+              $l->update([
+                  'bullet' => 'black',
+                  'orderby' => $key + 1,
+                  'level' => 0
+              ]);
+            } else {
+              $key - 1 === 1 ? $level = random_int(0, 2) : $level = random_int(1, 2);
+              $l->update([
+                  'bullet' => $bullets[random_int(8, 10)],
+                  'orderby' => $key + 1,
+                  'level' => $level,
+              ]);
+            }
+          });
+      $s->lines()->saveMany($lines);
+      $revision = factory('App\Revision')->create([
+          'owner_id' => random_int(1, 50),
+      ]);
+      $revision->status()->associate($status);
+      $revision->steps()->save($s);
     });
     return $steps;
-  }
-
-  /**
-   * @param $s
-   * @internal param $bullets
-   */
-  private function saveLines($s)
-  {
-    $bullets = ['black', 'red', 'orange', 'yellow', 'green', 'light-blue', 'blue', 'violet', 'caution', 'info', 'reminder'];
-
-    $lines = factory('App\Line', random_int(3, 8))
-        ->create()
-        ->each(function ($l, $key) use ($bullets) {
-          $this->determineBulletLevelAndOrderby($l, $key, $bullets);
-        });
-
-    $s->lines()->saveMany($lines);
-  }
-
-  /**
-   * @param $l
-   * @param $key
-   * @param $bullets
-   */
-  private function determineBulletLevelAndOrderby($l, $key, $bullets)
-  {
-    if ($key === 0) {
-      $l->update([
-          'bullet' => 'black',
-          'orderby' => $key + 1,
-          'level' => 0
-      ]);
-    } else {
-      $level = 1;
-      $key - 1 === 1 ? $level = random_int(0, 2) : random_int(1, 2);
-      $l->update([
-          'bullet' => random_int(0, count($bullets)),
-          'orderby' => $key + 1,
-          'level' => $level,
-      ]);
-    }
-  }
-
-  /**
-   * @param $s
-   */
-  private function createAndSaveRevision($s)
-  {
-    $revision = factory('App\Revision')->create([
-        'owner_id' => random_int(1, 50),
-    ]);
-    $status = create('App\Status');
-    $revision->status()->associate($status);
-    $revision->steps()->save($s);
-  }
-
-  /**
-   * @param $s
-   */
-  private function createAndSaveImages($s)
-  {
-    $images = factory('App\Image', random_int(2, 3))->create();
-    $images->each(function ($img, $key) use ($s) {
-      $img->update(['orderby' => $key + 1]);
-      $s->images()->save($img);
-    });
   }
 }

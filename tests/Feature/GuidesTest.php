@@ -70,16 +70,23 @@ class GuidesTest extends TestCase
   }
 
   /** @test */
-  public function an_unauthenticated_user_can_view_a_guide()
+  public function my_test_guide_algorithm_is_generating_data_for_the_correct_tables()
   {
-    $guides = $this->createCompleteGuide();
+    $this->createCompleteGuide();
 
-    $steps = \App\Step::where('guide_id', $guides->first()->id)->get();
-
+    $this->assertDatabaseHas('categories', ['id' => 1]);
+    $this->assertDatabaseHas('datatypes', ['id' => 1]);
+    $this->assertDatabaseHas('devices', ['id' => 1]);
     $this->assertDatabaseHas('guides', ['id' => 1]);
+    $this->assertDatabaseHas('images', ['guide_id' => 1]);
+    $this->assertDatabaseHas('images', ['step_id' => 1]);
     $this->assertDatabaseHas('steps', ['guide_id' => 1]);
     $this->assertDatabaseHas('lines', ['step_id' => 1]);
+    $this->assertDatabaseHas('revisions', ['id' => 1]);
+    $this->assertDatabaseHas('statuses', ['id' => 1]);
+    $this->assertDatabaseHas('types', ['id' => 1]);
   }
+
 
 
 }
