@@ -34,6 +34,12 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
   ];
 });
 
+$factory->state(App\Guide::class, 'complete', function ($faker) {
+  return [
+
+  ];
+});
+
 $factory->define(App\Image::class, function (Faker\Generator $faker) {
   return [
       'original' => $faker->imageUrl(),

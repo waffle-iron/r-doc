@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use GuidesSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -65,5 +66,11 @@ class GuidesTest extends TestCase
       'revised_at' => null,
       'deleted_at' => null,
     ]);
+  }
+
+  /** @test */
+  public function an_unauthenticated_user_can_view_a_guide()
+  {
+
   }
 }
