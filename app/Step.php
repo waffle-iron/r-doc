@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Step extends Model
 {
+  protected $fillable = [
+    'orderby'
+  ];
+
   public function revision()
   {
     return $this->belongsTo(Revision::class);

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guide extends Model
 {
+  protected $fillable = [
+    'url'
+  ];
+
   public function image()
   {
     return $this->hasOne(Image::class);

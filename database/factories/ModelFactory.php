@@ -34,10 +34,22 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
   ];
 });
 
-$factory->state(App\Guide::class, 'complete', function ($faker) {
+$factory->state(App\Guide::class, 'complete', function (Faker\Generator $faker) {
   return [
-
+      'can_edit' => true,
+    'url' => '',
+      'revision' => '-',
+      'device_id' => function () {
+        factory(App\Device::class)->create()->id;
+      },
+      'title' => $faker->sentence,
+      'summary' => $faker->paragraph,
+      'introduction' => $faker->paragraph,
+      'previous_text' => $faker->sentence,
+      'conclusion' => $faker->paragraph,
+      'obsolete' => false,
   ];
+
 });
 
 $factory->define(App\Image::class, function (Faker\Generator $faker) {

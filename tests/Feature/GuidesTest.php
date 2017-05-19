@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use GuidesSeeder;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -71,6 +72,14 @@ class GuidesTest extends TestCase
   /** @test */
   public function an_unauthenticated_user_can_view_a_guide()
   {
+    $guides = $this->createCompleteGuide();
 
+    $steps = \App\Step::where('guide_id', $guides->first()->id)->get();
+
+    $this->assertDatabaseHas('guides', ['id' => 1]);
+    $this->assertDatabaseHas('steps', ['guide_id' => 1]);
+    $this->assertDatabaseHas('lines', ['step_id' => 1]);
   }
+
+
 }

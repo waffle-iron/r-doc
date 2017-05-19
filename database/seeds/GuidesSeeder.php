@@ -24,10 +24,10 @@ class GuidesSeeder extends Seeder
       $device->guides()->save($g);
       $g->image()->save(factory(App\Image::class)->make());
       $g->update([
-          'title' => $faker->title,
+          'title' => $faker->sentence,
           'summary' => $faker->paragraph,
           'introduction' => $faker->paragraph,
-          'previous_text' => $faker->title,
+          'previous_text' => $faker->sentence,
           'conclusion' => $faker->paragraph,
       ]);
       $revision = factory(App\Revision::class)->create([
