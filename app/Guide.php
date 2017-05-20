@@ -10,6 +10,16 @@ class Guide extends Model
     'url'
   ];
 
+  protected $hidden = [
+    'deleted_at',
+    'revised_at',
+    'datatype_id'
+  ];
+
+  protected $appends = [
+    'datatype'
+  ];
+
   public function image()
   {
     return $this->hasOne(Image::class);
@@ -43,5 +53,11 @@ class Guide extends Model
   public function steps()
   {
     return $this->hasMany(Step::class);
+  }
+
+  public function getDatatypeAttribute()
+  {
+    $datatype = $this->datatype()->get();
+    return $datatype[0]->name;
   }
 }

@@ -37,7 +37,7 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
 $factory->state(App\Guide::class, 'complete', function (Faker\Generator $faker) {
   return [
       'can_edit' => true,
-    'url' => '',
+      'url' => '',
       'revision' => '-',
       'device_id' => function () {
         factory(App\Device::class)->create()->id;
@@ -143,12 +143,14 @@ $factory->define(App\Datatype::class, function (Faker\Generator $faker) {
 $factory->define(App\Step::class, function (Faker\Generator $faker) {
   return [
       'title' => $faker->sentence(1, true),
-      'orderby' => $faker->numberBetween(0,2),
+      'orderby' => $faker->numberBetween(0, 2),
   ];
 });
 
 $factory->define(App\Line::class, function (Faker\Generator $faker) {
   return [
       'text' => $faker->paragraph(1, true),
+      'level' => 0,
+      'orderby' => 0
   ];
 });

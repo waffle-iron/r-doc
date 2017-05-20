@@ -74,7 +74,7 @@ abstract class TestCase extends BaseTestCase
     $guide->each(function ($g) {
       $datatype = factory('App\Datatype')->create();
       $datatype->guides()->save($g);
-      $g->update(['url' => "/guide/{$g->id}"]);
+      $g->update(['url' => "{env('APP_URL')}/guide/{$g->id}"]);
       $category = create('App\Category');
       $category->guides()->save($g);
       $type = create('App\Type');

@@ -13,6 +13,8 @@ class GuidesTest extends TestCase
 {
   use DatabaseMigrations;
 
+  private $guides;
+
   /** @test */
   public function can_view_a_list_of_guides()
   {
@@ -87,6 +89,43 @@ class GuidesTest extends TestCase
     $this->assertDatabaseHas('types', ['id' => 1]);
   }
 
+  /** @test */
+  public function an_unauthenticated_user_can_retrieve_a_guides_data()
+  {
+    $response = $this->getAGuide();
 
+    $response->assertStatus(200);
+  }
+
+  // WHEN VIEWING A GUIDE AN UNAUTHENTICATED USER CAN...
+
+  /** @test */
+  public function see_the_guide_id()
+  {
+    $response = $this->getAGuide();
+    $response->assertJson([
+        'id' => $this->guides[0]->id,
+    ]);
+  }
+
+  /** @test */
+  public function see_a_particular_guide_based_on_its_id()
+  {
+    $response = $this->getAGuide(2, 2);
+    $response->assertJson([
+        'id' => 2,
+    ]);
+  }
+
+  /**
+   * @param int $qty
+   * @return \Illuminate\Foundation\Testing\TestResponse
+   */
+  private function getAGuide($qty = 1, $guideid = 1): \Illuminate\Foundation\Testing\TestResponse
+  {
+    $this->guides = $this->createCompleteGuide($qty);
+    $response = $this->get("/api/v1/guides/$guideid");
+    return $response;
+  }
 
 }
