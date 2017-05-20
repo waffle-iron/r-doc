@@ -78,6 +78,8 @@ abstract class TestCase extends BaseTestCase
       $g->update(['url' => "{$url}/guide/{$g->id}"]);
       $category = create('App\Category');
       $category->guides()->save($g);
+      $device = factory('App\Device')->create();
+      $g->device()->associate($device);
       $type = create('App\Type');
       $type->guides()->save($g);
       $g->image()->save(create('App\Image'));

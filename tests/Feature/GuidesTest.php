@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use const false;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -10,6 +11,7 @@ class GuidesTest extends TestCase
   use DatabaseMigrations;
 
   private $guides;
+  private $response;
 
   /** @test */
   public function can_view_a_list_of_guides()
@@ -89,7 +91,6 @@ class GuidesTest extends TestCase
   public function an_unauthenticated_user_can_retrieve_a_guides_data()
   {
     $response = $this->getAGuide();
-
     $response->assertStatus(200);
   }
 
@@ -116,15 +117,45 @@ class GuidesTest extends TestCase
   /** @test */
   public function has_the_correct_guide_url()
   {
-    $response = $this->getAGuide();
-    $response->assertJson(['url' => 'http://r-doc.dev/guide/1']);
+    $this->guideHas(['url' => 'http://r-doc.dev/guide/1']);
+  }
+  
+  /** @test */
+  public function has_the_correct_datatype()
+  {
+    $this->hasCorrect('datatype');
+  }
+
+  /** @test */
+  public function has_the_correct_category()
+  {
+    $this->hasCorrect('category');
+  }
+
+  /** @test */
+  public function has_a_revision_id()
+  {
+    $this->hasCorrect('revision_id');
+  }
+
+  /** @test */
+  public function has_the_correct_type()
+  {
+    $this->hasCorrect('type');
+  }
+
+  /** @test */
+  public function has_the_correct_device()
+  {
+    $this->hasCorrect('device');
   }
 
   /**
    * @param int $qty
+   * @param int $guideid
    * @return \Illuminate\Foundation\Testing\TestResponse
    */
-  private function getAGuide($qty = 1, $guideid = 1): \Illuminate\Foundation\Testing\TestResponse
+  private function getAGuide($qty = 1, $guideid = 1)
   {
     $this->guides = $this->createCompleteGuide($qty);
     $response = $this->get("/api/v1/guides/$guideid");
@@ -135,11 +166,22 @@ class GuidesTest extends TestCase
    * @param $attribute
    * @param int $qty
    * @param int $guideid
+   * @param bool $createGuide
    */
-  private function guideHas($attribute, $qty = 1, $guideid = 1)
+  private function guideHas($attribute, $qty = 1, $guideid = 1, $createGuide = true)
   {
-    $response = $this->getAGuide($qty, $guideid);
-    $response->assertJson($attribute);
+    if($createGuide) $this->response = $this->getAGuide($qty, $guideid);
+    $this->response->assertJson($attribute);
+  }
+
+  /**
+   * @param $attribute
+   */
+  private function hasCorrect($attribute)
+  {
+    $this->response = $this->getAGuide();
+    $x = $this->guides[0]->$attribute;
+    $this->guideHas([$attribute => $x], 1, 1, false);
   }
 
 }

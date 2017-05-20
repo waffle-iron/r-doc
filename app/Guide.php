@@ -13,11 +13,18 @@ class Guide extends Model
   protected $hidden = [
     'deleted_at',
     'revised_at',
-    'datatype_id'
+    'datatype_id',
+    'category_id',
+    'obsolete',
+    'type_id',
+    'device_id',
   ];
 
   protected $appends = [
-    'datatype'
+    'datatype',
+    'category',
+    'type',
+    'device',
   ];
 
   public function image()
@@ -59,5 +66,24 @@ class Guide extends Model
   {
     $datatype = $this->datatype()->get();
     return $datatype[0]->name;
+  }
+
+  public function getCategoryAttribute()
+  {
+    $category = $this->category()->get();
+    return $category[0]->name;
+  }
+
+  public function getTypeAttribute()
+  {
+    $type = $this->type()->get();
+    return $type[0]->name;
+  }
+
+  public function getDeviceAttribute()
+  {
+
+    $device = $this->device()->get();
+    return $device[0]->name;
   }
 }
