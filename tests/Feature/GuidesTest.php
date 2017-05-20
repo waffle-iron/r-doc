@@ -2,12 +2,8 @@
 
 namespace Tests\Feature;
 
-use GuidesSeeder;
-use Illuminate\Support\Collection;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class GuidesTest extends TestCase
 {
@@ -102,19 +98,26 @@ class GuidesTest extends TestCase
   /** @test */
   public function see_the_guide_id()
   {
-    $response = $this->getAGuide();
-    $response->assertJson([
-        'id' => $this->guides[0]->id,
-    ]);
+    $this->guideHas(['id' => 1]);
   }
 
   /** @test */
   public function see_a_particular_guide_based_on_its_id()
   {
-    $response = $this->getAGuide(2, 2);
-    $response->assertJson([
-        'id' => 2,
-    ]);
+    $this->guideHas(['id' => 2], 2, 2);
+  }
+
+  /** @test */
+  public function can_edit_is_true()
+  {
+    $this->guideHas(['can_edit' => true]);
+  }
+  
+  /** @test */
+  public function has_the_correct_guide_url()
+  {
+    $response = $this->getAGuide();
+    $response->assertJson(['url' => 'http://r-doc.dev/guide/1']);
   }
 
   /**
@@ -126,6 +129,17 @@ class GuidesTest extends TestCase
     $this->guides = $this->createCompleteGuide($qty);
     $response = $this->get("/api/v1/guides/$guideid");
     return $response;
+  }
+
+  /**
+   * @param $attribute
+   * @param int $qty
+   * @param int $guideid
+   */
+  private function guideHas($attribute, $qty = 1, $guideid = 1)
+  {
+    $response = $this->getAGuide($qty, $guideid);
+    $response->assertJson($attribute);
   }
 
 }
