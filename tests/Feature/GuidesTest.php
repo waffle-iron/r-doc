@@ -150,6 +150,36 @@ class GuidesTest extends TestCase
     $this->hasCorrect('device');
   }
 
+  /** @test */
+  public function has_correct_title()
+  {
+    $this->hasCorrect('title');
+  }
+
+  /** @test */
+  public function has_correct_summary()
+  {
+    $this->hasCorrect('summary');
+  }
+
+  /** @test */
+  public function has_correct_introduction()
+  {
+    $this->hasCorrect('introduction');
+  }
+
+  /** @test */
+  public function has_correct_previous_text()
+  {
+    $this->hasCorrect('previous_text');
+  }
+
+  /** @test */
+  public function has_correct_conclusion()
+  {
+    $this->hasCorrect('conclusion');
+  }
+
   /**
    * @param int $qty
    * @param int $guideid
