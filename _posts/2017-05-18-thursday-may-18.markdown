@@ -13,16 +13,25 @@ categories: r-doc log entry
 
 ### Progress
 
-- completed database seeding
+I reached out to my host's limited support to try to resolve the issue that I am having not being able to push any commits to them. Unfortunately, I was not able to get much of a response before they closed for the day. They're in Germany, so I have to compete with the time difference. I attempted to use SFTP to connect to the host but was not successful in connecting. I did not spend a lot of time with that, but it's beginning to look like an alternative that I will have to explore if I cannot get this resolved by the weekend.
+
+I completed all of the database seeds. I am now able to generate a large amount of fake data that I can now design the front-end around. This also means that my production environment will be able to use this data in order to display my work (once I get it working again).
+
+I hit somewhat of a brick wall after completing the database seeding task. The next thing I would like to work on is the CRUD interaction from the front-end to the back-end. I'm realizing quickly that it is going to take a bit of strategy to get started. Because a single documentation guide contains a lot of different information from many different database tables, structuring my tests to account for this is not as simple as I originally thought.
 
 ---
 
 ### Thoughts 
 
-...
+The first screenshot above shows a database seed generator for all of the steps that will be included in a given guide. The following two are a small snapshot into what the internal database looks like when it is populated. While I am happy with the code that I wrote in the displayed seed file, it is really messy. I think it would be beneficial for me to take some time to refactor this so that if I come back to this a year from now, I'll be able to make sense of what I did. I also have it configured to generate between 7 and 15 steps for 200 different guides. I did not include any way of changing that number without already having to know where to change what numbers in order to generate a different number. Especially if somebody else down the road were to look at this, i can only imagine that it looks like a mess.
 
 ---
 
 ### Daily Commits
 
-- [...]()
+- [all seeders created except for revisions](https://github.com/roberthamel/r-doc/commit/523e8af87a810eae3b37ef71cc9d400c9f55ba32){:target="_blank"}
+- [Remove all announcements, notifications, and invitations tables and tests; for future consideration](https://github.com/roberthamel/r-doc/commit/e6130211c9198db1ae81228730795f741a2439cf){:target="_blank"}
+- [Remove unused table column](https://github.com/roberthamel/r-doc/commit/1409be927d63e74265865082768694e5aa874fcb){:target="_blank"}
+- [Revisions implemented; database seeding complete](https://github.com/roberthamel/r-doc/commit/241e7aaf84636d0ba85c579763ad3d733553ee87){:target="_blank"}
+- [Minor logic change in steps seeder](https://github.com/roberthamel/r-doc/commit/55c8d5fc0bc70bd5727f2f991566bd02e2cfec0c){:target="_blank"}
+- [Merge pull request #2 from roberthamel/dbseeds](https://github.com/roberthamel/r-doc/commit/0f00a092b6b2071654c7ee812fc4e2ebb42620ee){:target="_blank"}

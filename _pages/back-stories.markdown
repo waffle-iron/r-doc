@@ -66,10 +66,17 @@ permalink: /back-stories/
 
 ---
 
+#### Remove Down-The-Line Configuration
+
+- [x] remove invitations, notifications, and announcements
+    - [x] tests
+    - [x] database tables
+    
+---
+
 #### CRUD Tests
-- [ ] test images (do i want to use dropzone?; need image resizing library)
 - [ ] test users
-    - [ ] add username to be required
+    - [ ] username needs to be required
     - [ ] test all optional fields
 - [ ] test teams
 - [ ] test statuses
@@ -81,3 +88,4 @@ permalink: /back-stories/
 - [ ] test steps
 - [ ] test lines
 - [ ] test revisions
+- [ ] test images (do i want to use dropzone?; need image resizing library)

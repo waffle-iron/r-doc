@@ -1,0 +1,28 @@
+---
+layout: post
+title:  "Friday May 19"
+date:   2017-05-19 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Screenshots
+
+[![Data Render Partially Complete]({{site.baseurl}}/images/week2/05-19-data-render-partially-complete.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week2/05-19-data-render-partially-complete.png){:target="_blank"}
+
+### Progress
+
+...
+
+---
+
+### Thoughts 
+
+...
+
+---
+
+### Daily Commits
+
+- [...]()
