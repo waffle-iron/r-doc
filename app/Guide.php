@@ -62,6 +62,11 @@ class Guide extends Model
     return $this->hasMany(Step::class);
   }
 
+  public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
+
   public function getDatatypeAttribute()
   {
     $datatype = $this->datatype()->get();

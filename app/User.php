@@ -52,4 +52,9 @@ class User extends Authenticatable
   {
     return $this->belongsToMany(Team::class);
   }
+
+  public function guides()
+  {
+    return $this->hasMany(Guide::class);
+  }
 }

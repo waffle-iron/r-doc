@@ -20,4 +20,10 @@ class UserTest extends TestCase
   {
     $this->relationship->testManyToMany('User', 'Team');
   }
+
+  /** @test */
+  public function a_user_has_many_guides()
+  {
+    $this->relationship->testOneToMany('User', 'Guide');
+  }
 }

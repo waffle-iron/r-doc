@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use const false;
+use GuidesTestSeeder;
+use StepsTestSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -188,7 +190,7 @@ class GuidesTest extends TestCase
   private function getAGuide($qty = 1, $guideid = 1)
   {
     $this->guides = $this->createCompleteGuide($qty);
-    $response = $this->get("/api/v1/guides/$guideid");
+    $response = $this->get(env('APP_URL')."/api/v1/guides/$guideid");
     return $response;
   }
 
@@ -212,6 +214,12 @@ class GuidesTest extends TestCase
     $this->response = $this->getAGuide();
     $x = $this->guides[0]->$attribute;
     $this->guideHas([$attribute => $x], 1, 1, false);
+  }
+
+  private function createGuide(): void
+  {
+    $this->seed(GuidesTestSeeder::class);
+    $this->seed(StepsTestSeeder::class);
   }
 
 }
