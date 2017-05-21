@@ -26,7 +26,11 @@ class User extends Authenticatable
    * @var array
    */
   protected $hidden = [
-      'password', 'remember_token',
+      'password', 'remember_token', 'deleted_at', 'updated_at', 'created_at',
+  ];
+
+  protected $appends = [
+    'joined'
   ];
 
   /**
@@ -56,5 +60,10 @@ class User extends Authenticatable
   public function guides()
   {
     return $this->hasMany(Guide::class);
+  }
+
+  public function getJoinedAttribute()
+  {
+    return $this->created_at->toFormattedDateString();
   }
 }

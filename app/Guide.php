@@ -18,6 +18,8 @@ class Guide extends Model
     'obsolete',
     'type_id',
     'device_id',
+    'can_edit',
+    'user_id',
   ];
 
   protected $appends = [
@@ -25,6 +27,8 @@ class Guide extends Model
     'category',
     'type',
     'device',
+    'editable',
+    'author'
   ];
 
   public function image()
@@ -69,26 +73,34 @@ class Guide extends Model
 
   public function getDatatypeAttribute()
   {
-    $datatype = $this->datatype()->get();
-    return $datatype[0]->name;
+    return $this->datatype()->get()[0]->name;
   }
 
   public function getCategoryAttribute()
   {
-    $category = $this->category()->get();
-    return $category[0]->name;
+    return $this->category()->get()[0]->name;
   }
 
   public function getTypeAttribute()
   {
-    $type = $this->type()->get();
-    return $type[0]->name;
+    return $this->type()->get()[0]->name;
   }
 
   public function getDeviceAttribute()
   {
 
-    $device = $this->device()->get();
-    return $device[0]->name;
+    return $this->device()->get()[0]->name;
+  }
+
+  public function getEditableAttribute()
+  {
+    return !! $this->can_edit;
+  }
+
+  public function getAuthorAttribute()
+  {
+    $userid = $this->user()->get()->first()->id;
+    $user = User::where('id', $userid)->first(['id', 'username', 'url', 'created_at']);
+    return $user;
   }
 }

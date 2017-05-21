@@ -51,23 +51,23 @@ class GuidesTest extends TestCase
     $guide = create('App\Guide');
 
     $this->assertDatabaseHas('guides', [
-      'id' => $guide->id,
-      'datatype_id' => $guide->datatype_id,
-      'can_edit' => true,
-      'url' => $guide->url,
-      'category_id' => $guide->category_id,
-      'revision' => '-',
-      'revision_id' => $guide->revision_id,
-      'type_id' => $guide->type_id,
-      'device_id' => $guide->device_id,
-      'title' => $guide->title,
-      'summary' => $guide->summary,
-      'introduction' => $guide->introduction,
-      'previous_text' => $guide->previous_text,
-      'conclusion' => $guide->conclusion,
-      'obsolete' => false,
-      'revised_at' => null,
-      'deleted_at' => null,
+        'id' => $guide->id,
+        'datatype_id' => $guide->datatype_id,
+        'can_edit' => true,
+        'url' => $guide->url,
+        'category_id' => $guide->category_id,
+        'revision' => '-',
+        'revision_id' => $guide->revision_id,
+        'type_id' => $guide->type_id,
+        'device_id' => $guide->device_id,
+        'title' => $guide->title,
+        'summary' => $guide->summary,
+        'introduction' => $guide->introduction,
+        'previous_text' => $guide->previous_text,
+        'conclusion' => $guide->conclusion,
+        'obsolete' => false,
+        'revised_at' => null,
+        'deleted_at' => null,
     ]);
   }
 
@@ -111,17 +111,17 @@ class GuidesTest extends TestCase
   }
 
   /** @test */
-  public function can_edit_is_true()
+  public function editable_is_true()
   {
-    $this->guideHas(['can_edit' => true]);
+    $this->guideHas(['editable' => true]);
   }
-  
+
   /** @test */
   public function has_the_correct_guide_url()
   {
     $this->guideHas(['url' => 'http://r-doc.dev/guide/1']);
   }
-  
+
   /** @test */
   public function has_the_correct_datatype()
   {
@@ -132,6 +132,12 @@ class GuidesTest extends TestCase
   public function has_the_correct_category()
   {
     $this->hasCorrect('category');
+  }
+
+  /** @test */
+  public function has_correct_revision()
+  {
+    $this->hasCorrect('revision');
   }
 
   /** @test */
@@ -182,6 +188,19 @@ class GuidesTest extends TestCase
     $this->hasCorrect('conclusion');
   }
 
+  /** @test */
+  public function has_correct_author_attributes()
+  {
+    $guide = $this->createCompleteGuide();
+    $response = $this->get('/api/v1/guides/1');
+    $response->assertJson(['author' => [
+        'id' => $guide[0]->author->id,
+        'username' => $guide[0]->author->username,
+        'url' => $guide[0]->author->url,
+        'joined' => $guide[0]->author->joined,
+    ]]);
+  }
+
   /**
    * @param int $qty
    * @param int $guideid
@@ -190,7 +209,7 @@ class GuidesTest extends TestCase
   private function getAGuide($qty = 1, $guideid = 1)
   {
     $this->guides = $this->createCompleteGuide($qty);
-    $response = $this->get(env('APP_URL')."/api/v1/guides/$guideid");
+    $response = $this->get(env('APP_URL') . "/api/v1/guides/$guideid");
     return $response;
   }
 
@@ -202,7 +221,7 @@ class GuidesTest extends TestCase
    */
   private function guideHas($attribute, $qty = 1, $guideid = 1, $createGuide = true)
   {
-    if($createGuide) $this->response = $this->getAGuide($qty, $guideid);
+    if ($createGuide) $this->response = $this->getAGuide($qty, $guideid);
     $this->response->assertJson($attribute);
   }
 
