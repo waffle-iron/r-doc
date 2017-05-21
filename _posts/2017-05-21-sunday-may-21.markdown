@@ -1,0 +1,31 @@
+---
+layout: post
+title:  "Sunday May 21"
+date:   2017-05-21 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Daily Todo
+
+- [ ] configure laravel-fractal and use current tests to ensure correct implementation
+- [ ] finish `api/v1/guides/{guideid}`
+
+---
+
+### Progress
+
+...
+
+---
+
+### Thoughts 
+
+...
+
+---
+
+### Daily Commits
+
+- [...]()

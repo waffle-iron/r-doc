@@ -3,6 +3,16 @@ layout: page
 title: Front End User Stories
 permalink: /front-stories/
 ---
+
+## After Server API is implemented
+
+ - [ ] implement `vue-router`
+ - [ ] implement `vuex`
+ - [ ] separate the client from the server.
+ - [ ] explore hosting option for the client.
+
+---
+
 ## Viewing a guide -- `/guide/{guideid}`
 
 ### As a user...

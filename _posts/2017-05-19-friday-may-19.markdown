@@ -13,16 +13,33 @@ categories: r-doc log entry
 
 ### Progress
 
-...
+Designed and implemented a testing structure to begin building my server API. The goal is for the front-end web page to make an AJAX request behind the scenes to retrieve data from the server without having to refresh the page. I was able to begin writing tests and the screenshot shows that what I have accomplished so far. When you make a request to the displayed endpoint (url address), you will receive a JSON response with all of the data that will need to be displayed on the page. The server will handle the retrieving and parsing the data from the database and the front-end will be responsible for turning this data into a user-friendly interface.
 
 ---
 
 ### Thoughts 
 
-...
+I like the idea of separating the front-end from the back-end more and more. In fact, I would like to move toward hosting the front-end on a different domain. This will allow me to create a desktop application or mobile application that can utilize the server to retrieve all necessary data. I think I am going to work towards this once I get the API tested to display all of the data I am going to need.
 
 ---
 
 ### Daily Commits
 
-- [...]()
+---
+
+#### Master Branch
+
+- [Configure dusk to use different database](https://github.com/roberthamel/r-doc/commit/f43f8d62f95ea3523ad8c7fbc1db9b479b19bf39){:target="_blank"}
+
+---
+
+#### create-crud Branch
+
+- [Create guides helper test function created](https://github.com/roberthamel/r-doc/commit/e4a79236dee0ccb82aef826e0acf0a15faeadf48){:target="_blank"}
+- [my_test_guide_algorithm_is_generating_data_for_the_correct_tables](https://github.com/roberthamel/r-doc/commit/f0925bfc696111bd6b0a38bc274b2aa8b07835bf){:target="_blank"}
+- [3 tests written](https://github.com/roberthamel/r-doc/commit/13482d0578f18acaef4ef0ea6be08d8e55f8536b){:target="_blank"}
+- [2 more tests and a refactor](https://github.com/roberthamel/r-doc/commit/ec9fee1a59f0d0537937310e02a7aa95f9625b41){:target="_blank"}
+- [5 new tests pass](https://github.com/roberthamel/r-doc/commit/28dc6300bcf49eb6f725f6d0d898430bb6944afa){:target="_blank"}
+- [5 tests that pass automatically](https://github.com/roberthamel/r-doc/commit/f39e516512adcef75985c03b4a9e905d323e0cfe){:target="_blank"}
+- [Fix broken tests](https://github.com/roberthamel/r-doc/commit/9a7bae0ba0becb031248aeb5e46dc9056aef817d){:target="_blank"}
+- [Ran composer update](https://github.com/roberthamel/r-doc/commit/8bec18557f52609758a25ee474e413628022eef6){:target="_blank"}

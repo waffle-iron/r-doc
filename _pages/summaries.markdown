@@ -21,6 +21,7 @@ By Thursday, I had finished with the initial database implementation. I wrote te
 - [Wednesday](/r-doc/2017/05/wednesday-may-17)
 - [Thursday](/r-doc/2017/05/thursday-may-18)
 - [Friday](/r-doc/2017/05/friday-may-19)
+- [Sunday](/r-doc/2017/05/sunday-may-21)
 
 ---
 

@@ -6,17 +6,22 @@
 </description>
     <link>http://localhost:4000/r-doc/</link>
     <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 19 May 2017 22:23:50 -0500</pubDate>
-    <lastBuildDate>Fri, 19 May 2017 22:23:50 -0500</lastBuildDate>
+    <pubDate>Sun, 21 May 2017 13:22:04 -0500</pubDate>
+    <lastBuildDate>Sun, 21 May 2017 13:22:04 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
-        <title>Friday May 19</title>
+        <title>Sunday May 21</title>
         <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+&lt;h3 id=&quot;daily-todo&quot;&gt;Daily Todo&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;/r-doc/images/week2/05-19-data-render-partially-complete.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week2/05-19-data-render-partially-complete.png&quot; alt=&quot;Data Render Partially Complete&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;[ ] configure laravel-fractal and use current tests to ensure correct implementation&lt;/li&gt;
+  &lt;li&gt;[ ] finish &lt;code class=&quot;highlighter-rouge&quot;&gt;api/v1/guides/{guideid}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
 
 &lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
@@ -34,6 +39,64 @@
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 21 May 2017 13:00:00 -0500</pubDate>
+        <link>http://localhost:4000/r-doc/2017/05/sunday-may-21</link>
+        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/sunday-may-21</guid>
+        
+        
+        <category>r-doc</category>
+        
+        <category>log</category>
+        
+        <category>entry</category>
+        
+      </item>
+    
+      <item>
+        <title>Friday May 19</title>
+        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/r-doc/images/week2/05-19-data-render-partially-complete.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week2/05-19-data-render-partially-complete.png&quot; alt=&quot;Data Render Partially Complete&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
+
+&lt;p&gt;Designed and implemented a testing structure to begin building my server API. The goal is for the front-end web page to make an AJAX request behind the scenes to retrieve data from the server without having to refresh the page. I was able to begin writing tests and the screenshot shows that what I have accomplished so far. When you make a request to the displayed endpoint (url address), you will receive a JSON response with all of the data that will need to be displayed on the page. The server will handle the retrieving and parsing the data from the database and the front-end will be responsible for turning this data into a user-friendly interface.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I like the idea of separating the front-end from the back-end more and more. In fact, I would like to move toward hosting the front-end on a different domain. This will allow me to create a desktop application or mobile application that can utilize the server to retrieve all necessary data. I think I am going to work towards this once I get the API tested to display all of the data I am going to need.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;master-branch&quot;&gt;Master Branch&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/f43f8d62f95ea3523ad8c7fbc1db9b479b19bf39&quot; target=&quot;_blank&quot;&gt;Configure dusk to use different database&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;create-crud-branch&quot;&gt;create-crud Branch&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e4a79236dee0ccb82aef826e0acf0a15faeadf48&quot; target=&quot;_blank&quot;&gt;Create guides helper test function created&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/f0925bfc696111bd6b0a38bc274b2aa8b07835bf&quot; target=&quot;_blank&quot;&gt;my_test_guide_algorithm_is_generating_data_for_the_correct_tables&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/13482d0578f18acaef4ef0ea6be08d8e55f8536b&quot; target=&quot;_blank&quot;&gt;3 tests written&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ec9fee1a59f0d0537937310e02a7aa95f9625b41&quot; target=&quot;_blank&quot;&gt;2 more tests and a refactor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/28dc6300bcf49eb6f725f6d0d898430bb6944afa&quot; target=&quot;_blank&quot;&gt;5 new tests pass&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/f39e516512adcef75985c03b4a9e905d323e0cfe&quot; target=&quot;_blank&quot;&gt;5 tests that pass automatically&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/9a7bae0ba0becb031248aeb5e46dc9056aef817d&quot; target=&quot;_blank&quot;&gt;Fix broken tests&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/8bec18557f52609758a25ee474e413628022eef6&quot; target=&quot;_blank&quot;&gt;Ran composer update&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 19 May 2017 13:00:00 -0500</pubDate>
@@ -455,57 +518,6 @@
         <pubDate>Wed, 10 May 2017 13:00:00 -0500</pubDate>
         <link>http://localhost:4000/r-doc/2017/05/wednesday-may-10</link>
         <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/wednesday-may-10</guid>
-        
-        
-        <category>r-doc</category>
-        
-        <category>log</category>
-        
-        <category>entry</category>
-        
-      </item>
-    
-      <item>
-        <title>Tuesday May 9, 2017</title>
-        <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;/r-doc/images/week1/05-09-guide-display.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-display.png&quot; alt=&quot;Guide Display&quot; width=&quot;200&quot; class=&quot;img-resonsive img-border&quot; /&gt;&lt;/a&gt;
-&lt;a href=&quot;/r-doc/images/week1/05-09-guide-intro-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-intro-edit.png&quot; alt=&quot;Guide Intro Edit Page&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
-&lt;a href=&quot;/r-doc/images/week1/05-09-guide-step-edit.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week1/05-09-guide-step-edit.png&quot; alt=&quot;Guide Step Edit Page&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
-
-&lt;p&gt;Spent my time primarily focusing on front-end design and implementation. Today was also the first day that I described my intended user stories and used them as a focus on what to work on.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
-
-&lt;p&gt;It was a nice exercise to pull in external JavaScript libraries to enhance my user interface. I’m finding that CSS is a bit tricky when trying to fix minute detail errors in a page. Good structure and organization is very important.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/aa04449fc4bb327f39608938cfb67c99c0de9e06&quot; target=&quot;_blank&quot;&gt;add simplemde module&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/8883a341e392d787e4e65292978de41bf3205acf&quot; target=&quot;_blank&quot;&gt;configured log entry workflow&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ffa5c0682ca2524e34c200927f345ff86bcf62a6&quot; target=&quot;_blank&quot;&gt;added license and an empty readme&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e4190b2b9de8228bfc8373bb7afc935a8993eb31&quot; target=&quot;_blank&quot;&gt;added simplemde, vue-simplemde, and to-markdown npm modules&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/73c865cc3c6b33eed24b601414f984a093d13273&quot; target=&quot;_blank&quot;&gt;added showdown npm module; added markdown editor to edit introduction page; added ability to both convert from html to markdown and markdown to html&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d6e4a811fd491c9ba90f05bcfb8ba413940968dc&quot; target=&quot;_blank&quot;&gt;implemented markdown editor on guide edit introduction page&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/b5f21183cab9ed75aa7d84027584c9363ddbb98e&quot; target=&quot;_blank&quot;&gt;fix css on edit introduction page&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/59aee815cdaaa215a05fa58f87251915efcaa1b5&quot; target=&quot;_blank&quot;&gt;fix css spacing issues on guide step edit page&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/7efb6c008f306eae4e590563f9818e3f211295fe&quot; target=&quot;_blank&quot;&gt;fixed minor css issue on guide page&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/dfb07ec76a08a8c38be5983dbae095bcc7b1a9ef&quot; target=&quot;_blank&quot;&gt;save, delete step, and insert step buttons added to guide step edit page&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/9d8edd97314b7aa40cecab9b409a610aee5ed0ff&quot; target=&quot;_blank&quot;&gt;bullet popup for edit pages implemented&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        <pubDate>Tue, 09 May 2017 13:00:00 -0500</pubDate>
-        <link>http://localhost:4000/r-doc/2017/05/tuesday-may-9</link>
-        <guid isPermaLink="true">http://localhost:4000/r-doc/2017/05/tuesday-may-9</guid>
         
         
         <category>r-doc</category>
