@@ -12,6 +12,7 @@ permalink: /summaries/
 
 ### Log Entries
 
+- [Sunday](/r-doc/2017/05/sunday-may-21)
 - [Monday](/r-doc/2017/05/monday-may-22)
 
 ---
@@ -28,12 +29,12 @@ By Thursday, I had finished with the initial database implementation. I wrote te
 
 ### Log Entries
 
+- [Sunday](/r-doc/2017/05/sunday-may-14)
 - [Monday](/r-doc/2017/05/monday-may-15)
 - [Tuesday](/r-doc/2017/05/tuesday-may-16)
 - [Wednesday](/r-doc/2017/05/wednesday-may-17)
 - [Thursday](/r-doc/2017/05/thursday-may-18)
 - [Friday](/r-doc/2017/05/friday-may-19)
-- [Sunday](/r-doc/2017/05/sunday-may-21)
 
 ---
 
@@ -63,6 +64,5 @@ Next up for me is to implement a new front-end theme using a yet to be determine
 - [Wednesday](/r-doc/2017/05/wednesday-may-10)
 - [Thursday](/r-doc/2017/05/thursday-may-11)
 - [Friday](/r-doc/2017/05/friday-may-12)
-- [Sunday](/r-doc/2017/05/sunday-may-14)
 
 ---
