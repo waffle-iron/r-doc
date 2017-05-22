@@ -37,6 +37,7 @@ class Guide extends Model
       'image',
       'modified_date',
       'published_date',
+      'steps',
       'type',
   ];
 
@@ -108,15 +109,13 @@ class Guide extends Model
 
   public function getAuthorAttribute()
   {
-    $userid = $this->user()->get()->first()->id;
-    $user = User::where('id', $userid)->first(['id', 'username', 'url', 'created_at']);
+    $user = $this->user()->get(['id', 'username', 'url', 'created_at']);
     return $user;
   }
 
   public function getImageAttribute()
   {
-    $imageid = $this->image()->get()->first()->id;
-    $image = Image::where('id', $imageid)->first(['id', 'original']);
+    $image = $this->image()->get(['id', 'original']);
     return $image;
   }
 
@@ -139,5 +138,11 @@ class Guide extends Model
   {
     if ($this->published_at) return $this->published_at->toFormattedDateString();
     return $this->published_at;
+  }
+
+  public function getStepsAttribute()
+  {
+    $steps = $this->steps()->get(['id', 'guide_id', 'title', 'revision_id']);
+    return $steps;
   }
 }

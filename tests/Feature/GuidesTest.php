@@ -214,23 +214,55 @@ class GuidesTest extends TestCase
     $guide = Guide::find(1);
     $response = $this->get('/api/v1/guides/1');
     $response->assertJson(['author' => [
-        'id' => $guide->author->id,
-        'username' => $guide->author->username,
-        'url' => $guide->author->url,
-        'join_date' => $guide->author->join_date,
-        'image' => [
-            [
-                'id' => $guide->author->image[0]->id,
-                'original' => $guide->author->image[0]->original,
+        [
+            'id' => $guide->author[0]->id,
+            'username' => $guide->author[0]->username,
+            'url' => $guide->author[0]->url,
+            'join_date' => $guide->author[0]->join_date,
+            'image' => [
+                [
+                    'id' => $guide->author[0]->image[0]->id,
+                    'original' => $guide->author[0]->image[0]->original,
+                ],
+            ],
+            'teams' => [
+                [
+                    'id' => $guide->author[0]->teams[0]->id,
+                    'name' => $guide->author[0]->teams[0]->name,
+                ],
             ],
         ],
-        'teams' => [
-            [
-                'id' => $guide->author->teams[0]->id,
-                'name' => $guide->author->teams[0]->name,
-            ],
-        ],
+    ]]);
+  }
 
+  /** @test */
+  public function has_correct_steps_attributes()
+  {
+    $this->createGuide();
+    $guide = Guide::find(1);
+    $response = $this->get('/api/v1/guides/1');
+    $response->assertJson(['steps' => [
+        [
+            'id' => $guide->steps[0]->id,
+            'title' => $guide->steps[0]->title,
+            'guide_id' => $guide->steps[0]->guide_id,
+            'revision_id' => $guide->steps[0]->revision_id,
+            'lines' => [
+                [
+                    'text' => $guide->steps[0]->lines[0]->text,
+                    'bullet' => $guide->steps[0]->lines[0]->bullet,
+                    'level' => $guide->steps[0]->lines[0]->level,
+                    'orderby' => $guide->steps[0]->lines[0]->orderby,
+                ]
+            ],
+            'media' => [
+                [
+                    'id' => $guide->steps[0]->media[0]->id,
+                    'original' => $guide->steps[0]->media[0]->original,
+                    'orderby' => $guide->steps[0]->media[0]->orderby,
+                ]
+            ],
+        ]
     ]]);
   }
 
@@ -240,8 +272,10 @@ class GuidesTest extends TestCase
     $guide = $this->createCompleteGuide();
     $response = $this->get('/api/v1/guides/1');
     $response->assertJson(['image' => [
-        'id' => $guide[0]->image->id,
-        'original' => $guide[0]->image->original,
+        [
+            'id' => $guide[0]->image[0]->id,
+            'original' => $guide[0]->image[0]->original,
+        ],
     ]]);
   }
 
