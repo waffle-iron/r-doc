@@ -24,14 +24,6 @@ class GuidesTest extends TestCase
   }
 
   /** @test */
-  public function will_redirect_to_mockup_when_visiting_the_homepage()
-  {
-    $response = $this->get('/');
-
-    $response->assertRedirect('/mockups/guide/0');
-  }
-
-  /** @test */
   public function redirects_to_login_page_when_trying_to_visit_non_mockup_related_urls()
   {
     $this->withExceptionHandling();
