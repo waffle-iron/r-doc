@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Guide;
-use const false;
 use GuidesTestSeeder;
 use StepsTestSeeder;
 use Tests\TestCase;
