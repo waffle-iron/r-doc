@@ -4,6 +4,18 @@ title: Weekly Summaries
 permalink: /summaries/
 ---
 
+## Week 3
+
+...
+
+---
+
+### Log Entries
+
+- [Monday](/r-doc/2017/05/monday-may-22)
+
+---
+
 ## Week 2
 
 I spent a majority of the week planning, testing, and implementing the database that I will need for this project. This is the first project that I have worked on of this scale and I'm finding that besides learning a lot in a compressed amount of time, I've been having to think a little bit differently about the tiny details that are involved with making this work fluently. I definitely made sure to write tests to ensure that what I am creating is actually working. I'm still finding that it takes a bit of extra time (and coding) to make this work, but I am now seeing why test-driven development is considered a crucial component of programming, these days.

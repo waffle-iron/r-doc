@@ -6,39 +6,59 @@
 </description>
     <link>http://localhost:4000/r-doc/</link>
     <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 21 May 2017 13:22:04 -0500</pubDate>
-    <lastBuildDate>Sun, 21 May 2017 13:22:04 -0500</lastBuildDate>
+    <pubDate>Mon, 22 May 2017 12:12:55 -0500</pubDate>
+    <lastBuildDate>Mon, 22 May 2017 12:12:55 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
         <title>Sunday May 21</title>
         <description>&lt;p&gt;&lt;a href=&quot;/r-doc/summaries&quot;&gt;back&lt;/a&gt;&lt;/p&gt;
 
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/r-doc/images/week2/05-22-api-guide-190.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week2/05-22-api-guide-190.png&quot; alt=&quot;API Guide 190&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week2/05-22-api-guide-177.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week2/05-22-api-guide-177.png&quot; alt=&quot;API Guide 177&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h3 id=&quot;daily-todo&quot;&gt;Daily Todo&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;[ ] configure laravel-fractal and use current tests to ensure correct implementation&lt;/li&gt;
-  &lt;li&gt;[ ] finish &lt;code class=&quot;highlighter-rouge&quot;&gt;api/v1/guides/{guideid}&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;[ ] &lt;del&gt;configure laravel-fractal and use current tests to ensure correct implementation&lt;/del&gt;&lt;/li&gt;
+  &lt;li&gt;[x] finish &lt;code class=&quot;highlighter-rouge&quot;&gt;api/v1/guides/{guideid}&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;I attempted to use a package called &lt;code class=&quot;highlighter-rouge&quot;&gt;laraevel-fractal&lt;/code&gt; to handle my transformers. Transformers are when you query the database, you receive all of the db columns by name. But sometimes you would want the &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; column to say &lt;code class=&quot;highlighter-rouge&quot;&gt;guideid&lt;/code&gt; instead. Transformers handle this and it looked like the package would handle this nicely. The only problem is that it broke a majority of my tests. I was getting a very nondescript error that did not allow me to isolate the problem to fix it. I decided to undo my progress (about an hour and a half) and implement using native Laravel methods. I was then able to write tests to support all of the data that I was expecting to see from the endpoint. This took a lot longer than I expected, but the end result is what I had originally planned. This, I believe, is also the biggest (and most data-heavy) piece of data that will be needed as far as site functionality is concerned. I do believe that the rest of the pieces will be a little easier to implement.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;While I do aim to continue to use feature and unit tests to ensure that my application is working correctly, today I found that I was writing these tests after I knew I was already displaying the right information. The whole goal with test-driven development is to write failing tests from the start and then follow the errors to make them pass. This will create a solid foundation for the application. It was actually harder for me to know how to implement my tests than it was to make the correct data appear on the endpoint that I was working on. I would also say that supporting the tests added three times the amount of time than if I were to simply implement the new feature and visually test the data. I’m still going to give the benefit of the doubt to state that having the tests will help with future development to understand any side-effects that may be caused by future implementation.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;daily-commits&quot;&gt;Daily Commits&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;&quot;&gt;…&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/599ddf68e0863bc010835c120ddc7433e935af76&quot; target=&quot;_blank&quot;&gt;Create two new database test seeder files&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/15d969f0646e65c5014cab3e127ad9d2a35943c7&quot; target=&quot;_blank&quot;&gt;Not fixing what isn’t broken&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/9dc8ede0743a5bdf1f9b0568ea3e05f878b3940f&quot; target=&quot;_blank&quot;&gt;has_correct_author_attributes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/76a62f0f28ca5ee7d04457c1760231fedd009993&quot; target=&quot;_blank&quot;&gt;4 new tests pass&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/74602c278800aecb6403503fd42ded365a516b25&quot; target=&quot;_blank&quot;&gt;Final tests passing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/3507d674de417a112895ee1a999a8acf629fc12f&quot; target=&quot;_blank&quot;&gt;Merge pull request #3 from roberthame/create-crud&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/8cc94fd6b958bb3c99d80280860f537e25564f19&quot; target=&quot;_blank&quot;&gt;Whoopsie&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d87666ebd820b9a91274a0ba147a2857e886f6b3&quot; target=&quot;_blank&quot;&gt;Careless&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ee8c079e1f4cf8d8ad75f497cb23f18048ed42d5&quot; target=&quot;_blank&quot;&gt;Even better?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/d64af386f4d3357d5f72be92ab1690f5bf7ce51f&quot; target=&quot;_blank&quot;&gt;Necessary change&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/c525072ccca43c020e3198881ad154216caad992&quot; target=&quot;_blank&quot;&gt;Remove jsondb…no longer have any use for&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/f9f623af633f4abf922c0146fa5c9e4bbfa7c90a&quot; target=&quot;_blank&quot;&gt;Remove jsondb from package.json&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e9171e0ef062593b72f461df7796a21b7289407a&quot; target=&quot;_blank&quot;&gt;Remove spatie/laravel-fractal&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/979c6dcca31a09ad9cc5755695be32ba9cad957f&quot; target=&quot;_blank&quot;&gt;Travis fix&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 21 May 2017 13:00:00 -0500</pubDate>

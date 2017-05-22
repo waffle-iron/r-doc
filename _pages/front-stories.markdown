@@ -8,9 +8,16 @@ permalink: /front-stories/
 
  - [ ] implement `vue-router`
  - [ ] implement `vuex`
+ - [ ] document index page
+ - [ ] rebuild current views with new theme
+
+---
+
+### Separate Client???
+
  - [ ] separate the client from the server.
  - [ ] explore hosting option for the client.
-
+ 
 ---
 
 ## Viewing a guide -- `/guide/{guideid}`

@@ -36,47 +36,149 @@
 
   <div class="c-article__main">
     <div class="post-content markdown-body" itemprop="articleBody">
-      <p><a href="http://dbdesigner.net/designer/schema/89573" target="_blank">DB Design</a></p>
+      <h3 id="database-entity-relationship-diagram">Database Entity-Relationship Diagram</h3>
 
+<h4 id="screenshots">Screenshots</h4>
+
+<p><a href="/r-doc/images/db/05-22-db-erd.png" target="_blank"><img src="/r-doc/images/db/05-22-db-erd.png" alt="DB ERD" width="200" class="img-responsive img-border" /></a></p>
+
+<hr />
+
+<h4 id="most-recent-database-erd-must-be-logged-in-to-see">Most Recent Database ERD: Must Be Logged In to See.</h4>
+
+<p><a href="http://dbdesigner.net/designer/schema/89573" target="_blank">dbdesigner.net</a></p>
+
+<hr />
+
+<h3 id="server-todo">Server Todo</h3>
+
+<p><em>NOTE: These are in order by most recent. Should save from having to scroll down the whole page</em></p>
+
+<h4 id="crud-tests">CRUD Tests</h4>
 <ul>
-  <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> establish mockup pages url and redirect to them when visiting ‘/’</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test guides
+    <ul>
+      <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> read <code class="highlighter-rouge">/api/v1/guides/{guideid}</code></li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> read <code class="highlighter-rouge">/api/v1/guides</code></li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> delete <code class="highlighter-rouge">api/v1/guides</code></li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> create <code class="highlighter-rouge">/api/v1/guides</code></li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> update <code class="highlighter-rouge">/api/v1/guides/{guideid}</code></li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> delete <code class="highlighter-rouge">/api/v1/guides/{guideid}</code></li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test steps</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test lines</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test revisions</li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test users
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> username needs to be required</li>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test all optional fields</li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test teams
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> create, update, delete</li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test statuses
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> create, update, delete</li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test types
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> create, update, delete</li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test devices
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> create, update, delete</li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test categories
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> create, update, delete</li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test datatypes
+    <ul>
+      <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> create, update, delete</li>
+    </ul>
+  </li>
+  <li class="box task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" disabled> test images (do i want to use dropzone?; need image resizing library)</li>
 </ul>
 
 <hr />
 
-<h4 id="database-migrations">Database Migrations</h4>
+<h4 id="remove-down-the-line-configuration">Remove Down-The-Line Configuration</h4>
+
 <ul>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create images migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> remove invitations, notifications, and announcements
+    <ul>
+      <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> tests</li>
+      <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> database tables</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h4 id="database-seeds">Database Seeds</h4>
+
+<ul>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> modify users migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> users</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create notifications and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> teams</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create announcements and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> images</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create team users and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> statuses</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create invitations and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> types</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create statuses migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> devices</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create revisions migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> categories</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create types migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> datatypes</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create devices migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guides</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create categories migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> steps</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create datatypes migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> lines</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create guides migration and test db</li>
-  <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create steps migration and test db</li>
-  <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create lines migration and test db</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> revisions</li>
 </ul>
 
 <hr />
@@ -119,86 +221,45 @@
 
 <hr />
 
-<h4 id="database-seeds">Database Seeds</h4>
-
+<h4 id="database-migrations">Database Migrations</h4>
 <ul>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> users</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create images migration and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> teams</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> modify users migration and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> images</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create notifications and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> statuses</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create announcements and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> types</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create team users and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> devices</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create invitations and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> categories</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create statuses migration and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> datatypes</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create revisions migration and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> guides</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create types migration and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> steps</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create devices migration and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> lines</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create categories migration and test db</li>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> revisions</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create datatypes migration and test db</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create guides migration and test db</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create steps migration and test db</li>
+  <li class="box_done task-list-item">
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> create lines migration and test db</li>
 </ul>
 
 <hr />
 
-<h4 id="remove-down-the-line-configuration">Remove Down-The-Line Configuration</h4>
-
 <ul>
   <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> remove invitations, notifications, and announcements
-    <ul>
-      <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> tests</li>
-      <li class="box_done task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> database tables</li>
-    </ul>
-  </li>
-</ul>
-
-<hr />
-
-<h4 id="crud-tests">CRUD Tests</h4>
-<ul>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test users
-    <ul>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> username needs to be required</li>
-      <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test all optional fields</li>
-    </ul>
-  </li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test teams</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test statuses</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test types</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test devices</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test categories</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test datatypes</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test guides</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test steps</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test lines</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test revisions</li>
-  <li class="box task-list-item">
-      <input type="checkbox" class="task-list-item-checkbox" disabled> test images (do i want to use dropzone?; need image resizing library)</li>
+      <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> establish mockup pages url and redirect to them when visiting ‘/’</li>
 </ul>
 
     </div>

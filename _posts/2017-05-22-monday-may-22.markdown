@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "Monday May 22"
+date:   2017-05-22 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Daily Todo
+
+- [ ] fetch a list of documents when viewing the home page `/` from `/api/v1/guides`
+- [ ] rebuild homepage and document view pages with new theme
+- [ ] incorporate vuex into front-end
+
+---
+
+### Progress
+
+...
+
+---
+
+### Thoughts 
+
+...
+
+---
+
+### Daily Commits
+
+- [...]()
