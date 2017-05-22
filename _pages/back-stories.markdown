@@ -25,7 +25,7 @@ _NOTE: These are in order by most recent. Should save from having to scroll down
 #### CRUD Tests
 - [ ] test guides
     - [x] read `/api/v1/guides/{guideid}`
-    - [ ] read `/api/v1/guides`
+    - [x] read `/api/v1/guides`
     - [ ] delete `api/v1/guides`
     - [ ] create `/api/v1/guides`
     - [ ] update `/api/v1/guides/{guideid}`

@@ -6,17 +6,10 @@ permalink: /front-stories/
 
 ## After Server API is implemented
 
- - [ ] implement `vue-router`
- - [ ] implement `vuex`
+ - [ ] ~~implement vue-router~~
  - [ ] document index page
  - [ ] rebuild current views with new theme
-
----
-
-### Separate Client???
-
- - [ ] separate the client from the server.
- - [ ] explore hosting option for the client.
+ - [ ] implement `vuex`
  
 ---
 

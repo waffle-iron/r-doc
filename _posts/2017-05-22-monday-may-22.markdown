@@ -9,7 +9,7 @@ categories: r-doc log entry
 
 ### Daily Todo
 
-- [ ] fetch a list of documents when viewing the home page `/` from `/api/v1/guides`
+- [x] fetch a list of documents when viewing the home page `/` from `/api/v1/guides`
 - [ ] rebuild homepage and document view pages with new theme
 - [ ] incorporate vuex into front-end
 
