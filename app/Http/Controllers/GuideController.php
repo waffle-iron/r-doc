@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Guide;
+use App\Image;
 use DB;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,17 @@ class GuideController extends Controller
    */
   public function index()
   {
-    return DB::table('guides')
+    $guide = DB::table('guides')
         ->select('id', 'title', 'url')
         ->paginate(25);
+
+    $guide->map(function($g) {
+      $g->image = Guide::find($g->id)->image()->get(['original']);
+      $g->image = $g->image[0]->original;
+      $g->modified_date = Guide::find($g->id)->modified_date;
+      $g->category = Guide::find($g->id)->category()->get(['name'])[0]->name;
+    });
+    return $guide;
   }
 
   /**
