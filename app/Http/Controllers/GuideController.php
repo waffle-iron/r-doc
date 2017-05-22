@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Guide;
+use DB;
 use Illuminate\Http\Request;
 
 class GuideController extends Controller
@@ -11,11 +12,13 @@ class GuideController extends Controller
   /**
    * Display a listing of the resource.
    *
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Http\Response
    */
   public function index()
   {
-    //
+    return DB::table('guides')
+        ->select('id', 'title', 'url')
+        ->paginate(25);
   }
 
   /**

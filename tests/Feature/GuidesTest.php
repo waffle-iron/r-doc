@@ -92,7 +92,15 @@ class GuidesTest extends TestCase
   /** @test */
   public function an_unauthenticated_user_can_retrieve_a_guides_data()
   {
+    $this->withExceptionHandling();
     $response = $this->getAGuide();
+    $response->assertStatus(200);
+  }
+
+  /** @test */
+  public function an_unauthenticated_user_can_retrieve_a_list_of_guides()
+  {
+    $response = $this->get('/api/v1/guides');
     $response->assertStatus(200);
   }
 
@@ -276,6 +284,38 @@ class GuidesTest extends TestCase
             'original' => $guide[0]->image[0]->original,
         ],
     ]]);
+  }
+
+//  GUIDE LISTS '/API/V1/GUIDES'
+
+  /** @test */
+  public function a_list_of_guides_outputs_correct_data()
+  {
+    $guides = $this->createCompleteGuide(2);
+    $response = $this->get('/api/v1/guides');
+    $response->assertExactJson([
+        'total' => count($guides),
+        'per_page' => 25,
+        'current_page' => 1,
+        'last_page' => 1,
+        'next_page_url' => null,
+        'prev_page_url' => null,
+        'from' => 1,
+        'to' => 2,
+        'data' => [
+            [
+                'id' => (string)$guides[0]->id,
+                'title' => $guides[0]->title,
+                'url' => $guides[0]->url,
+            ],
+            [
+                'id' => (string)$guides[1]->id,
+                'title' => $guides[1]->title,
+                'url' => $guides[1]->url,
+            ],
+        ],
+    ]);
+
   }
 
   /**
