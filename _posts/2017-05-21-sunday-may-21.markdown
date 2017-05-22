@@ -9,14 +9,14 @@ categories: r-doc log entry
 
 ### Daily Todo
 
-- [ ] configure laravel-fractal and use current tests to ensure correct implementation
-- [ ] finish `api/v1/guides/{guideid}`
+- [x] ~~configure laravel-fractal and use current tests to ensure correct implementation~~
+- [x] finish `api/v1/guides/{guideid}`
 
 ---
 
 ### Progress
 
-...
+- had to revert all spatie/fractal implements. did not work with tests. going to use a different method.
 
 ---
 
