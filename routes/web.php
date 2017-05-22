@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-  return view('welcome')->name('guide-index');
+  return view('welcome');
 });
 
 Route::group(['prefix' => 'mockups'], function () {
