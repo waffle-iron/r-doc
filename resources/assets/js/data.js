@@ -1,9 +1,38 @@
 export default
 {
-  "previous_text": "iMac Intel 27\" Retina 5K Repair",
+  "author": {
+    "userid": 524640,
+    "username": "Sam Lionheart",
+    "unique_username": "sam",
+    "join_date": 1350625879,
+    "image": {
+      "id": 277243,
+      "guid": "goWW1KSXtt5RIr4A",
+      "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.mini",
+      "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.thumbnail",
+      "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.standard",
+      "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.medium",
+      "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.large",
+      "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A"
+    },
+    "reputation": 246141,
+    "url": "https://www.ifixit.com/User/524640/Sam+Lionheart",
+    "teams": [
+      1
+    ],
+    "privileges": [
+      "Admin"
+    ]
+  },
+  "can_edit": true,
+  "category": "iMac Intel 27\" Retina 5K Display",
+  "completed": false,
+  "created_date": 1413563912,
   "conclusion": "<p>I hope you have enjoyed reading this document</p>",
   "difficulty": "Moderate",
   "documents": [],
+  "favorited": false,
+  "featured_documentid": null,
   "flags": [
     {
       "title": "Featured Guide",
@@ -11,8 +40,6 @@ export default
       "text": "This guide has been found to be exceptionally cool by the iFixit staff."
     }
   ],
-  "guideid": 30260,
-  "revision": "F",
   "image": {
     "id": 895976,
     "guid": "lRKYbGnjXT2jatbx",
@@ -25,8 +52,16 @@ export default
     "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/lRKYbGnjXT2jatbx"
   },
   "introduction": "<p>Think of the most colorful and radiant display you’ve ever seen. Now, discard that memory and stare at Apple’s newest iMac Intel 27” with Retina 5K Display. We're not talking 1080p or 4K, we're talking about 5K—millions and millions of pixels on a 27-inch display. Will the addition of a high-resolution display affect the repairability of the newest iMac Intel 27”? Let’s find out!</p>\n\n<p>Follow us on <a href=\"https://www.facebook.com/iFixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Facebook</a>, <a href=\"http://instagram.com/ifixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Instagram</a>, or <a href=\"https://twitter.com/ifixit\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">Twitter</a> for the latest teardown news.</p>",
+  "guideid": 30260,
+  "modified_date": 1493330183,
   "parts": [],
+  "prereq_modified_date": 0,
   "prerequisites": [],
+  "previous_text": "iMac Intel 27\" Retina 5K Repair",
+  "public": true,
+  "published_date": 1413588480,
+  "revision": "F",
+  "revisionid": 753275,
   "steps": [
     {
       "title": "",
@@ -1001,46 +1036,11 @@ export default
     }
   ],
   "type": "teardown",
-  "revisionid": 753275,
-  "created_date": 1413563912,
-  "published_date": 1413588480,
-  "modified_date": 1493330183,
-  "prereq_modified_date": 0,
-  "public": true,
-  "category": "iMac Intel 27\" Retina 5K Display",
-  "url": "https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+Retina+5K+Display+Teardown/30260",
-  "can_edit": true,
-  "favorited": false,
-  "completed": false,
-  "author": {
-    "userid": 524640,
-    "username": "Sam Lionheart",
-    "unique_username": "sam",
-    "join_date": 1350625879,
-    "image": {
-      "id": 277243,
-      "guid": "goWW1KSXtt5RIr4A",
-      "mini": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.mini",
-      "thumbnail": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.thumbnail",
-      "standard": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.standard",
-      "medium": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.medium",
-      "large": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A.large",
-      "original": "https://d3nevzfk7ii3be.cloudfront.net/igi/goWW1KSXtt5RIr4A"
-    },
-    "reputation": 246141,
-    "url": "https://www.ifixit.com/User/524640/Sam+Lionheart",
-    "teams": [
-      1
-    ],
-    "privileges": [
-      "Admin"
-    ]
-  },
-  "featured_documentid": null,
   "types": [
-      "Replacement",
-      "Disassembly",
-      "Teardown",
-      "Technique"
-  ]
+    "Replacement",
+    "Disassembly",
+    "Teardown",
+    "Technique"
+  ],
+  "url": "https://www.ifixit.com/Teardown/iMac+Intel+27-Inch+Retina+5K+Display+Teardown/30260"
 }

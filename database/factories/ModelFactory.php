@@ -28,16 +28,30 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
 
   return [
       'datatype_id' => 1,
+      'user_id' => factory(App\User::class)->create()->id,
       'url' => $faker->url(),
       'revision_id' => 1,
       'type_id' => 1,
   ];
 });
 
-$factory->state(App\Guide::class, 'complete', function ($faker) {
+$factory->state(App\Guide::class, 'complete', function (Faker\Generator $faker) {
   return [
-
+      'can_edit' => true,
+      'user_id' => factory(App\User::class)->create()->id,
+      'url' => '',
+      'revision' => '-',
+      'device_id' => function () {
+        factory(App\Device::class)->create()->id;
+      },
+      'title' => $faker->sentence,
+      'summary' => $faker->paragraph,
+      'introduction' => $faker->paragraph,
+      'previous_text' => $faker->sentence,
+      'conclusion' => $faker->paragraph,
+      'obsolete' => false,
   ];
+
 });
 
 $factory->define(App\Image::class, function (Faker\Generator $faker) {
@@ -67,7 +81,7 @@ $factory->define(App\Announcement::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Team::class, function (Faker\Generator $faker) {
-  $name = $faker->name;
+  $name = $faker->words(3, true);
   return [
       'owner_id' => 1,
       'name' => $name,
@@ -131,15 +145,14 @@ $factory->define(App\Datatype::class, function (Faker\Generator $faker) {
 $factory->define(App\Step::class, function (Faker\Generator $faker) {
   return [
       'title' => $faker->sentence(1, true),
-      'orderby' => 1,
+      'orderby' => $faker->numberBetween(0, 2),
   ];
 });
 
 $factory->define(App\Line::class, function (Faker\Generator $faker) {
   return [
       'text' => $faker->paragraph(1, true),
-      'bullet' => $faker->word,
       'level' => 0,
-      'orderby' => 1,
+      'orderby' => 0
   ];
 });

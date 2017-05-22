@@ -13,9 +13,9 @@ class GuidesSeeder extends Seeder
   public function run(Faker\Generator $faker)
   {
     factory(App\Guide::class, 200)->create()->each(function ($g) use ($faker) {
-      $datatype = App\Datatype::find($faker->numberBetween(1,5));
+      $datatype = App\Datatype::find($faker->numberBetween(1, 5));
       $datatype->guides()->save($g);
-      $g->update(['url' => '/guide/' . $g->id]);
+      $g->update(['url' => env('APP_URL') . '/guide/' . $g->id]);
       $category = App\Category::find($faker->numberBetween(1, 25));
       $category->guides()->save($g);
       $type = App\Type::find($faker->numberBetween(1, 10));
@@ -24,10 +24,10 @@ class GuidesSeeder extends Seeder
       $device->guides()->save($g);
       $g->image()->save(factory(App\Image::class)->make());
       $g->update([
-          'title' => $faker->title,
+          'title' => $faker->sentence,
           'summary' => $faker->paragraph,
           'introduction' => $faker->paragraph,
-          'previous_text' => $faker->title,
+          'previous_text' => $faker->sentence,
           'conclusion' => $faker->paragraph,
       ]);
       $revision = factory(App\Revision::class)->create([

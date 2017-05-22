@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
+  protected $fillable = [
+    'orderby'
+  ];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */

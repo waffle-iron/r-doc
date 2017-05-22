@@ -19,9 +19,6 @@ class LinesTest extends TestCase
     $this->assertDatabaseHas('lines', [
       'id' => $line->id,
       'text' => $line->text,
-      'bullet' => $line->bullet,
-      'level' => $line->level,
-      'orderby' => $line->orderby,
       'deleted_at' => null,
     ]);
   }

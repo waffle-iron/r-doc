@@ -18,7 +18,7 @@ class CreateLinesTable extends Migration
       $table->integer('step_id')->unsigned()->nullable();
       $table->text('text')->nullable();
       $table->string('bullet')->default('black');
-      $table->integer('level')->unsigned()->default(0);
+      $table->integer('level')->unsigned();
       $table->integer('orderby')->unsigned();
       $table->timestamp('deleted_at')->nullable()->default(null);
       $table->timestamps();

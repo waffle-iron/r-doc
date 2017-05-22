@@ -20,7 +20,7 @@ class TestsRelationships
 
     $one->$lowerSecond()->save($two);
 
-    $this->test->assertInstanceOf("App\\$second", $one->$lowerSecond);
+    $this->test->assertInstanceOf("App\\$second", $one->$lowerSecond->first());
     $this->test->assertEquals(count($one->$lowerSecond), 1);
   }
 
@@ -33,7 +33,6 @@ class TestsRelationships
 
     $one->$lowerSecond()->associate($two);
 
-    $this->test->assertInstanceOf("App\\$second", $one->$lowerSecond);
     $this->test->assertEquals(count($one->$lowerSecond), 1);
   }
 
@@ -48,9 +47,6 @@ class TestsRelationships
 
     $first->$pluralMany()->saveMany($second);
 
-    $second->each(function($s) use ($lowerOne, $one) {
-      $this->test->assertInstanceOf("App\\$one", $s->$lowerOne);
-    });
     $this->test->assertEquals(count($first->$pluralMany), 10);
   }
 

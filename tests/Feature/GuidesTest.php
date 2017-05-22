@@ -2,15 +2,19 @@
 
 namespace Tests\Feature;
 
-use GuidesSeeder;
+use App\Guide;
+use const false;
+use GuidesTestSeeder;
+use StepsTestSeeder;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class GuidesTest extends TestCase
 {
   use DatabaseMigrations;
+
+  private $guides;
+  private $response;
 
   /** @test */
   public function can_view_a_list_of_guides()
@@ -48,29 +52,271 @@ class GuidesTest extends TestCase
     $guide = create('App\Guide');
 
     $this->assertDatabaseHas('guides', [
-      'id' => $guide->id,
-      'datatype_id' => $guide->datatype_id,
-      'can_edit' => true,
-      'url' => $guide->url,
-      'category_id' => $guide->category_id,
-      'revision' => '-',
-      'revision_id' => $guide->revision_id,
-      'type_id' => $guide->type_id,
-      'device_id' => $guide->device_id,
-      'title' => $guide->title,
-      'summary' => $guide->summary,
-      'introduction' => $guide->introduction,
-      'previous_text' => $guide->previous_text,
-      'conclusion' => $guide->conclusion,
-      'obsolete' => false,
-      'revised_at' => null,
-      'deleted_at' => null,
+        'id' => $guide->id,
+        'datatype_id' => $guide->datatype_id,
+        'can_edit' => true,
+        'url' => $guide->url,
+        'category_id' => $guide->category_id,
+        'revision' => '-',
+        'revision_id' => $guide->revision_id,
+        'type_id' => $guide->type_id,
+        'device_id' => $guide->device_id,
+        'title' => $guide->title,
+        'summary' => $guide->summary,
+        'introduction' => $guide->introduction,
+        'previous_text' => $guide->previous_text,
+        'conclusion' => $guide->conclusion,
+        'obsolete' => false,
+        'revised_at' => null,
+        'deleted_at' => null,
     ]);
   }
 
   /** @test */
-  public function an_unauthenticated_user_can_view_a_guide()
+  public function my_test_guide_algorithm_is_generating_data_for_the_correct_tables()
   {
+    $this->createCompleteGuide();
 
+    $this->assertDatabaseHas('categories', ['id' => 1]);
+    $this->assertDatabaseHas('datatypes', ['id' => 1]);
+    $this->assertDatabaseHas('devices', ['id' => 1]);
+    $this->assertDatabaseHas('guides', ['id' => 1]);
+    $this->assertDatabaseHas('images', ['guide_id' => 1]);
+    $this->assertDatabaseHas('images', ['step_id' => 1]);
+    $this->assertDatabaseHas('steps', ['guide_id' => 1]);
+    $this->assertDatabaseHas('lines', ['step_id' => 1]);
+    $this->assertDatabaseHas('revisions', ['id' => 1]);
+    $this->assertDatabaseHas('statuses', ['id' => 1]);
+    $this->assertDatabaseHas('types', ['id' => 1]);
   }
+
+  /** @test */
+  public function an_unauthenticated_user_can_retrieve_a_guides_data()
+  {
+    $response = $this->getAGuide();
+    $response->assertStatus(200);
+  }
+
+  // WHEN VIEWING A GUIDE AN UNAUTHENTICATED USER CAN...
+
+  /** @test */
+  public function see_the_guideid()
+  {
+    $this->guideHas(['guideid' => 1]);
+  }
+
+  /** @test */
+  public function see_a_particular_guide_based_on_its_id()
+  {
+    $this->guideHas(['guideid' => 2], 2, 2);
+  }
+
+  /** @test */
+  public function editable_is_true()
+  {
+    $this->guideHas(['editable' => true]);
+  }
+
+  /** @test */
+  public function has_the_correct_guide_url()
+  {
+    $this->guideHas(['url' => 'http://r-doc.dev/guide/1']);
+  }
+
+  /** @test */
+  public function has_the_correct_datatype()
+  {
+    $this->hasCorrect('datatype');
+  }
+
+  /** @test */
+  public function has_the_correct_category()
+  {
+    $this->hasCorrect('category');
+  }
+
+  /** @test */
+  public function has_correct_revision()
+  {
+    $this->hasCorrect('revision');
+  }
+
+  /** @test */
+  public function has_a_revision_id()
+  {
+    $this->hasCorrect('revision_id');
+  }
+
+  /** @test */
+  public function has_the_correct_type()
+  {
+    $this->hasCorrect('type');
+  }
+
+  /** @test */
+  public function has_the_correct_device()
+  {
+    $this->hasCorrect('device');
+  }
+
+  /** @test */
+  public function has_correct_title()
+  {
+    $this->hasCorrect('title');
+  }
+
+  /** @test */
+  public function has_correct_summary()
+  {
+    $this->hasCorrect('summary');
+  }
+
+  /** @test */
+  public function has_correct_introduction()
+  {
+    $this->hasCorrect('introduction');
+  }
+
+  /** @test */
+  public function has_correct_previous_text()
+  {
+    $this->hasCorrect('previous_text');
+  }
+
+  /** @test */
+  public function has_correct_conclusion()
+  {
+    $this->hasCorrect('conclusion');
+  }
+
+  /** @test */
+  public function has_correct_created_date()
+  {
+    $this->hasCorrect('created_date');
+  }
+
+  /** @test */
+  public function has_correct_modified_date()
+  {
+    $this->hasCorrect('modified_date');
+  }
+
+  /** @test */
+  public function has_correct_published_date()
+  {
+    $this->hasCorrect('published_date');
+  }
+
+  /** @test */
+  public function has_correct_author_attributes()
+  {
+    $this->createGuide();
+    $guide = Guide::find(1);
+    $response = $this->get('/api/v1/guides/1');
+    $response->assertJson(['author' => [
+        [
+            'id' => $guide->author[0]->id,
+            'username' => $guide->author[0]->username,
+            'url' => $guide->author[0]->url,
+            'join_date' => $guide->author[0]->join_date,
+            'image' => [
+                [
+                    'id' => $guide->author[0]->image[0]->id,
+                    'original' => $guide->author[0]->image[0]->original,
+                ],
+            ],
+            'teams' => [
+                [
+                    'id' => $guide->author[0]->teams[0]->id,
+                    'name' => $guide->author[0]->teams[0]->name,
+                ],
+            ],
+        ],
+    ]]);
+  }
+
+  /** @test */
+  public function has_correct_steps_attributes()
+  {
+    $this->createGuide();
+    $guide = Guide::find(1);
+    $response = $this->get('/api/v1/guides/1');
+    $response->assertJson(['steps' => [
+        [
+            'id' => $guide->steps[0]->id,
+            'title' => $guide->steps[0]->title,
+            'guide_id' => $guide->steps[0]->guide_id,
+            'revision_id' => $guide->steps[0]->revision_id,
+            'lines' => [
+                [
+                    'text' => $guide->steps[0]->lines[0]->text,
+                    'bullet' => $guide->steps[0]->lines[0]->bullet,
+                    'level' => $guide->steps[0]->lines[0]->level,
+                    'orderby' => $guide->steps[0]->lines[0]->orderby,
+                ]
+            ],
+            'media' => [
+                [
+                    'id' => $guide->steps[0]->media[0]->id,
+                    'original' => $guide->steps[0]->media[0]->original,
+                    'orderby' => $guide->steps[0]->media[0]->orderby,
+                ]
+            ],
+        ]
+    ]]);
+  }
+
+  /** @test */
+  public function has_correct_guide_image_data()
+  {
+    $guide = $this->createCompleteGuide();
+    $response = $this->get('/api/v1/guides/1');
+    $response->assertJson(['image' => [
+        [
+            'id' => $guide[0]->image[0]->id,
+            'original' => $guide[0]->image[0]->original,
+        ],
+    ]]);
+  }
+
+  /**
+   * @param int $qty
+   * @param int $guideid
+   * @return \Illuminate\Foundation\Testing\TestResponse
+   */
+  private function getAGuide($qty = 1, $guideid = 1)
+  {
+    $this->guides = $this->createCompleteGuide($qty);
+    $response = $this->get(env('APP_URL') . "/api/v1/guides/$guideid");
+    return $response;
+  }
+
+  /**
+   * @param $attribute
+   * @param int $qty
+   * @param int $guideid
+   * @param bool $createGuide
+   */
+  private function guideHas($attribute, $qty = 1, $guideid = 1, $createGuide = true)
+  {
+    if ($createGuide) $this->response = $this->getAGuide($qty, $guideid);
+    $this->response->assertJson($attribute);
+  }
+
+  /**
+   * @param $attribute
+   */
+  private function hasCorrect($attribute)
+  {
+    $this->response = $this->getAGuide();
+    $x = $this->guides[0]->$attribute;
+    $this->guideHas([$attribute => $x], 1, 1, false);
+  }
+
+  private function createGuide(): void
+  {
+    $this->seed(GuidesTestSeeder::class);
+    $this->seed(StepsTestSeeder::class);
+  }
+
 }
