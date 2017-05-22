@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Guide;
 use const false;
 use GuidesTestSeeder;
 use StepsTestSeeder;
@@ -99,15 +100,15 @@ class GuidesTest extends TestCase
   // WHEN VIEWING A GUIDE AN UNAUTHENTICATED USER CAN...
 
   /** @test */
-  public function see_the_guide_id()
+  public function see_the_guideid()
   {
-    $this->guideHas(['id' => 1]);
+    $this->guideHas(['guideid' => 1]);
   }
 
   /** @test */
   public function see_a_particular_guide_based_on_its_id()
   {
-    $this->guideHas(['id' => 2], 2, 2);
+    $this->guideHas(['guideid' => 2], 2, 2);
   }
 
   /** @test */
@@ -189,15 +190,58 @@ class GuidesTest extends TestCase
   }
 
   /** @test */
+  public function has_correct_created_date()
+  {
+    $this->hasCorrect('created_date');
+  }
+
+  /** @test */
+  public function has_correct_modified_date()
+  {
+    $this->hasCorrect('modified_date');
+  }
+
+  /** @test */
+  public function has_correct_published_date()
+  {
+    $this->hasCorrect('published_date');
+  }
+
+  /** @test */
   public function has_correct_author_attributes()
+  {
+    $this->createGuide();
+    $guide = Guide::find(1);
+    $response = $this->get('/api/v1/guides/1');
+    $response->assertJson(['author' => [
+        'id' => $guide->author->id,
+        'username' => $guide->author->username,
+        'url' => $guide->author->url,
+        'join_date' => $guide->author->join_date,
+        'image' => [
+            [
+                'id' => $guide->author->image[0]->id,
+                'original' => $guide->author->image[0]->original,
+            ],
+        ],
+        'teams' => [
+            [
+                'id' => $guide->author->teams[0]->id,
+                'name' => $guide->author->teams[0]->name,
+            ],
+        ],
+
+    ]]);
+  }
+
+  /** @test */
+  public function has_correct_guide_image_data()
   {
     $guide = $this->createCompleteGuide();
     $response = $this->get('/api/v1/guides/1');
-    $response->assertJson(['author' => [
-        'id' => $guide[0]->author->id,
-        'username' => $guide[0]->author->username,
-        'url' => $guide[0]->author->url,
-        'joined' => $guide[0]->author->joined,
+    $response->assertJson(['image' => [
+        'id' => $guide[0]->image->id,
+        'original' => $guide[0]->image->original,
     ]]);
   }
 

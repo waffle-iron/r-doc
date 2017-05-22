@@ -11,6 +11,10 @@ class Team extends Model
      'owner_id'
   ];
 
+  protected $hidden = [
+    'pivot',
+  ];
+
   public function users()
   {
     return $this->belongsToMany(User::class);

@@ -38,6 +38,7 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
 $factory->state(App\Guide::class, 'complete', function (Faker\Generator $faker) {
   return [
       'can_edit' => true,
+      'user_id' => factory(App\User::class)->create()->id,
       'url' => '',
       'revision' => '-',
       'device_id' => function () {
@@ -80,7 +81,7 @@ $factory->define(App\Announcement::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Team::class, function (Faker\Generator $faker) {
-  $name = $faker->name;
+  $name = $faker->words(3, true);
   return [
       'owner_id' => 1,
       'name' => $name,

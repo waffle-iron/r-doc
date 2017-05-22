@@ -7,6 +7,7 @@ use App\Guide;
 use App\Image;
 use App\Revision;
 use App\Status;
+use App\Team;
 use App\Type;
 use App\User;
 use Illuminate\Database\Seeder;
@@ -32,6 +33,9 @@ class GuidesTestSeeder extends Seeder
       $device = factory(Device::class)->create();
       $device->guides()->save($g);
       $user = factory(User::class)->create();
+      $user->image()->save(factory(Image::class)->create());
+      $team = factory(Team::class)->create();
+      $user->teams()->save($team);
       $user->guides()->save($g);
       $g->image()->save(factory(Image::class)->make());
       $g->update([

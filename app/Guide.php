@@ -7,28 +7,37 @@ use Illuminate\Database\Eloquent\Model;
 class Guide extends Model
 {
   protected $fillable = [
-    'url'
+      'url'
   ];
 
   protected $hidden = [
-    'deleted_at',
-    'revised_at',
-    'datatype_id',
-    'category_id',
-    'obsolete',
-    'type_id',
-    'device_id',
-    'can_edit',
-    'user_id',
+      'deleted_at',
+      'revised_at',
+      'datatype_id',
+      'category_id',
+      'obsolete',
+      'type_id',
+      'device_id',
+      'can_edit',
+      'user_id',
+      'created_at',
+      'id',
+      'updated_at',
+      'published_at',
   ];
 
   protected $appends = [
-    'datatype',
-    'category',
-    'type',
-    'device',
-    'editable',
-    'author'
+      'author',
+      'category',
+      'created_date',
+      'datatype',
+      'device',
+      'editable',
+      'guideid',
+      'image',
+      'modified_date',
+      'published_date',
+      'type',
   ];
 
   public function image()
@@ -94,7 +103,7 @@ class Guide extends Model
 
   public function getEditableAttribute()
   {
-    return !! $this->can_edit;
+    return !!$this->can_edit;
   }
 
   public function getAuthorAttribute()
@@ -102,5 +111,33 @@ class Guide extends Model
     $userid = $this->user()->get()->first()->id;
     $user = User::where('id', $userid)->first(['id', 'username', 'url', 'created_at']);
     return $user;
+  }
+
+  public function getImageAttribute()
+  {
+    $imageid = $this->image()->get()->first()->id;
+    $image = Image::where('id', $imageid)->first(['id', 'original']);
+    return $image;
+  }
+
+  public function getCreatedDateAttribute()
+  {
+    return $this->created_at->toFormattedDateString();
+  }
+
+  public function getGuideidAttribute()
+  {
+    return $this->id;
+  }
+
+  public function getModifiedDateAttribute()
+  {
+    return $this->updated_at->toFormattedDateString();
+  }
+
+  public function getPublishedDateAttribute()
+  {
+    if ($this->published_at) return $this->published_at->toFormattedDateString();
+    return $this->published_at;
   }
 }
