@@ -293,7 +293,7 @@ class GuidesTest extends TestCase
   {
     $guides = $this->createCompleteGuide(2);
     $response = $this->get('/api/v1/guides');
-    $response->assertExactJson([
+    $response->assertJson([
         'total' => count($guides),
         'per_page' => 25,
         'current_page' => 1,
