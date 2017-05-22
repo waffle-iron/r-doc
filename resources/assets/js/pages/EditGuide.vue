@@ -14,10 +14,10 @@
 
 <script>
   import GuideData from './../testdb';
-  import EditContainer from './Guides/EditContainer.vue';
-  import EditNavbar from './Guides/EditNavbar.vue';
-  import EditLeft from './Guides/EditLeft.vue';
-  import EditRight from './Guides/EditRight.vue';
+  import EditContainer from '../components/Guides/EditContainer.vue';
+  import EditNavbar from '../components/Guides/EditNavbar.vue';
+  import EditLeft from '../components/Guides/EditLeft.vue';
+  import EditRight from '../components/Guides/EditRight.vue';
 
   export default {
     props: ['type'],

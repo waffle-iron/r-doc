@@ -15,8 +15,8 @@ window.Vue = require('vue');
  */
 
 // Root level components
-Vue.component('guide', require('./components/Guide.vue'));
-Vue.component('edit-guide', require('./components/EditGuide.vue'));
+Vue.component('guide', require('./pages/Guide.vue'));
+Vue.component('edit-guide', require('./pages/EditGuide.vue'));
 
 const app = new Vue({
   el: '#app'
