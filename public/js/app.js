@@ -139,7 +139,7 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 239);
+/******/ 	return __webpack_require__(__webpack_require__.s = 240);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -4610,7 +4610,7 @@ return hooks;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(236)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(237)(module)))
 
 /***/ }),
 /* 1 */
@@ -4676,7 +4676,7 @@ module.exports = function normalizeComponent (
 "use strict";
 
 
-var bind = __webpack_require__(13);
+var bind = __webpack_require__(12);
 
 /*global toString:true*/
 
@@ -14389,7 +14389,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(233)
+var listToStyles = __webpack_require__(234)
 
 /*
 type StyleObject = {
@@ -14615,10 +14615,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(9);
+    adapter = __webpack_require__(8);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(9);
+    adapter = __webpack_require__(8);
   }
   return adapter;
 }
@@ -14720,258 +14720,6 @@ module.exports = g;
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-var stylesInDom = {},
-	memoize = function(fn) {
-		var memo;
-		return function () {
-			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-			return memo;
-		};
-	},
-	isOldIE = memoize(function() {
-		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
-	}),
-	getHeadElement = memoize(function () {
-		return document.head || document.getElementsByTagName("head")[0];
-	}),
-	singletonElement = null,
-	singletonCounter = 0,
-	styleElementsInsertedAtTop = [];
-
-module.exports = function(list, options) {
-	if(typeof DEBUG !== "undefined" && DEBUG) {
-		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
-
-	// By default, add <style> tags to the bottom of <head>.
-	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
-
-	var styles = listToStyles(list);
-	addStylesToDom(styles, options);
-
-	return function update(newList) {
-		var mayRemove = [];
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-		if(newList) {
-			var newStyles = listToStyles(newList);
-			addStylesToDom(newStyles, options);
-		}
-		for(var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-			if(domStyle.refs === 0) {
-				for(var j = 0; j < domStyle.parts.length; j++)
-					domStyle.parts[j]();
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-}
-
-function addStylesToDom(styles, options) {
-	for(var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-		if(domStyle) {
-			domStyle.refs++;
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles(list) {
-	var styles = [];
-	var newStyles = {};
-	for(var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-		if(!newStyles[id])
-			styles.push(newStyles[id] = {id: id, parts: [part]});
-		else
-			newStyles[id].parts.push(part);
-	}
-	return styles;
-}
-
-function insertStyleElement(options, styleElement) {
-	var head = getHeadElement();
-	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-	if (options.insertAt === "top") {
-		if(!lastStyleElementInsertedAtTop) {
-			head.insertBefore(styleElement, head.firstChild);
-		} else if(lastStyleElementInsertedAtTop.nextSibling) {
-			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			head.appendChild(styleElement);
-		}
-		styleElementsInsertedAtTop.push(styleElement);
-	} else if (options.insertAt === "bottom") {
-		head.appendChild(styleElement);
-	} else {
-		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-	}
-}
-
-function removeStyleElement(styleElement) {
-	styleElement.parentNode.removeChild(styleElement);
-	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-	if(idx >= 0) {
-		styleElementsInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement(options) {
-	var styleElement = document.createElement("style");
-	styleElement.type = "text/css";
-	insertStyleElement(options, styleElement);
-	return styleElement;
-}
-
-function createLinkElement(options) {
-	var linkElement = document.createElement("link");
-	linkElement.rel = "stylesheet";
-	insertStyleElement(options, linkElement);
-	return linkElement;
-}
-
-function addStyle(obj, options) {
-	var styleElement, update, remove;
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-		styleElement = singletonElement || (singletonElement = createStyleElement(options));
-		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-	} else if(obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function") {
-		styleElement = createLinkElement(options);
-		update = updateLink.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-			if(styleElement.href)
-				URL.revokeObjectURL(styleElement.href);
-		};
-	} else {
-		styleElement = createStyleElement(options);
-		update = applyToTag.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle(newObj) {
-		if(newObj) {
-			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-				return;
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag(styleElement, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = styleElement.childNodes;
-		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-		if (childNodes.length) {
-			styleElement.insertBefore(cssNode, childNodes[index]);
-		} else {
-			styleElement.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag(styleElement, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		styleElement.setAttribute("media", media)
-	}
-
-	if(styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = css;
-	} else {
-		while(styleElement.firstChild) {
-			styleElement.removeChild(styleElement.firstChild);
-		}
-		styleElement.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink(linkElement, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	if(sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = linkElement.href;
-
-	linkElement.href = URL.createObjectURL(blob);
-
-	if(oldSrc)
-		URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14982,7 +14730,7 @@ var settle = __webpack_require__(145);
 var buildURL = __webpack_require__(148);
 var parseHeaders = __webpack_require__(154);
 var isURLSameOrigin = __webpack_require__(152);
-var createError = __webpack_require__(12);
+var createError = __webpack_require__(11);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(147);
 
 module.exports = function xhrAdapter(config) {
@@ -15155,7 +14903,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15181,7 +14929,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15193,7 +14941,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15217,7 +14965,7 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15235,14 +14983,14 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({"authors":[{"userid":45095,"username":"joaquin.strosin","image":{"id":52662,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/daykiine/128.jpg"},"teams":[3],"privileges":["Admin"]},{"userid":88088,"username":"chance.simonis","image":{"id":94238,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/muridrahhal/128.jpg"},"teams":[1],"privileges":["Admin"]},{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},{"userid":41284,"username":"mattie.maggio","image":{"id":4270,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/smalonso/128.jpg"},"teams":[3],"privileges":["Admin"]},{"userid":47364,"username":"lorenz.jerde","image":{"id":53767,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/S0ufi4n3/128.jpg"},"teams":[1],"privileges":["Admin"]}],"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"],"guides":[{"id":0,"previous_text":"Quae ipsam hic et est.","conclusion":"Ducimus facere ipsa quas ut laborum nemo dignissimos et cum. Animi numquam a et qui. Inventore eius at sunt commodi voluptatem sed et omnis. Excepturi quia aperiam natus voluptatum autem recusandae.","guideid":91101,"revision":"C","revisionid":63322,"image":{"id":41864,"huge":"http://lorempixel.com/1024/768/city/1"},"introduction":"<p>Quo error et et tenetur culpa voluptatem omnis ad numquam. Veritatis similique quidem. Natus sit voluptas dolores molestiae aperiam aut. Necessitatibus sed animi laborum iusto hic consequuntur non. Nobis et occaecati iure possimus totam.</p><p>Qui voluptatum qui est est a nobis dignissimos sit. Modi sunt voluptatem tempore dicta ex omnis nisi maiores. Ad est beatae nemo et similique.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Hic cum dolorem minus et.","title":"occaecati impedit laudantium","type":"repudiandae","published_date":1494552751,"public":true,"author":{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":1,"previous_text":"Sed officia ex harum.","conclusion":"Numquam temporibus quis qui aut recusandae. Ea dolorem beatae tempore illo aspernatur. Velit et quis necessitatibus nisi vitae quaerat nulla. Id eveniet in quod nobis maxime. Natus veniam numquam necessitatibus.","guideid":91101,"revision":"B","revisionid":39231,"image":{"id":10968,"huge":"http://lorempixel.com/1024/768/city/2"},"introduction":"<p>Dolorem animi libero sint odio recusandae placeat asperiores omnis. Deserunt error cum repellendus odit adipisci perferendis ad qui. Rerum optio rem quaerat et.</p><p>Repellendus officiis labore rem in alias exercitationem sit. Esse expedita enim magni nostrum aut sunt ex autem quasi. Velit reprehenderit nisi voluptas eligendi eos modi quam. Corporis aut laboriosam qui aut totam.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Quia voluptas totam maiores hic dicta illum id.","title":"et quo ut","type":"eum","published_date":1494550438,"public":true,"author":{"userid":88088,"username":"chance.simonis","image":{"id":94238,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/muridrahhal/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":2,"previous_text":"Sint accusamus voluptas qui doloribus ipsum fugiat non fugiat perferendis.","conclusion":"Vel et eaque minus et sunt sunt animi. Possimus mollitia saepe earum laborum est facilis explicabo. Perferendis voluptatibus accusamus neque sed error vero maiores. Enim distinctio ipsa saepe quo id culpa vitae. Et rerum eligendi quam porro aut et.","guideid":91101,"revision":"C","revisionid":18344,"image":{"id":60913,"huge":"http://lorempixel.com/1024/768/city/3"},"introduction":"<p>Aspernatur repudiandae necessitatibus quas facere ut reprehenderit fuga quae. Iure consectetur dolores ea quod voluptatem dignissimos nam sit. Sed ducimus vero veniam rerum facere. Ut officia quia quis modi ea sed repellat.</p><p>Adipisci dolor eos maxime qui. Corporis quisquam quae ea non itaque consequatur enim. Ipsum corrupti ex ut autem illo. Quia porro officia aut. Eum unde a possimus.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Iure quisquam exercitationem ex fuga qui illo ut amet non.","title":"harum ratione tempore","type":"id","published_date":1494599843,"public":true,"author":{"userid":41284,"username":"mattie.maggio","image":{"id":4270,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/smalonso/128.jpg"},"teams":[3],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":3,"previous_text":"Sed voluptatem magnam numquam est qui esse nihil repudiandae.","conclusion":"Nisi fugit hic ut. Molestiae temporibus iure et qui sunt. Non adipisci sed sed aspernatur repellendus quia eos. Facere molestias qui id nam ipsam dolorem sunt sunt blanditiis. Incidunt sint perspiciatis. Minima repudiandae voluptatum molestiae saepe quis consequuntur velit sit.","guideid":91101,"revision":"C","revisionid":34113,"image":{"id":73771,"huge":"http://lorempixel.com/1024/768/city/4"},"introduction":"<p>Nemo facere quasi dolorem quia vel. Mollitia facere et tenetur aut. Natus quasi eius voluptatum rerum et aliquid deserunt. Quia sequi quidem quae praesentium. Quis molestiae iusto sed aliquid a nihil quia.</p><p>In rerum neque neque vitae eligendi dignissimos unde qui sit. Ipsa nam maiores officia doloribus porro autem minus. Dolorem soluta inventore consequatur esse repellendus enim.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Repudiandae adipisci officiis odio quasi quia.","title":"dolores quo reprehenderit","type":"eum","published_date":1494573633,"public":true,"author":{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":4,"previous_text":"Sint excepturi molestias tempore.","conclusion":"Dolores nihil est placeat et voluptates voluptate quidem delectus. Eos est illum. Illum delectus non. Debitis assumenda sit consequatur velit. Autem rerum et.","guideid":91101,"revision":"C","revisionid":86820,"image":{"id":56287,"huge":"http://lorempixel.com/1024/768/city/5"},"introduction":"<p>Doloremque qui saepe sit atque sed hic veniam. Qui qui corporis est nobis impedit eos deserunt similique est. Dolor dolores repudiandae qui ullam consectetur aut ea. Perferendis et magnam qui atque minima consectetur.</p><p>Est quis deserunt nulla laudantium est. Saepe facere eligendi cupiditate. Ab amet repellendus qui ratione voluptatem eos expedita non libero. Eligendi atque distinctio molestiae consequatur sed odio ea nobis.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Quibusdam ut est consequatur earum consequuntur nostrum dolorum praesentium voluptatem.","title":"voluptatem qui eum","type":"id","published_date":1494602270,"public":true,"author":{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":5,"previous_text":"Voluptatibus repellendus aperiam non.","conclusion":"Minima expedita quae dignissimos est voluptatem esse molestiae facilis doloremque. Laborum velit illo nemo blanditiis dolore. Ut illum facilis in illo. Velit odit fuga adipisci aspernatur aliquid blanditiis at quod. Voluptatum ex suscipit consequatur exercitationem quo voluptatibus rerum tenetur.","guideid":91101,"revision":"A","revisionid":72573,"image":{"id":10407,"huge":"http://lorempixel.com/1024/768/city/6"},"introduction":"<p>Est nostrum asperiores quia voluptate eos exercitationem amet. Est dolorum iusto ab molestiae accusamus. Architecto aut nam velit dolorem nihil qui.</p><p>Pariatur tempora aut laborum. Nesciunt modi eveniet qui delectus est eum sequi rerum est. Et molestiae consequuntur aliquid enim voluptatum numquam perferendis. Voluptates eum id cumque. Molestiae sunt eius dolor sit. Delectus non sequi debitis sed aliquid quibusdam et.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Iusto in quia nobis sed assumenda earum qui.","title":"eum voluptas quia","type":"laboriosam","published_date":1494614987,"public":true,"author":{"userid":45095,"username":"joaquin.strosin","image":{"id":52662,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/daykiine/128.jpg"},"teams":[3],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":6,"previous_text":"Ipsa possimus facere cupiditate ullam quasi atque et.","conclusion":"Dolore ullam eaque placeat corporis dolorem unde quo eos occaecati. Id voluptatem voluptas. Quo atque excepturi fugiat qui aut molestias quasi vel. Doloribus nesciunt voluptatem voluptas facilis assumenda ut possimus quam. Molestiae nihil rerum quas dolore est facilis et. Fuga necessitatibus qui illum vel.","guideid":91101,"revision":"B","revisionid":17495,"image":{"id":63427,"huge":"http://lorempixel.com/1024/768/city/7"},"introduction":"<p>Accusantium quia eos quasi corrupti. Sint recusandae eaque vel in sunt. Qui voluptatem facere sint velit qui quis maxime nam.</p><p>Eveniet est amet velit ut aliquam suscipit expedita. Vitae fugiat voluptatem. Dignissimos dolore illo similique atque voluptatem voluptatibus fugit nesciunt et. Eligendi maxime qui nulla velit fuga voluptate aut. Qui reiciendis et fugit voluptates dolores sit.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Corporis sed doloremque vitae cum ad.","title":"iusto inventore iste","type":"et","published_date":1494597314,"public":true,"author":{"userid":45095,"username":"joaquin.strosin","image":{"id":52662,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/daykiine/128.jpg"},"teams":[3],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":7,"previous_text":"Laboriosam consequatur harum iusto aliquam accusantium.","conclusion":"Molestias omnis sunt voluptatem et voluptas labore impedit aperiam quasi. Ex corporis consequatur consequatur. Sunt voluptas dolore sed nostrum.","guideid":91101,"revision":"A","revisionid":75074,"image":{"id":23569,"huge":"http://lorempixel.com/1024/768/city/8"},"introduction":"<p>Corporis dicta dolores numquam sapiente explicabo nesciunt. Dolore consequatur quisquam accusamus ex aut id reiciendis. Consectetur consequatur et veritatis necessitatibus qui qui.</p><p>Illo recusandae deserunt. Id asperiores quisquam vitae. Odio quis quia nesciunt eum sit sequi. Libero nam temporibus et aliquam quidem ut numquam. Ratione ut itaque velit exercitationem ad a molestiae esse.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Est doloremque maiores repellendus.","title":"illum molestias et","type":"at","published_date":1494608258,"public":true,"author":{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":8,"previous_text":"Tempora sequi tenetur saepe velit et voluptatem suscipit nostrum.","conclusion":"Cupiditate omnis sit cupiditate voluptatem aspernatur nulla. Animi rem consequatur sit et officiis doloremque. Deleniti veniam dolor officia quia velit numquam.","guideid":91101,"revision":"A","revisionid":12332,"image":{"id":59067,"huge":"http://lorempixel.com/1024/768/city/9"},"introduction":"<p>Asperiores enim veniam soluta cupiditate. Non commodi ad est dicta est et eveniet non. Consectetur quam dolore magni natus iste praesentium numquam. Necessitatibus voluptatem facere asperiores.</p><p>Nesciunt est autem doloribus voluptatum ea in. Facere explicabo ut sit dolorum officiis qui magni modi asperiores. Quos ut sit. Sint optio qui blanditiis et nobis. Vero aliquid aut dolores. Nobis dolorum quasi placeat doloremque eum consequatur.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Qui nesciunt deserunt cum omnis harum aut non eum.","title":"explicabo quibusdam aperiam","type":"laboriosam","published_date":1494563239,"public":true,"author":{"userid":45095,"username":"joaquin.strosin","image":{"id":52662,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/daykiine/128.jpg"},"teams":[3],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":9,"previous_text":"Doloremque neque officia labore.","conclusion":"Quam qui aut quasi animi architecto quo est consequuntur voluptas. Assumenda autem nihil reiciendis eveniet et. Est quidem sapiente quibusdam hic excepturi ipsum dolorem. Minima magni ut dicta nam.","guideid":91101,"revision":"C","revisionid":82730,"image":{"id":55219,"huge":"http://lorempixel.com/1024/768/city/10"},"introduction":"<p>Eum iusto eaque cupiditate eos maiores necessitatibus ea. Cupiditate provident nam aut accusantium et distinctio a aut. Quia eos quibusdam dicta repudiandae. Illum laboriosam quas temporibus. Provident est totam alias ea assumenda eos natus.</p><p>Magni nam fuga aperiam reiciendis maiores recusandae assumenda. Soluta qui eum inventore molestiae neque eligendi. Eaque dolor cum dolorem minima recusandae. Amet id tempora. Voluptatem architecto et.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Inventore error recusandae doloremque eum ad laborum harum enim.","title":"ad aut quas","type":"eum","published_date":1494607856,"public":true,"author":{"userid":88088,"username":"chance.simonis","image":{"id":94238,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/muridrahhal/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":10,"previous_text":"Provident dolores minus voluptatum.","conclusion":"Omnis et sed. Labore odio porro voluptatem. Odio numquam rerum repudiandae voluptatem consequatur. Quod reiciendis quas vitae consequuntur assumenda rerum sunt.","guideid":91101,"revision":"C","revisionid":46571,"image":{"id":80723,"huge":"http://lorempixel.com/1024/768/technics/1"},"introduction":"<p>Illum laborum eligendi debitis aliquid corrupti voluptatum commodi repellendus. Voluptas repellat eius ut ad ducimus molestiae. Ratione voluptate velit impedit est velit. Suscipit natus magnam eius nihil et modi.</p><p>Eligendi aut sed suscipit maxime perferendis omnis nulla similique. Quis excepturi et est et impedit repudiandae nostrum qui itaque. Odio tempore dignissimos inventore.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Repudiandae ut et perspiciatis expedita quam sed aut at aperiam.","title":"quasi fugit nihil","type":"at","published_date":1494553846,"public":true,"author":{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":11,"previous_text":"Maiores placeat inventore ut quo aperiam itaque.","conclusion":"Quaerat magnam numquam. Velit eveniet pariatur voluptas omnis quia. Rerum ipsa maxime in voluptatem.","guideid":91101,"revision":"B","revisionid":74183,"image":{"id":89853,"huge":"http://lorempixel.com/1024/768/technics/2"},"introduction":"<p>Laudantium cum omnis ipsam sed. Explicabo sed sint rem qui et nemo provident nobis. Dolor minima dolor sed nulla corporis ea nisi et omnis. Odio qui rerum voluptatum dignissimos fuga. Error dicta corrupti quae. Omnis quod repellendus hic ipsum doloribus eos quia.</p><p>Commodi quae nisi itaque impedit. Totam occaecati ut similique. Quod omnis quam atque sit soluta qui in et. Voluptatem fugit alias ex rerum debitis. Et facilis odit ad temporibus. Aut delectus consectetur iste aut aut et.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Quas cum qui eveniet.","title":"voluptatibus blanditiis eius","type":"at","published_date":1494549972,"public":true,"author":{"userid":88088,"username":"chance.simonis","image":{"id":94238,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/muridrahhal/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":12,"previous_text":"Dignissimos magni consequatur praesentium.","conclusion":"Quo doloremque repellendus autem aut. Sed aut exercitationem tempora. Inventore totam eligendi qui a magnam nihil natus necessitatibus ipsa. Quibusdam dolores similique sint vel voluptatem. Architecto iure incidunt cumque quas. Et eum sequi saepe dignissimos est qui.","guideid":91101,"revision":"A","revisionid":80376,"image":{"id":76605,"huge":"http://lorempixel.com/1024/768/technics/3"},"introduction":"<p>Magnam alias dolor molestiae id consectetur delectus quia aut. Maiores deserunt autem numquam ea dolore cum consequatur inventore quod. Deserunt velit corporis omnis.</p><p>Qui non cumque. At id similique veritatis ea nihil. Et possimus voluptatem maxime minima consequuntur neque esse. Illo ducimus reprehenderit sit. Laudantium modi aliquid ullam reiciendis.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Rem incidunt eum dolore aliquam quia quasi praesentium dignissimos unde.","title":"unde aut deserunt","type":"repudiandae","published_date":1494579152,"public":true,"author":{"userid":88088,"username":"chance.simonis","image":{"id":94238,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/muridrahhal/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":13,"previous_text":"Rerum voluptatem autem omnis quo soluta sed ut.","conclusion":"Magni accusamus repellendus necessitatibus quos veritatis voluptate perspiciatis occaecati. Laudantium quisquam sit voluptates. Veritatis ab ut quos quae et labore deserunt officia. Sed at accusamus nulla sed rem dolorum.","guideid":91101,"revision":"B","revisionid":8513,"image":{"id":96155,"huge":"http://lorempixel.com/1024/768/technics/4"},"introduction":"<p>Quas ut deserunt blanditiis ut. Doloribus nulla error et reiciendis quia quas cupiditate voluptates. Dolorum voluptatem sit et quasi labore aliquid. Doloremque quos laboriosam.</p><p>Iure quis dignissimos modi. Fuga deleniti quod sint quibusdam. Rem quia vel non. Nostrum blanditiis illo.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Similique quasi voluptatem ullam sint explicabo laudantium repellat sit et.","title":"ut amet dicta","type":"et","published_date":1494571800,"public":true,"author":{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":14,"previous_text":"Commodi et accusantium dolorem voluptas nemo et.","conclusion":"Vel rerum nihil culpa aspernatur sapiente quam aut voluptas accusamus. Et nihil quo veritatis consequuntur vel. Quia ut in eos ea molestiae porro. Possimus aperiam consequuntur laboriosam eaque veniam eum sint dolor. Voluptatem aut laboriosam consequatur consequatur autem quo est. Nulla iure sint placeat ut veritatis debitis dolorem.","guideid":91101,"revision":"A","revisionid":54184,"image":{"id":6000,"huge":"http://lorempixel.com/1024/768/technics/5"},"introduction":"<p>In ut placeat harum natus voluptatem. Occaecati aliquid modi aut. Reprehenderit optio tempora ut ut laudantium. Alias aut fugit ipsam laudantium cumque. Esse aut nesciunt repudiandae quod et. Dolores nihil quidem rem iusto.</p><p>Quia sunt totam quidem corporis minima inventore. Atque nulla eaque vero laborum et voluptas. Sed aspernatur maiores nulla nam accusantium quas. Tempore nulla atque numquam exercitationem quis sequi. Praesentium quod ullam ad blanditiis nobis.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Illo consequatur ducimus.","title":"est tenetur non","type":"eum","published_date":1494540714,"public":true,"author":{"userid":29334,"username":"marion.hegmann","image":{"id":58139,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/operatino/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":15,"previous_text":"Sint esse quae.","conclusion":"Perferendis quis mollitia explicabo dolorem dolores. Ipsum iure ut. Amet qui sed illo.","guideid":91101,"revision":"A","revisionid":23549,"image":{"id":84177,"huge":"http://lorempixel.com/1024/768/technics/6"},"introduction":"<p>Molestiae pariatur molestiae et est. Sapiente impedit earum sit. Qui ut aliquid enim incidunt quia error. Aliquid dolorem consequatur est. Fuga non aliquid enim.</p><p>Rerum et consequuntur atque nobis in et. Non sit rerum aliquid ut nam quisquam voluptatibus. Eos pariatur voluptas pariatur deleniti doloremque assumenda iure blanditiis tempora. Unde qui vel assumenda. Eum eum quaerat. Impedit voluptatem natus non maxime quasi.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Libero et perspiciatis iste ullam molestiae ab architecto recusandae quod.","title":"qui dolor assumenda","type":"at","published_date":1494620676,"public":true,"author":{"userid":45095,"username":"joaquin.strosin","image":{"id":52662,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/daykiine/128.jpg"},"teams":[3],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":16,"previous_text":"Ea est assumenda optio.","conclusion":"Veritatis sit ea debitis dolorem voluptatibus a ratione delectus cum. Ut laborum explicabo ipsam vitae ea ullam eum voluptatem eveniet. Voluptas reiciendis occaecati distinctio nihil sequi voluptatem. Error officia voluptas provident nisi nulla quaerat. Incidunt qui placeat temporibus ullam possimus et.","guideid":91101,"revision":"B","revisionid":92146,"image":{"id":78162,"huge":"http://lorempixel.com/1024/768/technics/7"},"introduction":"<p>Repellendus et cumque rem qui cum. Occaecati quia magnam dolor hic fugiat. Maxime voluptatem voluptatum et perspiciatis. Consequuntur consequatur placeat. Alias qui ut sint. Ut occaecati et excepturi dolor aliquam.</p><p>Est voluptas dolores doloribus non. Maxime blanditiis enim harum tenetur unde molestiae. Expedita impedit dolorum laboriosam corporis blanditiis aut. Voluptates nesciunt omnis nihil officia fugiat. Iste qui et.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Ut ut ex.","title":"quia est quia","type":"at","published_date":1494558901,"public":true,"author":{"userid":88088,"username":"chance.simonis","image":{"id":94238,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/muridrahhal/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":17,"previous_text":"Error veniam vel placeat quod quaerat libero totam.","conclusion":"Dicta exercitationem est distinctio. Et assumenda culpa aut et adipisci rem id. Voluptatum cum asperiores ut consequatur tempora eligendi ut. Est id perspiciatis voluptas.","guideid":91101,"revision":"C","revisionid":46359,"image":{"id":51921,"huge":"http://lorempixel.com/1024/768/technics/8"},"introduction":"<p>Ut repudiandae eum assumenda ut et veritatis. Quia officiis aspernatur maxime nisi exercitationem non ducimus. Quia alias adipisci consequatur hic. Voluptatem porro assumenda ea a dolorem natus officiis. Ut tempore temporibus.</p><p>Accusantium quo temporibus deserunt voluptatem. Corporis incidunt unde. Nulla accusantium ut voluptatem ratione. Voluptatem sint qui. Minima repudiandae ratione dolorum possimus exercitationem modi recusandae vel odit. Ea expedita non assumenda velit incidunt non.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Voluptas placeat autem.","title":"non quis et","type":"id","published_date":1494607359,"public":true,"author":{"userid":45095,"username":"joaquin.strosin","image":{"id":52662,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/daykiine/128.jpg"},"teams":[3],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":18,"previous_text":"Quia aut velit.","conclusion":"Nihil veniam aut. Rerum expedita at excepturi laborum quisquam. Quis quia qui voluptatem adipisci ut eos.","guideid":91101,"revision":"A","revisionid":38882,"image":{"id":59842,"huge":"http://lorempixel.com/1024/768/technics/9"},"introduction":"<p>Accusamus rerum sequi temporibus dicta eligendi. Quo corrupti est et vitae pariatur rerum corporis modi. Cumque vel qui voluptatem quo eaque dolores. Aut molestias est architecto voluptatem.</p><p>Ad aut maxime quibusdam cum et dolore molestiae aliquam et. Odit voluptatem ex unde fugit in et quia. Quia blanditiis quidem voluptate qui maxime maxime distinctio rem inventore.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Quas sunt totam nesciunt quo corporis molestiae officiis.","title":"quia libero pariatur","type":"et","published_date":1494596359,"public":true,"author":{"userid":88088,"username":"chance.simonis","image":{"id":94238,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/muridrahhal/128.jpg"},"teams":[1],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]},{"id":19,"previous_text":"Tenetur dicta neque quo.","conclusion":"Ipsum voluptas occaecati repudiandae. Et hic quidem maiores ea sint ratione aut. Error modi consectetur aliquid placeat sed est molestiae. Vel quae unde voluptatem magnam beatae nemo odit. Est corrupti et voluptas labore eius labore earum in. Eaque ex sapiente dolores.","guideid":91101,"revision":"C","revisionid":50171,"image":{"id":4864,"huge":"http://lorempixel.com/1024/768/technics/10"},"introduction":"<p>Rerum earum doloremque quam aliquid rem praesentium. Rerum corrupti itaque reiciendis incidunt assumenda ipsam qui. Libero qui sint tenetur deleniti ullam nam sit culpa.</p><p>Quisquam ex libero sit dolore voluptatem. Quia quis pariatur earum deserunt. Autem distinctio magni aliquid non eum explicabo error ipsum harum. Officiis quam excepturi eius veniam aspernatur et cum omnis velit.</p>","steps":[{"lines":[{"text_rendered":"Ducimus quia in qui non et occaecati.","level":0,"bullet":"black"},{"text_rendered":"Et ea qui asperiores temporibus quia reiciendis.","level":1,"bullet":"orange"},{"text_rendered":"Animi qui ratione quo nihil sunt.","level":2,"bullet":"red-caution"},{"text_rendered":"Fugit et nostrum sunt et.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Et minus sed nulla esse culpa ipsam.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Ut praesentium est pariatur.","level":1,"bullet":"green"},{"text_rendered":"Error et et deleniti aut sed asperiores molestiae.","level":0,"bullet":"black"},{"text_rendered":"Quasi vitae exercitationem in.","level":1,"bullet":"info-icon"},{"text_rendered":"Adipisci sed fuga quis officiis.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":20698,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":54498,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":28565,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":20790,"orderby":1},{"lines":[{"text_rendered":"Minima qui earum aspernatur recusandae animi similique et.","level":0,"bullet":"black"},{"text_rendered":"Hic incidunt voluptates ut deserunt quod corporis eaque sapiente.","level":1,"bullet":"violet"},{"text_rendered":"Dolorem ad quia.","level":2,"bullet":"red-caution"},{"text_rendered":"Ipsam aspernatur dolorem quia incidunt sit eos qui reprehenderit.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Quisquam quos molestias minima pariatur.","level":2,"bullet":"red-caution"}],"media":{"data":[{"id":18835,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":59465,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false},{"id":4963,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":52422,"orderby":2},{"lines":[{"text_rendered":"Rem consequatur minus vel totam culpa sequi.","level":0,"bullet":"black"},{"text_rendered":"Accusantium quibusdam corrupti nesciunt.","level":1,"bullet":"orange"},{"text_rendered":"Magnam ullam magnam eos esse necessitatibus eaque assumenda.","level":0,"bullet":"black"},{"text_rendered":"Quos eos libero debitis quisquam.","level":1,"bullet":"green"}],"media":{"data":[{"id":91770,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":42897,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":51445,"orderby":3},{"lines":[{"text_rendered":"Illum velit cum voluptatem occaecati velit enim commodi eum.","level":0,"bullet":"black"},{"text_rendered":"Atque explicabo ducimus perspiciatis alias velit libero.","level":1,"bullet":"yellow"},{"text_rendered":"Unde beatae in sint aut maxime.","level":2,"bullet":"red-caution"},{"text_rendered":"Libero illum consequatur aliquam ut nulla molestiae et aliquam necessitatibus.","level":0,"bullet":"black"},{"text_rendered":"Odit id impedit in itaque.","level":1,"bullet":"blue"},{"text_rendered":"Nesciunt voluptas soluta.","level":0,"bullet":"black"},{"text_rendered":"Dolores nulla cumque occaecati eos quia ea distinctio iste.","level":1,"bullet":"blue"}],"media":{"data":[{"id":97078,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":17588,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":35892,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":false}]},"stepid":56055,"orderby":4},{"lines":[{"text_rendered":"Rerum occaecati odio qui.","level":0,"bullet":"black"},{"text_rendered":"Mollitia molestiae autem.","level":1,"bullet":"red-caution"},{"text_rendered":"Nostrum nobis exercitationem in vel non corrupti.","level":0,"bullet":"black"},{"text_rendered":"Suscipit enim et odit nam.","level":1,"bullet":"orange"},{"text_rendered":"Assumenda earum aliquid labore quis eaque sunt vel asperiores.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Voluptates repellat ut excepturi a dolorem maiores perferendis et.","level":1,"bullet":"orange"},{"text_rendered":"Quos et illum eos aperiam repellat animi.","level":0,"bullet":"black"}],"media":{"data":[{"id":38295,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":true},{"id":4824,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":81540,"orderby":5},{"lines":[{"text_rendered":"In rerum voluptas fugit maxime modi cum.","level":0,"bullet":"black"},{"text_rendered":"Animi distinctio veritatis assumenda voluptatem.","level":1,"bullet":"violet"},{"text_rendered":"Modi amet veritatis aspernatur ut est eum aut.","level":0,"bullet":"black"},{"text_rendered":"Consequatur deserunt qui eos perspiciatis enim rerum.","level":1,"bullet":"orange"},{"text_rendered":"Quia quia dolorem neque similique quae.","level":0,"bullet":"black"},{"text_rendered":"Ipsam asperiores sit laborum cumque.","level":1,"bullet":"red"},{"text_rendered":"Est ab exercitationem ut eaque debitis eligendi perferendis.","level":1,"bullet":"violet"},{"text_rendered":"Dolor et est voluptates laboriosam.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":81720,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":true},{"id":15443,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false},{"id":97706,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":50064,"orderby":6},{"lines":[{"text_rendered":"Culpa laudantium ducimus culpa.","level":0,"bullet":"black"},{"text_rendered":"Dolore eaque odit aut similique error doloremque quo.","level":1,"bullet":"orange"},{"text_rendered":"Sapiente assumenda eius vitae quam est velit facilis.","level":2,"bullet":"red-caution"},{"text_rendered":"Assumenda rerum voluptas illo consequuntur repellendus voluptas.","level":1,"bullet":"info-icon"},{"text_rendered":"Necessitatibus minima atque ratione totam in nisi enim minima.","level":2,"bullet":"red-caution"},{"text_rendered":"Minus qui aut quaerat mollitia.","level":0,"bullet":"black"}],"media":{"data":[{"id":38284,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":40505,"mini":"http://lorempixel.com/640/480/sports","medium":"http://lorempixel.com/640/480/sports","visible":false}]},"stepid":12612,"orderby":7},{"lines":[{"text_rendered":"Illo sit fugit culpa quo.","level":0,"bullet":"black"},{"text_rendered":"Quidem architecto labore nemo repudiandae id id aut.","level":1,"bullet":"red-caution"},{"text_rendered":"Sint ut aliquid voluptate quaerat consequatur id dolores ut eveniet.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":86634,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":20817,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":21561,"orderby":8},{"lines":[{"text_rendered":"Inventore id id omnis.","level":0,"bullet":"black"},{"text_rendered":"Aliquid omnis vel suscipit voluptatem aut beatae.","level":1,"bullet":"light-blue"},{"text_rendered":"Voluptas dolorem voluptates.","level":1,"bullet":"orange"},{"text_rendered":"Commodi ut fugiat illum necessitatibus corporis corrupti temporibus quo vel.","level":1,"bullet":"info-icon"},{"text_rendered":"Dolores tempora voluptatem.","level":0,"bullet":"black"}],"media":{"data":[{"id":45945,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":93898,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":false}]},"stepid":17177,"orderby":9},{"lines":[{"text_rendered":"Repellat mollitia voluptate aliquid praesentium veritatis magnam asperiores corrupti accusamus.","level":0,"bullet":"black"},{"text_rendered":"Quia porro sed.","level":1,"bullet":"violet"},{"text_rendered":"Quia aliquam aut numquam reiciendis dolore.","level":1,"bullet":"red"},{"text_rendered":"Soluta tenetur cum ab eos pariatur natus.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":85241,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":true},{"id":6186,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":false}]},"stepid":62618,"orderby":10},{"lines":[{"text_rendered":"Laboriosam est soluta.","level":0,"bullet":"black"},{"text_rendered":"Quis tempora unde.","level":1,"bullet":"blue"},{"text_rendered":"Possimus amet eum officiis rerum omnis alias.","level":0,"bullet":"black"},{"text_rendered":"Nisi maiores aliquid aut eum nobis quia ex accusantium.","level":1,"bullet":"blue"},{"text_rendered":"Molestiae non assumenda dicta et enim nihil voluptate qui.","level":0,"bullet":"black"},{"text_rendered":"Delectus neque eos amet harum itaque laudantium voluptatibus.","level":1,"bullet":"light-blue"},{"text_rendered":"Aut exercitationem voluptatibus et saepe.","level":0,"bullet":"black"},{"text_rendered":"Eos et beatae saepe consequatur quisquam.","level":1,"bullet":"orange"},{"text_rendered":"Nostrum alias eum quidem expedita.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":16709,"mini":"http://lorempixel.com/640/480/food","medium":"http://lorempixel.com/640/480/food","visible":true},{"id":72062,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":false}]},"stepid":1312,"orderby":11},{"lines":[{"text_rendered":"Sunt et repudiandae non enim sunt maiores ullam dolorum qui.","level":0,"bullet":"black"},{"text_rendered":"Ab facere quia error.","level":1,"bullet":"light-blue"},{"text_rendered":"Laboriosam quisquam excepturi fugit repellat tenetur voluptas accusantium.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Culpa assumenda enim excepturi sequi et aut voluptas.","level":2,"bullet":"red-caution"},{"text_rendered":"Modi nemo nihil et id illo.","level":1,"bullet":"blue"},{"text_rendered":"Nulla est modi ut aliquam eius.","level":0,"bullet":"black"},{"text_rendered":"Ipsum voluptatem itaque qui.","level":1,"bullet":"orange"},{"text_rendered":"Deleniti ut dolores harum fuga sint blanditiis.","level":0,"bullet":"black"},{"text_rendered":"Dolores molestiae qui laborum.","level":1,"bullet":"green"}],"media":{"data":[{"id":10642,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":88186,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":false},{"id":20903,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":25615,"orderby":12},{"lines":[{"text_rendered":"Dolorem nihil adipisci voluptatem voluptatem nam ducimus officiis.","level":0,"bullet":"black"},{"text_rendered":"Sint qui laborum voluptatem totam eos.","level":1,"bullet":"info-icon"},{"text_rendered":"Earum earum iste voluptatem beatae fugiat itaque ratione.","level":1,"bullet":"orange"},{"text_rendered":"Pariatur voluptatem quibusdam est et ut perspiciatis.","level":1,"bullet":"yellow"},{"text_rendered":"Mollitia distinctio perferendis aut et et eius quisquam quia.","level":1,"bullet":"red-caution"},{"text_rendered":"Reiciendis maxime fugit magni veniam nisi sint ipsam quos ut.","level":2,"bullet":"red-caution"},{"text_rendered":"Enim non non quam ut quas dolores.","level":2,"bullet":"info-icon"},{"text_rendered":"Quo qui consequuntur repellat sed assumenda repellendus aut eum alias.","level":1,"bullet":"light-blue"}],"media":{"data":[{"id":42496,"mini":"http://lorempixel.com/640/480/people","medium":"http://lorempixel.com/640/480/people","visible":true},{"id":55123,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false},{"id":29486,"mini":"http://lorempixel.com/640/480/fashion","medium":"http://lorempixel.com/640/480/fashion","visible":false}]},"stepid":65063,"orderby":13},{"lines":[{"text_rendered":"Laudantium repellendus beatae quae autem a.","level":0,"bullet":"black"},{"text_rendered":"Dolores cupiditate amet cupiditate quia rem non cupiditate architecto voluptas.","level":1,"bullet":"red-caution"},{"text_rendered":"Voluptatem iusto quas temporibus eligendi sapiente iste nobis sed.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Perferendis et occaecati soluta sit tempore.","level":2,"bullet":"info-icon"},{"text_rendered":"Expedita tempore autem.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Magni ullam et ipsam esse veniam dolores nostrum dolore illo.","level":2,"bullet":"info-icon"}],"media":{"data":[{"id":64709,"mini":"http://lorempixel.com/640/480/abstract","medium":"http://lorempixel.com/640/480/abstract","visible":true},{"id":19474,"mini":"http://lorempixel.com/640/480/animals","medium":"http://lorempixel.com/640/480/animals","visible":false},{"id":25815,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false}]},"stepid":97942,"orderby":14},{"lines":[{"text_rendered":"Nihil consectetur nobis aut dolore itaque.","level":0,"bullet":"black"},{"text_rendered":"Quo sint fuga occaecati cumque molestiae eligendi.","level":1,"bullet":"violet"},{"text_rendered":"Natus voluptates enim distinctio sed perferendis odio.","level":0,"bullet":"black"},{"text_rendered":"Eum tenetur accusamus.","level":1,"bullet":"red"},{"text_rendered":"Sint tempora est consequuntur a quod illo a iure voluptatem.","level":2,"bullet":"red-caution"},{"text_rendered":"Adipisci ut dolores.","level":2,"bullet":"red-caution"},{"text_rendered":"Et ipsum quaerat saepe consequatur et optio itaque.","level":2,"bullet":"info-icon"},{"text_rendered":"Et atque non sint autem voluptatem rerum.","level":1,"bullet":"green"}],"media":{"data":[{"id":67420,"mini":"http://lorempixel.com/640/480/business","medium":"http://lorempixel.com/640/480/business","visible":true},{"id":4158,"mini":"http://lorempixel.com/640/480/nature","medium":"http://lorempixel.com/640/480/nature","visible":false}]},"stepid":21753,"orderby":15},{"lines":[{"text_rendered":"At recusandae amet et est fugiat.","level":0,"bullet":"black"},{"text_rendered":"Consequuntur voluptatibus ipsa qui fugiat quisquam in voluptas ipsa repellat.","level":1,"bullet":"blue"},{"text_rendered":"Et qui sit.","level":2,"bullet":"red-caution"},{"text_rendered":"Deserunt libero molestiae mollitia maxime consequatur.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":95289,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":true},{"id":22050,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false}]},"stepid":23968,"orderby":16},{"lines":[{"text_rendered":"Quam quas ducimus.","level":0,"bullet":"black"},{"text_rendered":"Aut commodi ex aut et tenetur officiis labore.","level":1,"bullet":"reminder-icon"},{"text_rendered":"Voluptatem eligendi est dignissimos autem.","level":0,"bullet":"black"},{"text_rendered":"Ut et qui exercitationem et ipsum vero deleniti.","level":1,"bullet":"red-caution"},{"text_rendered":"Itaque nulla perspiciatis impedit vel consequuntur suscipit voluptate quia.","level":2,"bullet":"reminder-icon"},{"text_rendered":"Aliquid esse voluptas culpa dolorum harum rerum.","level":0,"bullet":"black"},{"text_rendered":"Qui et est ut deleniti a.","level":1,"bullet":"violet"},{"text_rendered":"Soluta dolorum dignissimos.","level":0,"bullet":"black"}],"media":{"data":[{"id":66183,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":true},{"id":33815,"mini":"http://lorempixel.com/640/480/cats","medium":"http://lorempixel.com/640/480/cats","visible":false},{"id":42399,"mini":"http://lorempixel.com/640/480/city","medium":"http://lorempixel.com/640/480/city","visible":false}]},"stepid":69872,"orderby":17},{"lines":[{"text_rendered":"Voluptatem tempora maxime dolorem.","level":0,"bullet":"black"},{"text_rendered":"Eius aut et occaecati optio deserunt.","level":1,"bullet":"red-caution"},{"text_rendered":"Error at impedit tempora eaque ipsa.","level":1,"bullet":"green"},{"text_rendered":"Et qui aperiam cum.","level":2,"bullet":"reminder-icon"}],"media":{"data":[{"id":11266,"mini":"http://lorempixel.com/640/480/nightlife","medium":"http://lorempixel.com/640/480/nightlife","visible":true},{"id":29926,"mini":"http://lorempixel.com/640/480/technics","medium":"http://lorempixel.com/640/480/technics","visible":false},{"id":44625,"mini":"http://lorempixel.com/640/480/transport","medium":"http://lorempixel.com/640/480/transport","visible":false}]},"stepid":22291,"orderby":18}],"summary":"Sed non nam.","title":"laborum sit excepturi","type":"id","published_date":1494607449,"public":true,"author":{"userid":45095,"username":"joaquin.strosin","image":{"id":52662,"standard":"https://s3.amazonaws.com/uifaces/faces/twitter/daykiine/128.jpg"},"teams":[3],"privileges":["Admin"]},"types":["laboriosam","eum","repudiandae","id","et","at","fugit","aperiam"]}]});
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -15338,7 +15086,7 @@ CodeMirror.overlayMode = function(base, overlay, combine) {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -15346,7 +15094,7 @@ CodeMirror.overlayMode = function(base, overlay, combine) {
 
 (function(mod) {
   if (true) // CommonJS
-    mod(__webpack_require__(3), __webpack_require__(17), __webpack_require__(181));
+    mod(__webpack_require__(3), __webpack_require__(16), __webpack_require__(182));
   else if (typeof define == "function" && define.amd) // AMD
     define(["../../lib/codemirror", "../xml/xml", "../meta"], mod);
   else // Plain browser env
@@ -16139,7 +15887,7 @@ CodeMirror.defineMIME("text/x-markdown", "markdown");
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -16539,7 +16287,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16617,7 +16365,7 @@ return af;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16681,7 +16429,7 @@ return arDz;
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16745,7 +16493,7 @@ return arKw;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16876,7 +16624,7 @@ return arLy;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16941,7 +16689,7 @@ return arMa;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17051,7 +16799,7 @@ return arSa;
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17115,7 +16863,7 @@ return arTn;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17262,7 +17010,7 @@ return ar;
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17372,7 +17120,7 @@ return az;
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17511,7 +17259,7 @@ return be;
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17606,7 +17354,7 @@ return bg;
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17730,7 +17478,7 @@ return bn;
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17854,7 +17602,7 @@ return bo;
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17967,7 +17715,7 @@ return br;
 
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18115,7 +17863,7 @@ return bs;
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18208,7 +17956,7 @@ return ca;
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18385,7 +18133,7 @@ return cs;
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18453,7 +18201,7 @@ return cv;
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18539,7 +18287,7 @@ return cy;
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18604,7 +18352,7 @@ return da;
 
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18688,7 +18436,7 @@ return deAt;
 
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18771,7 +18519,7 @@ return deCh;
 
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18854,7 +18602,7 @@ return de;
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18959,7 +18707,7 @@ return dv;
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19064,7 +18812,7 @@ return el;
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19136,7 +18884,7 @@ return enAu;
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19204,7 +18952,7 @@ return enCa;
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19276,7 +19024,7 @@ return enGb;
 
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19348,7 +19096,7 @@ return enIe;
 
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19420,7 +19168,7 @@ return enNz;
 
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19498,7 +19246,7 @@ return eo;
 
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19585,7 +19333,7 @@ return esDo;
 
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19673,7 +19421,7 @@ return es;
 
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19758,7 +19506,7 @@ return et;
 
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19829,7 +19577,7 @@ return eu;
 
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19941,7 +19689,7 @@ return fa;
 
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20053,7 +19801,7 @@ return fi;
 
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20118,7 +19866,7 @@ return fo;
 
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20197,7 +19945,7 @@ return frCa;
 
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20280,7 +20028,7 @@ return frCh;
 
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20368,7 +20116,7 @@ return fr;
 
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20448,7 +20196,7 @@ return fy;
 
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20529,7 +20277,7 @@ return gd;
 
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20611,7 +20359,7 @@ return gl;
 
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20738,7 +20486,7 @@ return gomLatn;
 
 
 /***/ }),
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20842,7 +20590,7 @@ return he;
 
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20971,7 +20719,7 @@ return hi;
 
 
 /***/ }),
-/* 65 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21121,7 +20869,7 @@ return hr;
 
 
 /***/ }),
-/* 66 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21235,7 +20983,7 @@ return hu;
 
 
 /***/ }),
-/* 67 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21335,7 +21083,7 @@ return hyAm;
 
 
 /***/ }),
-/* 68 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21423,7 +21171,7 @@ return id;
 
 
 /***/ }),
-/* 69 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21555,7 +21303,7 @@ return is;
 
 
 /***/ }),
-/* 70 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21630,7 +21378,7 @@ return it;
 
 
 /***/ }),
-/* 71 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21715,7 +21463,7 @@ return ja;
 
 
 /***/ }),
-/* 72 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21803,7 +21551,7 @@ return jv;
 
 
 /***/ }),
-/* 73 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21897,7 +21645,7 @@ return ka;
 
 
 /***/ }),
-/* 74 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21989,7 +21737,7 @@ return kk;
 
 
 /***/ }),
-/* 75 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22052,7 +21800,7 @@ return km;
 
 
 /***/ }),
-/* 76 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22183,7 +21931,7 @@ return kn;
 
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22257,7 +22005,7 @@ return ko;
 
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22350,7 +22098,7 @@ return ky;
 
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22492,7 +22240,7 @@ return lb;
 
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22567,7 +22315,7 @@ return lo;
 
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22689,7 +22437,7 @@ return lt;
 
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22791,7 +22539,7 @@ return lv;
 
 
 /***/ }),
-/* 83 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22907,7 +22655,7 @@ return me;
 
 
 /***/ }),
-/* 84 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22976,7 +22724,7 @@ return mi;
 
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23071,7 +22819,7 @@ return mk;
 
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23157,7 +22905,7 @@ return ml;
 
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23321,7 +23069,7 @@ return mr;
 
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23409,7 +23157,7 @@ return msMy;
 
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23496,7 +23244,7 @@ return ms;
 
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23597,7 +23345,7 @@ return my;
 
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23665,7 +23413,7 @@ return nb;
 
 
 /***/ }),
-/* 92 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23793,7 +23541,7 @@ return ne;
 
 
 /***/ }),
-/* 93 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23886,7 +23634,7 @@ return nlBe;
 
 
 /***/ }),
-/* 94 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23979,7 +23727,7 @@ return nl;
 
 
 /***/ }),
-/* 95 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24044,7 +23792,7 @@ return nn;
 
 
 /***/ }),
-/* 96 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24173,7 +23921,7 @@ return paIn;
 
 
 /***/ }),
-/* 97 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24285,7 +24033,7 @@ return pl;
 
 
 /***/ }),
-/* 98 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24351,7 +24099,7 @@ return ptBr;
 
 
 /***/ }),
-/* 99 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24421,7 +24169,7 @@ return pt;
 
 
 /***/ }),
-/* 100 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24501,7 +24249,7 @@ return ro;
 
 
 /***/ }),
-/* 101 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24689,7 +24437,7 @@ return ru;
 
 
 /***/ }),
-/* 102 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24792,7 +24540,7 @@ return sd;
 
 
 /***/ }),
-/* 103 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24858,7 +24606,7 @@ return se;
 
 
 /***/ }),
-/* 104 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24934,7 +24682,7 @@ return si;
 
 
 /***/ }),
-/* 105 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25089,7 +24837,7 @@ return sk;
 
 
 /***/ }),
-/* 106 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25256,7 +25004,7 @@ return sl;
 
 
 /***/ }),
-/* 107 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25331,7 +25079,7 @@ return sq;
 
 
 /***/ }),
-/* 108 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25446,7 +25194,7 @@ return srCyrl;
 
 
 /***/ }),
-/* 109 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25561,7 +25309,7 @@ return sr;
 
 
 /***/ }),
-/* 110 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25655,7 +25403,7 @@ return ss;
 
 
 /***/ }),
-/* 111 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25729,7 +25477,7 @@ return sv;
 
 
 /***/ }),
-/* 112 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25793,7 +25541,7 @@ return sw;
 
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25928,7 +25676,7 @@ return ta;
 
 
 /***/ }),
-/* 114 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26022,7 +25770,7 @@ return te;
 
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26095,7 +25843,7 @@ return tet;
 
 
 /***/ }),
-/* 116 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26167,7 +25915,7 @@ return th;
 
 
 /***/ }),
-/* 117 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26234,7 +25982,7 @@ return tlPh;
 
 
 /***/ }),
-/* 118 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26359,7 +26107,7 @@ return tlh;
 
 
 /***/ }),
-/* 119 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26454,7 +26202,7 @@ return tr;
 
 
 /***/ }),
-/* 120 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26550,7 +26298,7 @@ return tzl;
 
 
 /***/ }),
-/* 121 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26613,7 +26361,7 @@ return tzmLatn;
 
 
 /***/ }),
-/* 122 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26676,7 +26424,7 @@ return tzm;
 
 
 /***/ }),
-/* 123 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26832,7 +26580,7 @@ return uk;
 
 
 /***/ }),
-/* 124 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26936,7 +26684,7 @@ return ur;
 
 
 /***/ }),
-/* 125 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26999,7 +26747,7 @@ return uzLatn;
 
 
 /***/ }),
-/* 126 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27062,7 +26810,7 @@ return uz;
 
 
 /***/ }),
-/* 127 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27146,7 +26894,7 @@ return vi;
 
 
 /***/ }),
-/* 128 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27219,7 +26967,7 @@ return xPseudo;
 
 
 /***/ }),
-/* 129 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27284,7 +27032,7 @@ return yo;
 
 
 /***/ }),
-/* 130 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27400,7 +27148,7 @@ return zhCn;
 
 
 /***/ }),
-/* 131 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27510,7 +27258,7 @@ return zhHk;
 
 
 /***/ }),
-/* 132 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27619,14 +27367,14 @@ return zhTw;
 
 
 /***/ }),
-/* 133 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(165),
   /* template */
-  __webpack_require__(226),
+  __webpack_require__(227),
   /* scopeId */
   null,
   /* cssModules */
@@ -27653,14 +27401,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 134 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(166),
   /* template */
-  __webpack_require__(228),
+  __webpack_require__(229),
   /* scopeId */
   null,
   /* cssModules */
@@ -27687,7 +27435,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 135 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27695,7 +27443,7 @@ module.exports = Component.exports
  * @author F-loat
  */
 
-var markdownEditor = __webpack_require__(205);
+var markdownEditor = __webpack_require__(204);
 
 var VueSimplemde = {
   markdownEditor: markdownEditor,
@@ -27708,43 +27456,294 @@ module.exports = VueSimplemde;
 
 
 /***/ }),
-/* 136 */
+/* 135 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(235);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuetify__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuetify__ = __webpack_require__(236);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuetify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetify_dist_vuetify_min_css__ = __webpack_require__(198);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetify_dist_vuetify_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuetify_dist_vuetify_min_css__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(169);
+__webpack_require__(170);
 
 
-
+// import 'vuetify/dist/vuetify.min.css';
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuetify___default.a);
 
 // Root level components
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('guide', __webpack_require__(215));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('edit-guide', __webpack_require__(214));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('guide', __webpack_require__(214));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('edit-guide', __webpack_require__(213));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('login', __webpack_require__(215));
 
 var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
   el: '#app'
 });
 
 /***/ }),
-/* 137 */
+/* 136 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 137 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+var stylesInDom = {},
+	memoize = function(fn) {
+		var memo;
+		return function () {
+			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+			return memo;
+		};
+	},
+	isOldIE = memoize(function() {
+		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
+	}),
+	getHeadElement = memoize(function () {
+		return document.head || document.getElementsByTagName("head")[0];
+	}),
+	singletonElement = null,
+	singletonCounter = 0,
+	styleElementsInsertedAtTop = [];
+
+module.exports = function(list, options) {
+	if(typeof DEBUG !== "undefined" && DEBUG) {
+		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the bottom of <head>.
+	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+	var styles = listToStyles(list);
+	addStylesToDom(styles, options);
+
+	return function update(newList) {
+		var mayRemove = [];
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+		if(newList) {
+			var newStyles = listToStyles(newList);
+			addStylesToDom(newStyles, options);
+		}
+		for(var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+			if(domStyle.refs === 0) {
+				for(var j = 0; j < domStyle.parts.length; j++)
+					domStyle.parts[j]();
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+}
+
+function addStylesToDom(styles, options) {
+	for(var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+		if(domStyle) {
+			domStyle.refs++;
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles(list) {
+	var styles = [];
+	var newStyles = {};
+	for(var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+		if(!newStyles[id])
+			styles.push(newStyles[id] = {id: id, parts: [part]});
+		else
+			newStyles[id].parts.push(part);
+	}
+	return styles;
+}
+
+function insertStyleElement(options, styleElement) {
+	var head = getHeadElement();
+	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+	if (options.insertAt === "top") {
+		if(!lastStyleElementInsertedAtTop) {
+			head.insertBefore(styleElement, head.firstChild);
+		} else if(lastStyleElementInsertedAtTop.nextSibling) {
+			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			head.appendChild(styleElement);
+		}
+		styleElementsInsertedAtTop.push(styleElement);
+	} else if (options.insertAt === "bottom") {
+		head.appendChild(styleElement);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement(styleElement) {
+	styleElement.parentNode.removeChild(styleElement);
+	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+	if(idx >= 0) {
+		styleElementsInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement(options) {
+	var styleElement = document.createElement("style");
+	styleElement.type = "text/css";
+	insertStyleElement(options, styleElement);
+	return styleElement;
+}
+
+function createLinkElement(options) {
+	var linkElement = document.createElement("link");
+	linkElement.rel = "stylesheet";
+	insertStyleElement(options, linkElement);
+	return linkElement;
+}
+
+function addStyle(obj, options) {
+	var styleElement, update, remove;
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+		styleElement = singletonElement || (singletonElement = createStyleElement(options));
+		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+	} else if(obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function") {
+		styleElement = createLinkElement(options);
+		update = updateLink.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+			if(styleElement.href)
+				URL.revokeObjectURL(styleElement.href);
+		};
+	} else {
+		styleElement = createStyleElement(options);
+		update = applyToTag.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle(newObj) {
+		if(newObj) {
+			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+				return;
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag(styleElement, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = styleElement.childNodes;
+		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+		if (childNodes.length) {
+			styleElement.insertBefore(cssNode, childNodes[index]);
+		} else {
+			styleElement.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag(styleElement, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		styleElement.setAttribute("media", media)
+	}
+
+	if(styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = css;
+	} else {
+		while(styleElement.firstChild) {
+			styleElement.removeChild(styleElement.firstChild);
+		}
+		styleElement.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink(linkElement, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	if(sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = linkElement.href;
+
+	linkElement.href = URL.createObjectURL(blob);
+
+	if(oldSrc)
+		URL.revokeObjectURL(oldSrc);
+}
+
 
 /***/ }),
 /* 138 */
@@ -27760,7 +27759,7 @@ module.exports = __webpack_require__(139);
 
 
 var utils = __webpack_require__(2);
-var bind = __webpack_require__(13);
+var bind = __webpack_require__(12);
 var Axios = __webpack_require__(141);
 var defaults = __webpack_require__(6);
 
@@ -27795,9 +27794,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(10);
+axios.Cancel = __webpack_require__(9);
 axios.CancelToken = __webpack_require__(140);
-axios.isCancel = __webpack_require__(11);
+axios.isCancel = __webpack_require__(10);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -27818,7 +27817,7 @@ module.exports.default = axios;
 "use strict";
 
 
-var Cancel = __webpack_require__(10);
+var Cancel = __webpack_require__(9);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -28035,7 +28034,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(2);
 var transformData = __webpack_require__(146);
-var isCancel = __webpack_require__(11);
+var isCancel = __webpack_require__(10);
 var defaults = __webpack_require__(6);
 
 /**
@@ -28145,7 +28144,7 @@ module.exports = function enhanceError(error, config, code, response) {
 "use strict";
 
 
-var createError = __webpack_require__(12);
+var createError = __webpack_require__(11);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -28644,8 +28643,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (configs.renderingConfig && configs.renderingConfig.codeSyntaxHighlighting) {
         __webpack_require__.e/* require.ensure */(0).then((function () {
           var theme = configs.renderingConfig.highlightingTheme || 'default';
-          window.hljs = __webpack_require__(240);
-          __webpack_require__(241)("./" + theme + '.css');
+          window.hljs = __webpack_require__(241);
+          __webpack_require__(242)("./" + theme + '.css');
         }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
       }
 
@@ -28714,11 +28713,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue__ = __webpack_require__(210);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__GuideEditIntroduction_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GuideStep_vue__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GuideStep_vue__ = __webpack_require__(132);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GuideStep_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__GuideStep_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue__ = __webpack_require__(133);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__StepsGuideIndex_vue__);
 //
 //
@@ -28844,7 +28843,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue__ = __webpack_require__(133);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__StepsGuideIndex_vue__);
 //
 //
@@ -28911,7 +28910,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_simplemde__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_simplemde__ = __webpack_require__(134);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_simplemde___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_simplemde__);
 //
 //
@@ -29545,14 +29544,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__testdb__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Guides_EditContainer_vue__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__testdb__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Guides_EditContainer_vue__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Guides_EditContainer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Guides_EditContainer_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Guides_EditNavbar_vue__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Guides_EditNavbar_vue__ = __webpack_require__(207);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Guides_EditNavbar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_Guides_EditNavbar_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Guides_EditLeft_vue__ = __webpack_require__(207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Guides_EditLeft_vue__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Guides_EditLeft_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_Guides_EditLeft_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Guides_EditRight_vue__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Guides_EditRight_vue__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Guides_EditRight_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_Guides_EditRight_vue__);
 //
 //
@@ -29619,14 +29618,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__testdb_js__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Guides_GuideHeaderNavigation_vue__ = __webpack_require__(212);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__testdb_js__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Guides_GuideHeaderNavigation_vue__ = __webpack_require__(211);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Guides_GuideHeaderNavigation_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Guides_GuideHeaderNavigation_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Guides_GuideImage_vue__ = __webpack_require__(213);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Guides_GuideImage_vue__ = __webpack_require__(212);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Guides_GuideImage_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_Guides_GuideImage_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Guides_GuideStep_vue__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Guides_GuideStep_vue__ = __webpack_require__(132);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Guides_GuideStep_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_Guides_GuideStep_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Guides_GuideCompleted_vue__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Guides_GuideCompleted_vue__ = __webpack_require__(209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Guides_GuideCompleted_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_Guides_GuideCompleted_vue__);
 //
 //
@@ -29677,6 +29676,63 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 169 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      email: 'michaela.morar@example.com',
+      password: 'secret'
+    };
+  },
+
+  methods: {
+    login: function login() {
+      console.log('attempting post request');
+      axios.post('http://r-doc.dev/login', {
+        email: this.email,
+        password: this.password
+      }).then(function (response) {
+        window.location = response.responseURL;
+        console.log(response);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    test: function test() {
+      console.log('fired');
+    }
+  }
+});
+
+/***/ }),
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // window._ = require('lodash');
@@ -29691,15 +29747,15 @@ var showdown = __webpack_require__(194);
 
 try {
   window.$ = window.jQuery = __webpack_require__(190);
-  __webpack_require__(172);
+  __webpack_require__(173);
   window.moment = __webpack_require__(0);
-  window.toMarkdown = __webpack_require__(199);
+  window.toMarkdown = __webpack_require__(198);
   window.converter = new showdown.Converter();
 } catch (e) {
   console.log(e);
 }
 
-var VueSimplemde = __webpack_require__(135);
+var VueSimplemde = __webpack_require__(134);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -29713,7 +29769,7 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29834,7 +29890,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports) {
 
 /**
@@ -29883,7 +29939,7 @@ module.exports = [
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports) {
 
 /*!
@@ -32266,7 +32322,7 @@ if (typeof jQuery === 'undefined') {
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -32280,9 +32336,9 @@ if (typeof jQuery === 'undefined') {
 
 
 
-var base64 = __webpack_require__(170)
+var base64 = __webpack_require__(171)
 var ieee754 = __webpack_require__(189)
-var isArray = __webpack_require__(174)
+var isArray = __webpack_require__(175)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -34063,7 +34119,7 @@ function isnan (val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -34074,7 +34130,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34083,7 +34139,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 // Requires
-var Typo = __webpack_require__(203);
+var Typo = __webpack_require__(202);
 
 
 // Create function
@@ -34199,7 +34255,7 @@ CodeMirrorSpellChecker.typo;
 module.exports = CodeMirrorSpellChecker;
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -34246,7 +34302,7 @@ module.exports = CodeMirrorSpellChecker;
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -34314,7 +34370,7 @@ module.exports = CodeMirrorSpellChecker;
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -34371,7 +34427,7 @@ module.exports = CodeMirrorSpellChecker;
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -34496,7 +34552,7 @@ module.exports = CodeMirrorSpellChecker;
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -34504,7 +34560,7 @@ module.exports = CodeMirrorSpellChecker;
 
 (function(mod) {
   if (true) // CommonJS
-    mod(__webpack_require__(3), __webpack_require__(16), __webpack_require__(15));
+    mod(__webpack_require__(3), __webpack_require__(15), __webpack_require__(14));
   else if (typeof define == "function" && define.amd) // AMD
     define(["../../lib/codemirror", "../markdown/markdown", "../../addon/mode/overlay"], mod);
   else // Plain browser env
@@ -34631,7 +34687,7 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
 
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -34851,19 +34907,19 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var voidElements = __webpack_require__(204);
+var voidElements = __webpack_require__(203);
 Object.keys(voidElements).forEach(function (name) {
   voidElements[name.toUpperCase()] = 1;
 });
 
 var blockElements = {};
-__webpack_require__(171).forEach(function (name) {
+__webpack_require__(172).forEach(function (name) {
   blockElements[name.toUpperCase()] = 1;
 });
 
@@ -34994,46 +35050,39 @@ module.exports = collapseWhitespace;
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(4)();
 exports.push([module.i, "/**\n * simplemde v1.11.2\n * Copyright Next Step Webs, Inc.\n * @link https://github.com/NextStepWebs/simplemde-markdown-editor\n * @license MIT\n */\n.CodeMirror{color:#000}.CodeMirror-lines{padding:4px 0}.CodeMirror pre{padding:0 4px}.CodeMirror-gutter-filler,.CodeMirror-scrollbar-filler{background-color:#fff}.CodeMirror-gutters{border-right:1px solid #ddd;background-color:#f7f7f7;white-space:nowrap}.CodeMirror-linenumber{padding:0 3px 0 5px;min-width:20px;text-align:right;color:#999;white-space:nowrap}.CodeMirror-guttermarker{color:#000}.CodeMirror-guttermarker-subtle{color:#999}.CodeMirror-cursor{border-left:1px solid #000;border-right:none;width:0}.CodeMirror div.CodeMirror-secondarycursor{border-left:1px solid silver}.cm-fat-cursor .CodeMirror-cursor{width:auto;border:0!important;background:#7e7}.cm-fat-cursor div.CodeMirror-cursors{z-index:1}.cm-animate-fat-cursor{width:auto;border:0;-webkit-animation:blink 1.06s steps(1) infinite;-moz-animation:blink 1.06s steps(1) infinite;animation:blink 1.06s steps(1) infinite;background-color:#7e7}@-moz-keyframes blink{50%{background-color:transparent}}@-webkit-keyframes blink{50%{background-color:transparent}}@keyframes blink{50%{background-color:transparent}}.cm-tab{display:inline-block;text-decoration:inherit}.CodeMirror-ruler{border-left:1px solid #ccc;position:absolute}.cm-s-default .cm-header{color:#00f}.cm-s-default .cm-quote{color:#090}.cm-negative{color:#d44}.cm-positive{color:#292}.cm-header,.cm-strong{font-weight:700}.cm-em{font-style:italic}.cm-link{text-decoration:underline}.cm-strikethrough{text-decoration:line-through}.cm-s-default .cm-keyword{color:#708}.cm-s-default .cm-atom{color:#219}.cm-s-default .cm-number{color:#164}.cm-s-default .cm-def{color:#00f}.cm-s-default .cm-variable-2{color:#05a}.cm-s-default .cm-variable-3{color:#085}.cm-s-default .cm-comment{color:#a50}.cm-s-default .cm-string{color:#a11}.cm-s-default .cm-string-2{color:#f50}.cm-s-default .cm-meta,.cm-s-default .cm-qualifier{color:#555}.cm-s-default .cm-builtin{color:#30a}.cm-s-default .cm-bracket{color:#997}.cm-s-default .cm-tag{color:#170}.cm-s-default .cm-attribute{color:#00c}.cm-s-default .cm-hr{color:#999}.cm-s-default .cm-link{color:#00c}.cm-invalidchar,.cm-s-default .cm-error{color:red}.CodeMirror-composing{border-bottom:2px solid}div.CodeMirror span.CodeMirror-matchingbracket{color:#0f0}div.CodeMirror span.CodeMirror-nonmatchingbracket{color:#f22}.CodeMirror-matchingtag{background:rgba(255,150,0,.3)}.CodeMirror-activeline-background{background:#e8f2ff}.CodeMirror{position:relative;overflow:hidden;background:#fff}.CodeMirror-scroll{overflow:scroll!important;margin-bottom:-30px;margin-right:-30px;padding-bottom:30px;height:100%;outline:0;position:relative}.CodeMirror-sizer{position:relative;border-right:30px solid transparent}.CodeMirror-gutter-filler,.CodeMirror-hscrollbar,.CodeMirror-scrollbar-filler,.CodeMirror-vscrollbar{position:absolute;z-index:6;display:none}.CodeMirror-vscrollbar{right:0;top:0;overflow-x:hidden;overflow-y:scroll}.CodeMirror-hscrollbar{bottom:0;left:0;overflow-y:hidden;overflow-x:scroll}.CodeMirror-scrollbar-filler{right:0;bottom:0}.CodeMirror-gutter-filler{left:0;bottom:0}.CodeMirror-gutters{position:absolute;left:0;top:0;min-height:100%;z-index:3}.CodeMirror-gutter{white-space:normal;height:100%;display:inline-block;vertical-align:top;margin-bottom:-30px}.CodeMirror-gutter-wrapper{position:absolute;z-index:4;background:0 0!important;border:none!important;-webkit-user-select:none;-moz-user-select:none;user-select:none}.CodeMirror-gutter-background{position:absolute;top:0;bottom:0;z-index:4}.CodeMirror-gutter-elt{position:absolute;cursor:default;z-index:4}.CodeMirror-lines{cursor:text;min-height:1px}.CodeMirror pre{-moz-border-radius:0;-webkit-border-radius:0;border-radius:0;border-width:0;background:0 0;font-family:inherit;font-size:inherit;margin:0;white-space:pre;word-wrap:normal;line-height:inherit;color:inherit;z-index:2;position:relative;overflow:visible;-webkit-tap-highlight-color:transparent;-webkit-font-variant-ligatures:none;font-variant-ligatures:none}.CodeMirror-wrap pre{word-wrap:break-word;white-space:pre-wrap;word-break:normal}.CodeMirror-linebackground{position:absolute;left:0;right:0;top:0;bottom:0;z-index:0}.CodeMirror-linewidget{position:relative;z-index:2;overflow:auto}.CodeMirror-code{outline:0}.CodeMirror-gutter,.CodeMirror-gutters,.CodeMirror-linenumber,.CodeMirror-scroll,.CodeMirror-sizer{-moz-box-sizing:content-box;box-sizing:content-box}.CodeMirror-measure{position:absolute;width:100%;height:0;overflow:hidden;visibility:hidden}.CodeMirror-cursor{position:absolute}.CodeMirror-measure pre{position:static}div.CodeMirror-cursors{visibility:hidden;position:relative;z-index:3}.CodeMirror-focused div.CodeMirror-cursors,div.CodeMirror-dragcursors{visibility:visible}.CodeMirror-selected{background:#d9d9d9}.CodeMirror-focused .CodeMirror-selected,.CodeMirror-line::selection,.CodeMirror-line>span::selection,.CodeMirror-line>span>span::selection{background:#d7d4f0}.CodeMirror-crosshair{cursor:crosshair}.CodeMirror-line::-moz-selection,.CodeMirror-line>span::-moz-selection,.CodeMirror-line>span>span::-moz-selection{background:#d7d4f0}.cm-searching{background:#ffa;background:rgba(255,255,0,.4)}.cm-force-border{padding-right:.1px}@media print{.CodeMirror div.CodeMirror-cursors{visibility:hidden}}.cm-tab-wrap-hack:after{content:''}span.CodeMirror-selectedtext{background:0 0}.CodeMirror{height:auto;min-height:300px;border:1px solid #ddd;border-bottom-left-radius:4px;border-bottom-right-radius:4px;padding:10px;font:inherit;z-index:1}.CodeMirror-scroll{min-height:300px}.CodeMirror-fullscreen{background:#fff;position:fixed!important;top:50px;left:0;right:0;bottom:0;height:auto;z-index:9}.CodeMirror-sided{width:50%!important}.editor-toolbar{position:relative;opacity:.6;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none;padding:0 10px;border-top:1px solid #bbb;border-left:1px solid #bbb;border-right:1px solid #bbb;border-top-left-radius:4px;border-top-right-radius:4px}.editor-toolbar:after,.editor-toolbar:before{display:block;content:' ';height:1px}.editor-toolbar:before{margin-bottom:8px}.editor-toolbar:after{margin-top:8px}.editor-toolbar:hover,.editor-wrapper input.title:focus,.editor-wrapper input.title:hover{opacity:.8}.editor-toolbar.fullscreen{width:100%;height:50px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding-top:10px;padding-bottom:10px;box-sizing:border-box;background:#fff;border:0;position:fixed;top:0;left:0;opacity:1;z-index:9}.editor-toolbar.fullscreen::before{width:20px;height:50px;background:-moz-linear-gradient(left,rgba(255,255,255,1) 0,rgba(255,255,255,0) 100%);background:-webkit-gradient(linear,left top,right top,color-stop(0,rgba(255,255,255,1)),color-stop(100%,rgba(255,255,255,0)));background:-webkit-linear-gradient(left,rgba(255,255,255,1) 0,rgba(255,255,255,0) 100%);background:-o-linear-gradient(left,rgba(255,255,255,1) 0,rgba(255,255,255,0) 100%);background:-ms-linear-gradient(left,rgba(255,255,255,1) 0,rgba(255,255,255,0) 100%);background:linear-gradient(to right,rgba(255,255,255,1) 0,rgba(255,255,255,0) 100%);position:fixed;top:0;left:0;margin:0;padding:0}.editor-toolbar.fullscreen::after{width:20px;height:50px;background:-moz-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 100%);background:-webkit-gradient(linear,left top,right top,color-stop(0,rgba(255,255,255,0)),color-stop(100%,rgba(255,255,255,1)));background:-webkit-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 100%);background:-o-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 100%);background:-ms-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,1) 100%);background:linear-gradient(to right,rgba(255,255,255,0) 0,rgba(255,255,255,1) 100%);position:fixed;top:0;right:0;margin:0;padding:0}.editor-toolbar a{display:inline-block;text-align:center;text-decoration:none!important;color:#2c3e50!important;width:30px;height:30px;margin:0;border:1px solid transparent;border-radius:3px;cursor:pointer}.editor-toolbar a.active,.editor-toolbar a:hover{background:#fcfcfc;border-color:#95a5a6}.editor-toolbar a:before{line-height:30px}.editor-toolbar i.separator{display:inline-block;width:0;border-left:1px solid #d9d9d9;border-right:1px solid #fff;color:transparent;text-indent:-10px;margin:0 6px}.editor-toolbar a.fa-header-x:after{font-family:Arial,\"Helvetica Neue\",Helvetica,sans-serif;font-size:65%;vertical-align:text-bottom;position:relative;top:2px}.editor-toolbar a.fa-header-1:after{content:\"1\"}.editor-toolbar a.fa-header-2:after{content:\"2\"}.editor-toolbar a.fa-header-3:after{content:\"3\"}.editor-toolbar a.fa-header-bigger:after{content:\"▲\"}.editor-toolbar a.fa-header-smaller:after{content:\"▼\"}.editor-toolbar.disabled-for-preview a:not(.no-disable){pointer-events:none;background:#fff;border-color:transparent;text-shadow:inherit}@media only screen and (max-width:700px){.editor-toolbar a.no-mobile{display:none}}.editor-statusbar{padding:8px 10px;font-size:12px;color:#959694;text-align:right}.editor-statusbar span{display:inline-block;min-width:4em;margin-left:1em}.editor-preview,.editor-preview-side{padding:10px;background:#fafafa;overflow:auto;display:none;box-sizing:border-box}.editor-statusbar .lines:before{content:'lines: '}.editor-statusbar .words:before{content:'words: '}.editor-statusbar .characters:before{content:'characters: '}.editor-preview{position:absolute;width:100%;height:100%;top:0;left:0;z-index:7}.editor-preview-side{position:fixed;bottom:0;width:50%;top:50px;right:0;z-index:9;border:1px solid #ddd}.editor-preview-active,.editor-preview-active-side{display:block}.editor-preview-side>p,.editor-preview>p{margin-top:0}.editor-preview pre,.editor-preview-side pre{background:#eee;margin-bottom:10px}.editor-preview table td,.editor-preview table th,.editor-preview-side table td,.editor-preview-side table th{border:1px solid #ddd;padding:5px}.CodeMirror .CodeMirror-code .cm-tag{color:#63a35c}.CodeMirror .CodeMirror-code .cm-attribute{color:#795da3}.CodeMirror .CodeMirror-code .cm-string{color:#183691}.CodeMirror .CodeMirror-selected{background:#d9d9d9}.CodeMirror .CodeMirror-code .cm-header-1{font-size:200%;line-height:200%}.CodeMirror .CodeMirror-code .cm-header-2{font-size:160%;line-height:160%}.CodeMirror .CodeMirror-code .cm-header-3{font-size:125%;line-height:125%}.CodeMirror .CodeMirror-code .cm-header-4{font-size:110%;line-height:110%}.CodeMirror .CodeMirror-code .cm-comment{background:rgba(0,0,0,.05);border-radius:2px}.CodeMirror .CodeMirror-code .cm-link{color:#7f8c8d}.CodeMirror .CodeMirror-code .cm-url{color:#aab2b3}.CodeMirror .CodeMirror-code .cm-strikethrough{text-decoration:line-through}.CodeMirror .CodeMirror-placeholder{opacity:.5}.CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word){background:rgba(255,0,0,.15)}", ""]);
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(4)();
 exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(4)();
 exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(4)();
 exports.push([module.i, "\n.markdown-editor .markdown-body {\n  padding: 0.5em\n}\n.markdown-editor .editor-preview-active, .markdown-editor .editor-preview-active-side {\n  display: block;\n}\n", ""]);
 
 /***/ }),
-/* 187 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)();
-exports.push([module.i, "\n.completion-container {\n  margin: 60px 0;\n  position: relative;\n}\n.guide-complete {\n  margin: 0;\n  background-color: #f2f8fd;\n  border: 1px solid #b3d4f0;\n  border-raidus: 4px;\n  padding: 26px;\n}\n#guideConclusion {\n  text-align: center;\n}\n.finish-line {\n  margin: 0 auto 30px;\n  position: relative;\n  display: inline-block;\n  padding: 0 15px;\n  z-index: 1;\n  font-size: 20px;\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.conclusionText {\n  font-size: 1.2em;\n  font-weight: 500;\n}\n", ""]);
-
-/***/ }),
 /* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(4)();
-exports.push([module.i, "/*!\n* Vuetify v0.12.1\n* Forged by John Leider\n* Released under the MIT License.\n*/   \n.light--text{color:#fff}.dark--text{color:rgba(0,0,0,.87)}.elevation-0{box-shadow:0 0 0 rgba(0,0,0,.2),0 0 0 rgba(0,0,0,.14),0 0 0 rgba(0,0,0,.12)!important}.elevation-1{box-shadow:0 1px 3px rgba(0,0,0,.2),0 1px 1px rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)!important}.elevation-2{box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)!important}.elevation-3{box-shadow:0 1px 8px rgba(0,0,0,.2),0 3px 4px rgba(0,0,0,.14),0 3px 3px -2px rgba(0,0,0,.12)!important}.elevation-4{box-shadow:0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px rgba(0,0,0,.14),0 1px 10px rgba(0,0,0,.12)!important}.elevation-5{box-shadow:0 3px 5px -1px rgba(0,0,0,.2),0 5px 8px rgba(0,0,0,.14),0 1px 14px rgba(0,0,0,.12)!important}.elevation-6{box-shadow:0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px rgba(0,0,0,.14),0 1px 18px rgba(0,0,0,.12)!important}.elevation-7{box-shadow:0 4px 5px -2px rgba(0,0,0,.2),0 7px 10px 1px rgba(0,0,0,.14),0 2px 16px 1px rgba(0,0,0,.12)!important}.elevation-8{box-shadow:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12)!important}.elevation-9{box-shadow:0 5px 6px -3px rgba(0,0,0,.2),0 9px 12px 1px rgba(0,0,0,.14),0 3px 16px 2px rgba(0,0,0,.12)!important}.elevation-10{box-shadow:0 6px 6px -3px rgba(0,0,0,.2),0 10px 14px 1px rgba(0,0,0,.14),0 4px 18px 3px rgba(0,0,0,.12)!important}.elevation-11{box-shadow:0 6px 7px -4px rgba(0,0,0,.2),0 11px 15px 1px rgba(0,0,0,.14),0 4px 20px 3px rgba(0,0,0,.12)!important}.elevation-12{box-shadow:0 7px 8px -4px rgba(0,0,0,.2),0 12px 17px 2px rgba(0,0,0,.14),0 5px 22px 4px rgba(0,0,0,.12)!important}.elevation-13{box-shadow:0 7px 8px -4px rgba(0,0,0,.2),0 13px 19px 2px rgba(0,0,0,.14),0 5px 24px 4px rgba(0,0,0,.12)!important}.elevation-14{box-shadow:0 7px 9px -4px rgba(0,0,0,.2),0 14px 21px 2px rgba(0,0,0,.14),0 5px 26px 4px rgba(0,0,0,.12)!important}.elevation-15{box-shadow:0 8px 9px -5px rgba(0,0,0,.2),0 15px 22px 2px rgba(0,0,0,.14),0 6px 28px 5px rgba(0,0,0,.12)!important}.elevation-16{box-shadow:0 8px 10px -5px rgba(0,0,0,.2),0 16px 24px 2px rgba(0,0,0,.14),0 6px 30px 5px rgba(0,0,0,.12)!important}.elevation-17{box-shadow:0 8px 11px -5px rgba(0,0,0,.2),0 17px 26px 2px rgba(0,0,0,.14),0 6px 32px 5px rgba(0,0,0,.12)!important}.elevation-18{box-shadow:0 9px 11px -5px rgba(0,0,0,.2),0 18px 28px 2px rgba(0,0,0,.14),0 7px 34px 6px rgba(0,0,0,.12)!important}.elevation-19{box-shadow:0 9px 12px -6px rgba(0,0,0,.2),0 19px 29px 2px rgba(0,0,0,.14),0 7px 36px 6px rgba(0,0,0,.12)!important}.elevation-20{box-shadow:0 10px 13px -6px rgba(0,0,0,.2),0 20px 31px 3px rgba(0,0,0,.14),0 8px 38px 7px rgba(0,0,0,.12)!important}.elevation-21{box-shadow:0 10px 13px -6px rgba(0,0,0,.2),0 21px 33px 3px rgba(0,0,0,.14),0 8px 40px 7px rgba(0,0,0,.12)!important}.elevation-22{box-shadow:0 10px 14px -6px rgba(0,0,0,.2),0 22px 35px 3px rgba(0,0,0,.14),0 8px 42px 7px rgba(0,0,0,.12)!important}.elevation-23{box-shadow:0 11px 14px -7px rgba(0,0,0,.2),0 23px 36px 3px rgba(0,0,0,.14),0 9px 44px 8px rgba(0,0,0,.12)!important}.elevation-24{box-shadow:0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14),0 9px 46px 8px rgba(0,0,0,.12)!important}.application{-webkit-backface-visibility:hidden;position:relative}.application--dark{background:#303030;color:#fff}.application--light{background:#fff;color:rgba(0,0,0,.87)}.application--toolbar>main>.container{min-height:calc(100vh - 56px)}.application--toolbar.application--footer>main>.container{min-height:calc(100vh - 56px - 36px)}.application--footer>main>.container{min-height:calc(100vh - 36px)}.application--footer-fixed>aside.navigation-drawer{max-height:calc(100vh - 36px)}.application--footer-fixed.application--toolbar>aside.navigation-drawer.navigation-drawer--clipped{max-height:calc(100vh - 56px - 36px)}.primary{background-color:#1976d2!important;border-color:#1976d2!important}.primary--text{color:#1976d2!important}.primary--after:after{background:#1976d2!important}.accent{background-color:#448aff!important;border-color:#448aff!important}.accent--text{color:#448aff!important}.accent--after:after{background:#448aff!important}.secondary{background-color:#424242!important;border-color:#424242!important}.secondary--text{color:#424242!important}.secondary--after:after{background:#424242!important}.info{background-color:#2196f3!important;border-color:#2196f3!important}.info--text{color:#2196f3!important}.info--after:after{background:#2196f3!important}.warning{background-color:#ffc107!important;border-color:#ffc107!important}.warning--text{color:#ffc107!important}.warning--after:after{background:#ffc107!important}.error{background-color:#ff5252!important;border-color:#ff5252!important}.error--text{color:#ff5252!important}.error--after:after{background:#ff5252!important}.success{background-color:#4caf50!important;border-color:#4caf50!important}.success--text{color:#4caf50!important}.success--after:after{background:#4caf50!important}.black{background-color:#000!important;border-color:#000!important}.black--text{color:#000!important}.black--after:after{background:#000!important}.white{background-color:#fff!important;border-color:#fff!important}.white--text{color:#fff!important}.white--after:after{background:#fff!important}.transparent{background-color:transparent!important;border-color:transparent!important}.transparent--text{color:transparent!important}.transparent--after:after{background:transparent!important}.red{background-color:#f44336!important;border-color:#f44336!important}.red--text{color:#f44336!important}.red--after:after{background:#f44336!important}.red.lighten-5{border-color:#ffebee!important}.red.lighten-5,.red.lighten-5--after:after{background-color:#ffebee!important}.red--text.text--lighten-5{color:#ffebee!important}.red.lighten-4{border-color:#ffcdd2!important}.red.lighten-4,.red.lighten-4--after:after{background-color:#ffcdd2!important}.red--text.text--lighten-4{color:#ffcdd2!important}.red.lighten-3{border-color:#ef9a9a!important}.red.lighten-3,.red.lighten-3--after:after{background-color:#ef9a9a!important}.red--text.text--lighten-3{color:#ef9a9a!important}.red.lighten-2{border-color:#e57373!important}.red.lighten-2,.red.lighten-2--after:after{background-color:#e57373!important}.red--text.text--lighten-2{color:#e57373!important}.red.lighten-1{border-color:#ef5350!important}.red.lighten-1,.red.lighten-1--after:after{background-color:#ef5350!important}.red--text.text--lighten-1{color:#ef5350!important}.red.darken-1{border-color:#e53935!important}.red.darken-1,.red.darken-1--after:after{background-color:#e53935!important}.red--text.text--darken-1{color:#e53935!important}.red.darken-2{border-color:#d32f2f!important}.red.darken-2,.red.darken-2--after:after{background-color:#d32f2f!important}.red--text.text--darken-2{color:#d32f2f!important}.red.darken-3{border-color:#c62828!important}.red.darken-3,.red.darken-3--after:after{background-color:#c62828!important}.red--text.text--darken-3{color:#c62828!important}.red.darken-4{border-color:#b71c1c!important}.red.darken-4,.red.darken-4--after:after{background-color:#b71c1c!important}.red--text.text--darken-4{color:#b71c1c!important}.red.accent-1{border-color:#ff8a80!important}.red.accent-1,.red.accent-1--after:after{background-color:#ff8a80!important}.red--text.text--accent-1{color:#ff8a80!important}.red.accent-2{border-color:#ff5252!important}.red.accent-2,.red.accent-2--after:after{background-color:#ff5252!important}.red--text.text--accent-2{color:#ff5252!important}.red.accent-3{border-color:#ff1744!important}.red.accent-3,.red.accent-3--after:after{background-color:#ff1744!important}.red--text.text--accent-3{color:#ff1744!important}.red.accent-4{border-color:#d50000!important}.red.accent-4,.red.accent-4--after:after{background-color:#d50000!important}.red--text.text--accent-4{color:#d50000!important}.pink{background-color:#e91e63!important;border-color:#e91e63!important}.pink--text{color:#e91e63!important}.pink--after:after{background:#e91e63!important}.pink.lighten-5{border-color:#fce4ec!important}.pink.lighten-5,.pink.lighten-5--after:after{background-color:#fce4ec!important}.pink--text.text--lighten-5{color:#fce4ec!important}.pink.lighten-4{border-color:#f8bbd0!important}.pink.lighten-4,.pink.lighten-4--after:after{background-color:#f8bbd0!important}.pink--text.text--lighten-4{color:#f8bbd0!important}.pink.lighten-3{border-color:#f48fb1!important}.pink.lighten-3,.pink.lighten-3--after:after{background-color:#f48fb1!important}.pink--text.text--lighten-3{color:#f48fb1!important}.pink.lighten-2{border-color:#f06292!important}.pink.lighten-2,.pink.lighten-2--after:after{background-color:#f06292!important}.pink--text.text--lighten-2{color:#f06292!important}.pink.lighten-1{border-color:#ec407a!important}.pink.lighten-1,.pink.lighten-1--after:after{background-color:#ec407a!important}.pink--text.text--lighten-1{color:#ec407a!important}.pink.darken-1{border-color:#d81b60!important}.pink.darken-1,.pink.darken-1--after:after{background-color:#d81b60!important}.pink--text.text--darken-1{color:#d81b60!important}.pink.darken-2{border-color:#c2185b!important}.pink.darken-2,.pink.darken-2--after:after{background-color:#c2185b!important}.pink--text.text--darken-2{color:#c2185b!important}.pink.darken-3{border-color:#ad1457!important}.pink.darken-3,.pink.darken-3--after:after{background-color:#ad1457!important}.pink--text.text--darken-3{color:#ad1457!important}.pink.darken-4{border-color:#880e4f!important}.pink.darken-4,.pink.darken-4--after:after{background-color:#880e4f!important}.pink--text.text--darken-4{color:#880e4f!important}.pink.accent-1{border-color:#ff80ab!important}.pink.accent-1,.pink.accent-1--after:after{background-color:#ff80ab!important}.pink--text.text--accent-1{color:#ff80ab!important}.pink.accent-2{border-color:#ff4081!important}.pink.accent-2,.pink.accent-2--after:after{background-color:#ff4081!important}.pink--text.text--accent-2{color:#ff4081!important}.pink.accent-3{border-color:#f50057!important}.pink.accent-3,.pink.accent-3--after:after{background-color:#f50057!important}.pink--text.text--accent-3{color:#f50057!important}.pink.accent-4{border-color:#c51162!important}.pink.accent-4,.pink.accent-4--after:after{background-color:#c51162!important}.pink--text.text--accent-4{color:#c51162!important}.purple{background-color:#9c27b0!important;border-color:#9c27b0!important}.purple--text{color:#9c27b0!important}.purple--after:after{background:#9c27b0!important}.purple.lighten-5{border-color:#f3e5f5!important}.purple.lighten-5,.purple.lighten-5--after:after{background-color:#f3e5f5!important}.purple--text.text--lighten-5{color:#f3e5f5!important}.purple.lighten-4{border-color:#e1bee7!important}.purple.lighten-4,.purple.lighten-4--after:after{background-color:#e1bee7!important}.purple--text.text--lighten-4{color:#e1bee7!important}.purple.lighten-3{border-color:#ce93d8!important}.purple.lighten-3,.purple.lighten-3--after:after{background-color:#ce93d8!important}.purple--text.text--lighten-3{color:#ce93d8!important}.purple.lighten-2{border-color:#ba68c8!important}.purple.lighten-2,.purple.lighten-2--after:after{background-color:#ba68c8!important}.purple--text.text--lighten-2{color:#ba68c8!important}.purple.lighten-1{border-color:#ab47bc!important}.purple.lighten-1,.purple.lighten-1--after:after{background-color:#ab47bc!important}.purple--text.text--lighten-1{color:#ab47bc!important}.purple.darken-1{border-color:#8e24aa!important}.purple.darken-1,.purple.darken-1--after:after{background-color:#8e24aa!important}.purple--text.text--darken-1{color:#8e24aa!important}.purple.darken-2{border-color:#7b1fa2!important}.purple.darken-2,.purple.darken-2--after:after{background-color:#7b1fa2!important}.purple--text.text--darken-2{color:#7b1fa2!important}.purple.darken-3{border-color:#6a1b9a!important}.purple.darken-3,.purple.darken-3--after:after{background-color:#6a1b9a!important}.purple--text.text--darken-3{color:#6a1b9a!important}.purple.darken-4{border-color:#4a148c!important}.purple.darken-4,.purple.darken-4--after:after{background-color:#4a148c!important}.purple--text.text--darken-4{color:#4a148c!important}.purple.accent-1{border-color:#ea80fc!important}.purple.accent-1,.purple.accent-1--after:after{background-color:#ea80fc!important}.purple--text.text--accent-1{color:#ea80fc!important}.purple.accent-2{border-color:#e040fb!important}.purple.accent-2,.purple.accent-2--after:after{background-color:#e040fb!important}.purple--text.text--accent-2{color:#e040fb!important}.purple.accent-3{border-color:#d500f9!important}.purple.accent-3,.purple.accent-3--after:after{background-color:#d500f9!important}.purple--text.text--accent-3{color:#d500f9!important}.purple.accent-4{border-color:#a0f!important}.purple.accent-4,.purple.accent-4--after:after{background-color:#a0f!important}.purple--text.text--accent-4{color:#a0f!important}.deep-purple{background-color:#673ab7!important;border-color:#673ab7!important}.deep-purple--text{color:#673ab7!important}.deep-purple--after:after{background:#673ab7!important}.deep-purple.lighten-5{border-color:#ede7f6!important}.deep-purple.lighten-5,.deep-purple.lighten-5--after:after{background-color:#ede7f6!important}.deep-purple--text.text--lighten-5{color:#ede7f6!important}.deep-purple.lighten-4{border-color:#d1c4e9!important}.deep-purple.lighten-4,.deep-purple.lighten-4--after:after{background-color:#d1c4e9!important}.deep-purple--text.text--lighten-4{color:#d1c4e9!important}.deep-purple.lighten-3{border-color:#b39ddb!important}.deep-purple.lighten-3,.deep-purple.lighten-3--after:after{background-color:#b39ddb!important}.deep-purple--text.text--lighten-3{color:#b39ddb!important}.deep-purple.lighten-2{border-color:#9575cd!important}.deep-purple.lighten-2,.deep-purple.lighten-2--after:after{background-color:#9575cd!important}.deep-purple--text.text--lighten-2{color:#9575cd!important}.deep-purple.lighten-1{border-color:#7e57c2!important}.deep-purple.lighten-1,.deep-purple.lighten-1--after:after{background-color:#7e57c2!important}.deep-purple--text.text--lighten-1{color:#7e57c2!important}.deep-purple.darken-1{border-color:#5e35b1!important}.deep-purple.darken-1,.deep-purple.darken-1--after:after{background-color:#5e35b1!important}.deep-purple--text.text--darken-1{color:#5e35b1!important}.deep-purple.darken-2{border-color:#512da8!important}.deep-purple.darken-2,.deep-purple.darken-2--after:after{background-color:#512da8!important}.deep-purple--text.text--darken-2{color:#512da8!important}.deep-purple.darken-3{border-color:#4527a0!important}.deep-purple.darken-3,.deep-purple.darken-3--after:after{background-color:#4527a0!important}.deep-purple--text.text--darken-3{color:#4527a0!important}.deep-purple.darken-4{border-color:#311b92!important}.deep-purple.darken-4,.deep-purple.darken-4--after:after{background-color:#311b92!important}.deep-purple--text.text--darken-4{color:#311b92!important}.deep-purple.accent-1{border-color:#b388ff!important}.deep-purple.accent-1,.deep-purple.accent-1--after:after{background-color:#b388ff!important}.deep-purple--text.text--accent-1{color:#b388ff!important}.deep-purple.accent-2{border-color:#7c4dff!important}.deep-purple.accent-2,.deep-purple.accent-2--after:after{background-color:#7c4dff!important}.deep-purple--text.text--accent-2{color:#7c4dff!important}.deep-purple.accent-3{border-color:#651fff!important}.deep-purple.accent-3,.deep-purple.accent-3--after:after{background-color:#651fff!important}.deep-purple--text.text--accent-3{color:#651fff!important}.deep-purple.accent-4{border-color:#6200ea!important}.deep-purple.accent-4,.deep-purple.accent-4--after:after{background-color:#6200ea!important}.deep-purple--text.text--accent-4{color:#6200ea!important}.indigo{background-color:#3f51b5!important;border-color:#3f51b5!important}.indigo--text{color:#3f51b5!important}.indigo--after:after{background:#3f51b5!important}.indigo.lighten-5{border-color:#e8eaf6!important}.indigo.lighten-5,.indigo.lighten-5--after:after{background-color:#e8eaf6!important}.indigo--text.text--lighten-5{color:#e8eaf6!important}.indigo.lighten-4{border-color:#c5cae9!important}.indigo.lighten-4,.indigo.lighten-4--after:after{background-color:#c5cae9!important}.indigo--text.text--lighten-4{color:#c5cae9!important}.indigo.lighten-3{border-color:#9fa8da!important}.indigo.lighten-3,.indigo.lighten-3--after:after{background-color:#9fa8da!important}.indigo--text.text--lighten-3{color:#9fa8da!important}.indigo.lighten-2{border-color:#7986cb!important}.indigo.lighten-2,.indigo.lighten-2--after:after{background-color:#7986cb!important}.indigo--text.text--lighten-2{color:#7986cb!important}.indigo.lighten-1{border-color:#5c6bc0!important}.indigo.lighten-1,.indigo.lighten-1--after:after{background-color:#5c6bc0!important}.indigo--text.text--lighten-1{color:#5c6bc0!important}.indigo.darken-1{border-color:#3949ab!important}.indigo.darken-1,.indigo.darken-1--after:after{background-color:#3949ab!important}.indigo--text.text--darken-1{color:#3949ab!important}.indigo.darken-2{border-color:#303f9f!important}.indigo.darken-2,.indigo.darken-2--after:after{background-color:#303f9f!important}.indigo--text.text--darken-2{color:#303f9f!important}.indigo.darken-3{border-color:#283593!important}.indigo.darken-3,.indigo.darken-3--after:after{background-color:#283593!important}.indigo--text.text--darken-3{color:#283593!important}.indigo.darken-4{border-color:#1a237e!important}.indigo.darken-4,.indigo.darken-4--after:after{background-color:#1a237e!important}.indigo--text.text--darken-4{color:#1a237e!important}.indigo.accent-1{border-color:#8c9eff!important}.indigo.accent-1,.indigo.accent-1--after:after{background-color:#8c9eff!important}.indigo--text.text--accent-1{color:#8c9eff!important}.indigo.accent-2{border-color:#536dfe!important}.indigo.accent-2,.indigo.accent-2--after:after{background-color:#536dfe!important}.indigo--text.text--accent-2{color:#536dfe!important}.indigo.accent-3{border-color:#3d5afe!important}.indigo.accent-3,.indigo.accent-3--after:after{background-color:#3d5afe!important}.indigo--text.text--accent-3{color:#3d5afe!important}.indigo.accent-4{border-color:#304ffe!important}.indigo.accent-4,.indigo.accent-4--after:after{background-color:#304ffe!important}.indigo--text.text--accent-4{color:#304ffe!important}.blue{background-color:#2196f3!important;border-color:#2196f3!important}.blue--text{color:#2196f3!important}.blue--after:after{background:#2196f3!important}.blue.lighten-5{border-color:#e3f2fd!important}.blue.lighten-5,.blue.lighten-5--after:after{background-color:#e3f2fd!important}.blue--text.text--lighten-5{color:#e3f2fd!important}.blue.lighten-4{border-color:#bbdefb!important}.blue.lighten-4,.blue.lighten-4--after:after{background-color:#bbdefb!important}.blue--text.text--lighten-4{color:#bbdefb!important}.blue.lighten-3{border-color:#90caf9!important}.blue.lighten-3,.blue.lighten-3--after:after{background-color:#90caf9!important}.blue--text.text--lighten-3{color:#90caf9!important}.blue.lighten-2{border-color:#64b5f6!important}.blue.lighten-2,.blue.lighten-2--after:after{background-color:#64b5f6!important}.blue--text.text--lighten-2{color:#64b5f6!important}.blue.lighten-1{border-color:#42a5f5!important}.blue.lighten-1,.blue.lighten-1--after:after{background-color:#42a5f5!important}.blue--text.text--lighten-1{color:#42a5f5!important}.blue.darken-1{border-color:#1e88e5!important}.blue.darken-1,.blue.darken-1--after:after{background-color:#1e88e5!important}.blue--text.text--darken-1{color:#1e88e5!important}.blue.darken-2{border-color:#1976d2!important}.blue.darken-2,.blue.darken-2--after:after{background-color:#1976d2!important}.blue--text.text--darken-2{color:#1976d2!important}.blue.darken-3{border-color:#1565c0!important}.blue.darken-3,.blue.darken-3--after:after{background-color:#1565c0!important}.blue--text.text--darken-3{color:#1565c0!important}.blue.darken-4{border-color:#0d47a1!important}.blue.darken-4,.blue.darken-4--after:after{background-color:#0d47a1!important}.blue--text.text--darken-4{color:#0d47a1!important}.blue.accent-1{border-color:#82b1ff!important}.blue.accent-1,.blue.accent-1--after:after{background-color:#82b1ff!important}.blue--text.text--accent-1{color:#82b1ff!important}.blue.accent-2{border-color:#448aff!important}.blue.accent-2,.blue.accent-2--after:after{background-color:#448aff!important}.blue--text.text--accent-2{color:#448aff!important}.blue.accent-3{border-color:#2979ff!important}.blue.accent-3,.blue.accent-3--after:after{background-color:#2979ff!important}.blue--text.text--accent-3{color:#2979ff!important}.blue.accent-4{border-color:#2962ff!important}.blue.accent-4,.blue.accent-4--after:after{background-color:#2962ff!important}.blue--text.text--accent-4{color:#2962ff!important}.light-blue{background-color:#03a9f4!important;border-color:#03a9f4!important}.light-blue--text{color:#03a9f4!important}.light-blue--after:after{background:#03a9f4!important}.light-blue.lighten-5{border-color:#e1f5fe!important}.light-blue.lighten-5,.light-blue.lighten-5--after:after{background-color:#e1f5fe!important}.light-blue--text.text--lighten-5{color:#e1f5fe!important}.light-blue.lighten-4{border-color:#b3e5fc!important}.light-blue.lighten-4,.light-blue.lighten-4--after:after{background-color:#b3e5fc!important}.light-blue--text.text--lighten-4{color:#b3e5fc!important}.light-blue.lighten-3{border-color:#81d4fa!important}.light-blue.lighten-3,.light-blue.lighten-3--after:after{background-color:#81d4fa!important}.light-blue--text.text--lighten-3{color:#81d4fa!important}.light-blue.lighten-2{border-color:#4fc3f7!important}.light-blue.lighten-2,.light-blue.lighten-2--after:after{background-color:#4fc3f7!important}.light-blue--text.text--lighten-2{color:#4fc3f7!important}.light-blue.lighten-1{border-color:#29b6f6!important}.light-blue.lighten-1,.light-blue.lighten-1--after:after{background-color:#29b6f6!important}.light-blue--text.text--lighten-1{color:#29b6f6!important}.light-blue.darken-1{border-color:#039be5!important}.light-blue.darken-1,.light-blue.darken-1--after:after{background-color:#039be5!important}.light-blue--text.text--darken-1{color:#039be5!important}.light-blue.darken-2{border-color:#0288d1!important}.light-blue.darken-2,.light-blue.darken-2--after:after{background-color:#0288d1!important}.light-blue--text.text--darken-2{color:#0288d1!important}.light-blue.darken-3{border-color:#0277bd!important}.light-blue.darken-3,.light-blue.darken-3--after:after{background-color:#0277bd!important}.light-blue--text.text--darken-3{color:#0277bd!important}.light-blue.darken-4{border-color:#01579b!important}.light-blue.darken-4,.light-blue.darken-4--after:after{background-color:#01579b!important}.light-blue--text.text--darken-4{color:#01579b!important}.light-blue.accent-1{border-color:#80d8ff!important}.light-blue.accent-1,.light-blue.accent-1--after:after{background-color:#80d8ff!important}.light-blue--text.text--accent-1{color:#80d8ff!important}.light-blue.accent-2{border-color:#40c4ff!important}.light-blue.accent-2,.light-blue.accent-2--after:after{background-color:#40c4ff!important}.light-blue--text.text--accent-2{color:#40c4ff!important}.light-blue.accent-3{border-color:#00b0ff!important}.light-blue.accent-3,.light-blue.accent-3--after:after{background-color:#00b0ff!important}.light-blue--text.text--accent-3{color:#00b0ff!important}.light-blue.accent-4{border-color:#0091ea!important}.light-blue.accent-4,.light-blue.accent-4--after:after{background-color:#0091ea!important}.light-blue--text.text--accent-4{color:#0091ea!important}.cyan{background-color:#00bcd4!important;border-color:#00bcd4!important}.cyan--text{color:#00bcd4!important}.cyan--after:after{background:#00bcd4!important}.cyan.lighten-5{border-color:#e0f7fa!important}.cyan.lighten-5,.cyan.lighten-5--after:after{background-color:#e0f7fa!important}.cyan--text.text--lighten-5{color:#e0f7fa!important}.cyan.lighten-4{border-color:#b2ebf2!important}.cyan.lighten-4,.cyan.lighten-4--after:after{background-color:#b2ebf2!important}.cyan--text.text--lighten-4{color:#b2ebf2!important}.cyan.lighten-3{border-color:#80deea!important}.cyan.lighten-3,.cyan.lighten-3--after:after{background-color:#80deea!important}.cyan--text.text--lighten-3{color:#80deea!important}.cyan.lighten-2{border-color:#4dd0e1!important}.cyan.lighten-2,.cyan.lighten-2--after:after{background-color:#4dd0e1!important}.cyan--text.text--lighten-2{color:#4dd0e1!important}.cyan.lighten-1{border-color:#26c6da!important}.cyan.lighten-1,.cyan.lighten-1--after:after{background-color:#26c6da!important}.cyan--text.text--lighten-1{color:#26c6da!important}.cyan.darken-1{border-color:#00acc1!important}.cyan.darken-1,.cyan.darken-1--after:after{background-color:#00acc1!important}.cyan--text.text--darken-1{color:#00acc1!important}.cyan.darken-2{border-color:#0097a7!important}.cyan.darken-2,.cyan.darken-2--after:after{background-color:#0097a7!important}.cyan--text.text--darken-2{color:#0097a7!important}.cyan.darken-3{border-color:#00838f!important}.cyan.darken-3,.cyan.darken-3--after:after{background-color:#00838f!important}.cyan--text.text--darken-3{color:#00838f!important}.cyan.darken-4{border-color:#006064!important}.cyan.darken-4,.cyan.darken-4--after:after{background-color:#006064!important}.cyan--text.text--darken-4{color:#006064!important}.cyan.accent-1{border-color:#84ffff!important}.cyan.accent-1,.cyan.accent-1--after:after{background-color:#84ffff!important}.cyan--text.text--accent-1{color:#84ffff!important}.cyan.accent-2{border-color:#18ffff!important}.cyan.accent-2,.cyan.accent-2--after:after{background-color:#18ffff!important}.cyan--text.text--accent-2{color:#18ffff!important}.cyan.accent-3{border-color:#00e5ff!important}.cyan.accent-3,.cyan.accent-3--after:after{background-color:#00e5ff!important}.cyan--text.text--accent-3{color:#00e5ff!important}.cyan.accent-4{border-color:#00b8d4!important}.cyan.accent-4,.cyan.accent-4--after:after{background-color:#00b8d4!important}.cyan--text.text--accent-4{color:#00b8d4!important}.teal{background-color:#009688!important;border-color:#009688!important}.teal--text{color:#009688!important}.teal--after:after{background:#009688!important}.teal.lighten-5{border-color:#e0f2f1!important}.teal.lighten-5,.teal.lighten-5--after:after{background-color:#e0f2f1!important}.teal--text.text--lighten-5{color:#e0f2f1!important}.teal.lighten-4{border-color:#b2dfdb!important}.teal.lighten-4,.teal.lighten-4--after:after{background-color:#b2dfdb!important}.teal--text.text--lighten-4{color:#b2dfdb!important}.teal.lighten-3{border-color:#80cbc4!important}.teal.lighten-3,.teal.lighten-3--after:after{background-color:#80cbc4!important}.teal--text.text--lighten-3{color:#80cbc4!important}.teal.lighten-2{border-color:#4db6ac!important}.teal.lighten-2,.teal.lighten-2--after:after{background-color:#4db6ac!important}.teal--text.text--lighten-2{color:#4db6ac!important}.teal.lighten-1{border-color:#26a69a!important}.teal.lighten-1,.teal.lighten-1--after:after{background-color:#26a69a!important}.teal--text.text--lighten-1{color:#26a69a!important}.teal.darken-1{border-color:#00897b!important}.teal.darken-1,.teal.darken-1--after:after{background-color:#00897b!important}.teal--text.text--darken-1{color:#00897b!important}.teal.darken-2{border-color:#00796b!important}.teal.darken-2,.teal.darken-2--after:after{background-color:#00796b!important}.teal--text.text--darken-2{color:#00796b!important}.teal.darken-3{border-color:#00695c!important}.teal.darken-3,.teal.darken-3--after:after{background-color:#00695c!important}.teal--text.text--darken-3{color:#00695c!important}.teal.darken-4{border-color:#004d40!important}.teal.darken-4,.teal.darken-4--after:after{background-color:#004d40!important}.teal--text.text--darken-4{color:#004d40!important}.teal.accent-1{border-color:#a7ffeb!important}.teal.accent-1,.teal.accent-1--after:after{background-color:#a7ffeb!important}.teal--text.text--accent-1{color:#a7ffeb!important}.teal.accent-2{border-color:#64ffda!important}.teal.accent-2,.teal.accent-2--after:after{background-color:#64ffda!important}.teal--text.text--accent-2{color:#64ffda!important}.teal.accent-3{border-color:#1de9b6!important}.teal.accent-3,.teal.accent-3--after:after{background-color:#1de9b6!important}.teal--text.text--accent-3{color:#1de9b6!important}.teal.accent-4{border-color:#00bfa5!important}.teal.accent-4,.teal.accent-4--after:after{background-color:#00bfa5!important}.teal--text.text--accent-4{color:#00bfa5!important}.green{background-color:#4caf50!important;border-color:#4caf50!important}.green--text{color:#4caf50!important}.green--after:after{background:#4caf50!important}.green.lighten-5{border-color:#e8f5e9!important}.green.lighten-5,.green.lighten-5--after:after{background-color:#e8f5e9!important}.green--text.text--lighten-5{color:#e8f5e9!important}.green.lighten-4{border-color:#c8e6c9!important}.green.lighten-4,.green.lighten-4--after:after{background-color:#c8e6c9!important}.green--text.text--lighten-4{color:#c8e6c9!important}.green.lighten-3{border-color:#a5d6a7!important}.green.lighten-3,.green.lighten-3--after:after{background-color:#a5d6a7!important}.green--text.text--lighten-3{color:#a5d6a7!important}.green.lighten-2{border-color:#81c784!important}.green.lighten-2,.green.lighten-2--after:after{background-color:#81c784!important}.green--text.text--lighten-2{color:#81c784!important}.green.lighten-1{border-color:#66bb6a!important}.green.lighten-1,.green.lighten-1--after:after{background-color:#66bb6a!important}.green--text.text--lighten-1{color:#66bb6a!important}.green.darken-1{border-color:#43a047!important}.green.darken-1,.green.darken-1--after:after{background-color:#43a047!important}.green--text.text--darken-1{color:#43a047!important}.green.darken-2{border-color:#388e3c!important}.green.darken-2,.green.darken-2--after:after{background-color:#388e3c!important}.green--text.text--darken-2{color:#388e3c!important}.green.darken-3{border-color:#2e7d32!important}.green.darken-3,.green.darken-3--after:after{background-color:#2e7d32!important}.green--text.text--darken-3{color:#2e7d32!important}.green.darken-4{border-color:#1b5e20!important}.green.darken-4,.green.darken-4--after:after{background-color:#1b5e20!important}.green--text.text--darken-4{color:#1b5e20!important}.green.accent-1{border-color:#b9f6ca!important}.green.accent-1,.green.accent-1--after:after{background-color:#b9f6ca!important}.green--text.text--accent-1{color:#b9f6ca!important}.green.accent-2{border-color:#69f0ae!important}.green.accent-2,.green.accent-2--after:after{background-color:#69f0ae!important}.green--text.text--accent-2{color:#69f0ae!important}.green.accent-3{border-color:#00e676!important}.green.accent-3,.green.accent-3--after:after{background-color:#00e676!important}.green--text.text--accent-3{color:#00e676!important}.green.accent-4{border-color:#00c853!important}.green.accent-4,.green.accent-4--after:after{background-color:#00c853!important}.green--text.text--accent-4{color:#00c853!important}.light-green{background-color:#8bc34a!important;border-color:#8bc34a!important}.light-green--text{color:#8bc34a!important}.light-green--after:after{background:#8bc34a!important}.light-green.lighten-5{border-color:#f1f8e9!important}.light-green.lighten-5,.light-green.lighten-5--after:after{background-color:#f1f8e9!important}.light-green--text.text--lighten-5{color:#f1f8e9!important}.light-green.lighten-4{border-color:#dcedc8!important}.light-green.lighten-4,.light-green.lighten-4--after:after{background-color:#dcedc8!important}.light-green--text.text--lighten-4{color:#dcedc8!important}.light-green.lighten-3{border-color:#c5e1a5!important}.light-green.lighten-3,.light-green.lighten-3--after:after{background-color:#c5e1a5!important}.light-green--text.text--lighten-3{color:#c5e1a5!important}.light-green.lighten-2{border-color:#aed581!important}.light-green.lighten-2,.light-green.lighten-2--after:after{background-color:#aed581!important}.light-green--text.text--lighten-2{color:#aed581!important}.light-green.lighten-1{border-color:#9ccc65!important}.light-green.lighten-1,.light-green.lighten-1--after:after{background-color:#9ccc65!important}.light-green--text.text--lighten-1{color:#9ccc65!important}.light-green.darken-1{border-color:#7cb342!important}.light-green.darken-1,.light-green.darken-1--after:after{background-color:#7cb342!important}.light-green--text.text--darken-1{color:#7cb342!important}.light-green.darken-2{border-color:#689f38!important}.light-green.darken-2,.light-green.darken-2--after:after{background-color:#689f38!important}.light-green--text.text--darken-2{color:#689f38!important}.light-green.darken-3{border-color:#558b2f!important}.light-green.darken-3,.light-green.darken-3--after:after{background-color:#558b2f!important}.light-green--text.text--darken-3{color:#558b2f!important}.light-green.darken-4{border-color:#33691e!important}.light-green.darken-4,.light-green.darken-4--after:after{background-color:#33691e!important}.light-green--text.text--darken-4{color:#33691e!important}.light-green.accent-1{border-color:#ccff90!important}.light-green.accent-1,.light-green.accent-1--after:after{background-color:#ccff90!important}.light-green--text.text--accent-1{color:#ccff90!important}.light-green.accent-2{border-color:#b2ff59!important}.light-green.accent-2,.light-green.accent-2--after:after{background-color:#b2ff59!important}.light-green--text.text--accent-2{color:#b2ff59!important}.light-green.accent-3{border-color:#76ff03!important}.light-green.accent-3,.light-green.accent-3--after:after{background-color:#76ff03!important}.light-green--text.text--accent-3{color:#76ff03!important}.light-green.accent-4{border-color:#64dd17!important}.light-green.accent-4,.light-green.accent-4--after:after{background-color:#64dd17!important}.light-green--text.text--accent-4{color:#64dd17!important}.lime{background-color:#cddc39!important;border-color:#cddc39!important}.lime--text{color:#cddc39!important}.lime--after:after{background:#cddc39!important}.lime.lighten-5{border-color:#f9fbe7!important}.lime.lighten-5,.lime.lighten-5--after:after{background-color:#f9fbe7!important}.lime--text.text--lighten-5{color:#f9fbe7!important}.lime.lighten-4{border-color:#f0f4c3!important}.lime.lighten-4,.lime.lighten-4--after:after{background-color:#f0f4c3!important}.lime--text.text--lighten-4{color:#f0f4c3!important}.lime.lighten-3{border-color:#e6ee9c!important}.lime.lighten-3,.lime.lighten-3--after:after{background-color:#e6ee9c!important}.lime--text.text--lighten-3{color:#e6ee9c!important}.lime.lighten-2{border-color:#dce775!important}.lime.lighten-2,.lime.lighten-2--after:after{background-color:#dce775!important}.lime--text.text--lighten-2{color:#dce775!important}.lime.lighten-1{border-color:#d4e157!important}.lime.lighten-1,.lime.lighten-1--after:after{background-color:#d4e157!important}.lime--text.text--lighten-1{color:#d4e157!important}.lime.darken-1{border-color:#c0ca33!important}.lime.darken-1,.lime.darken-1--after:after{background-color:#c0ca33!important}.lime--text.text--darken-1{color:#c0ca33!important}.lime.darken-2{border-color:#afb42b!important}.lime.darken-2,.lime.darken-2--after:after{background-color:#afb42b!important}.lime--text.text--darken-2{color:#afb42b!important}.lime.darken-3{border-color:#9e9d24!important}.lime.darken-3,.lime.darken-3--after:after{background-color:#9e9d24!important}.lime--text.text--darken-3{color:#9e9d24!important}.lime.darken-4{border-color:#827717!important}.lime.darken-4,.lime.darken-4--after:after{background-color:#827717!important}.lime--text.text--darken-4{color:#827717!important}.lime.accent-1{border-color:#f4ff81!important}.lime.accent-1,.lime.accent-1--after:after{background-color:#f4ff81!important}.lime--text.text--accent-1{color:#f4ff81!important}.lime.accent-2{border-color:#eeff41!important}.lime.accent-2,.lime.accent-2--after:after{background-color:#eeff41!important}.lime--text.text--accent-2{color:#eeff41!important}.lime.accent-3{border-color:#c6ff00!important}.lime.accent-3,.lime.accent-3--after:after{background-color:#c6ff00!important}.lime--text.text--accent-3{color:#c6ff00!important}.lime.accent-4{border-color:#aeea00!important}.lime.accent-4,.lime.accent-4--after:after{background-color:#aeea00!important}.lime--text.text--accent-4{color:#aeea00!important}.yellow{background-color:#ffeb3b!important;border-color:#ffeb3b!important}.yellow--text{color:#ffeb3b!important}.yellow--after:after{background:#ffeb3b!important}.yellow.lighten-5{border-color:#fffde7!important}.yellow.lighten-5,.yellow.lighten-5--after:after{background-color:#fffde7!important}.yellow--text.text--lighten-5{color:#fffde7!important}.yellow.lighten-4{border-color:#fff9c4!important}.yellow.lighten-4,.yellow.lighten-4--after:after{background-color:#fff9c4!important}.yellow--text.text--lighten-4{color:#fff9c4!important}.yellow.lighten-3{border-color:#fff59d!important}.yellow.lighten-3,.yellow.lighten-3--after:after{background-color:#fff59d!important}.yellow--text.text--lighten-3{color:#fff59d!important}.yellow.lighten-2{border-color:#fff176!important}.yellow.lighten-2,.yellow.lighten-2--after:after{background-color:#fff176!important}.yellow--text.text--lighten-2{color:#fff176!important}.yellow.lighten-1{border-color:#ffee58!important}.yellow.lighten-1,.yellow.lighten-1--after:after{background-color:#ffee58!important}.yellow--text.text--lighten-1{color:#ffee58!important}.yellow.darken-1{border-color:#fdd835!important}.yellow.darken-1,.yellow.darken-1--after:after{background-color:#fdd835!important}.yellow--text.text--darken-1{color:#fdd835!important}.yellow.darken-2{border-color:#fbc02d!important}.yellow.darken-2,.yellow.darken-2--after:after{background-color:#fbc02d!important}.yellow--text.text--darken-2{color:#fbc02d!important}.yellow.darken-3{border-color:#f9a825!important}.yellow.darken-3,.yellow.darken-3--after:after{background-color:#f9a825!important}.yellow--text.text--darken-3{color:#f9a825!important}.yellow.darken-4{border-color:#f57f17!important}.yellow.darken-4,.yellow.darken-4--after:after{background-color:#f57f17!important}.yellow--text.text--darken-4{color:#f57f17!important}.yellow.accent-1{border-color:#ffff8d!important}.yellow.accent-1,.yellow.accent-1--after:after{background-color:#ffff8d!important}.yellow--text.text--accent-1{color:#ffff8d!important}.yellow.accent-2{border-color:#ff0!important}.yellow.accent-2,.yellow.accent-2--after:after{background-color:#ff0!important}.yellow--text.text--accent-2{color:#ff0!important}.yellow.accent-3{border-color:#ffea00!important}.yellow.accent-3,.yellow.accent-3--after:after{background-color:#ffea00!important}.yellow--text.text--accent-3{color:#ffea00!important}.yellow.accent-4{border-color:#ffd600!important}.yellow.accent-4,.yellow.accent-4--after:after{background-color:#ffd600!important}.yellow--text.text--accent-4{color:#ffd600!important}.amber{background-color:#ffc107!important;border-color:#ffc107!important}.amber--text{color:#ffc107!important}.amber--after:after{background:#ffc107!important}.amber.lighten-5{border-color:#fff8e1!important}.amber.lighten-5,.amber.lighten-5--after:after{background-color:#fff8e1!important}.amber--text.text--lighten-5{color:#fff8e1!important}.amber.lighten-4{border-color:#ffecb3!important}.amber.lighten-4,.amber.lighten-4--after:after{background-color:#ffecb3!important}.amber--text.text--lighten-4{color:#ffecb3!important}.amber.lighten-3{border-color:#ffe082!important}.amber.lighten-3,.amber.lighten-3--after:after{background-color:#ffe082!important}.amber--text.text--lighten-3{color:#ffe082!important}.amber.lighten-2{border-color:#ffd54f!important}.amber.lighten-2,.amber.lighten-2--after:after{background-color:#ffd54f!important}.amber--text.text--lighten-2{color:#ffd54f!important}.amber.lighten-1{border-color:#ffca28!important}.amber.lighten-1,.amber.lighten-1--after:after{background-color:#ffca28!important}.amber--text.text--lighten-1{color:#ffca28!important}.amber.darken-1{border-color:#ffb300!important}.amber.darken-1,.amber.darken-1--after:after{background-color:#ffb300!important}.amber--text.text--darken-1{color:#ffb300!important}.amber.darken-2{border-color:#ffa000!important}.amber.darken-2,.amber.darken-2--after:after{background-color:#ffa000!important}.amber--text.text--darken-2{color:#ffa000!important}.amber.darken-3{border-color:#ff8f00!important}.amber.darken-3,.amber.darken-3--after:after{background-color:#ff8f00!important}.amber--text.text--darken-3{color:#ff8f00!important}.amber.darken-4{border-color:#ff6f00!important}.amber.darken-4,.amber.darken-4--after:after{background-color:#ff6f00!important}.amber--text.text--darken-4{color:#ff6f00!important}.amber.accent-1{border-color:#ffe57f!important}.amber.accent-1,.amber.accent-1--after:after{background-color:#ffe57f!important}.amber--text.text--accent-1{color:#ffe57f!important}.amber.accent-2{border-color:#ffd740!important}.amber.accent-2,.amber.accent-2--after:after{background-color:#ffd740!important}.amber--text.text--accent-2{color:#ffd740!important}.amber.accent-3{border-color:#ffc400!important}.amber.accent-3,.amber.accent-3--after:after{background-color:#ffc400!important}.amber--text.text--accent-3{color:#ffc400!important}.amber.accent-4{border-color:#ffab00!important}.amber.accent-4,.amber.accent-4--after:after{background-color:#ffab00!important}.amber--text.text--accent-4{color:#ffab00!important}.orange{background-color:#ff9800!important;border-color:#ff9800!important}.orange--text{color:#ff9800!important}.orange--after:after{background:#ff9800!important}.orange.lighten-5{border-color:#fff3e0!important}.orange.lighten-5,.orange.lighten-5--after:after{background-color:#fff3e0!important}.orange--text.text--lighten-5{color:#fff3e0!important}.orange.lighten-4{border-color:#ffe0b2!important}.orange.lighten-4,.orange.lighten-4--after:after{background-color:#ffe0b2!important}.orange--text.text--lighten-4{color:#ffe0b2!important}.orange.lighten-3{border-color:#ffcc80!important}.orange.lighten-3,.orange.lighten-3--after:after{background-color:#ffcc80!important}.orange--text.text--lighten-3{color:#ffcc80!important}.orange.lighten-2{border-color:#ffb74d!important}.orange.lighten-2,.orange.lighten-2--after:after{background-color:#ffb74d!important}.orange--text.text--lighten-2{color:#ffb74d!important}.orange.lighten-1{border-color:#ffa726!important}.orange.lighten-1,.orange.lighten-1--after:after{background-color:#ffa726!important}.orange--text.text--lighten-1{color:#ffa726!important}.orange.darken-1{border-color:#fb8c00!important}.orange.darken-1,.orange.darken-1--after:after{background-color:#fb8c00!important}.orange--text.text--darken-1{color:#fb8c00!important}.orange.darken-2{border-color:#f57c00!important}.orange.darken-2,.orange.darken-2--after:after{background-color:#f57c00!important}.orange--text.text--darken-2{color:#f57c00!important}.orange.darken-3{border-color:#ef6c00!important}.orange.darken-3,.orange.darken-3--after:after{background-color:#ef6c00!important}.orange--text.text--darken-3{color:#ef6c00!important}.orange.darken-4{border-color:#e65100!important}.orange.darken-4,.orange.darken-4--after:after{background-color:#e65100!important}.orange--text.text--darken-4{color:#e65100!important}.orange.accent-1{border-color:#ffd180!important}.orange.accent-1,.orange.accent-1--after:after{background-color:#ffd180!important}.orange--text.text--accent-1{color:#ffd180!important}.orange.accent-2{border-color:#ffab40!important}.orange.accent-2,.orange.accent-2--after:after{background-color:#ffab40!important}.orange--text.text--accent-2{color:#ffab40!important}.orange.accent-3{border-color:#ff9100!important}.orange.accent-3,.orange.accent-3--after:after{background-color:#ff9100!important}.orange--text.text--accent-3{color:#ff9100!important}.orange.accent-4{border-color:#ff6d00!important}.orange.accent-4,.orange.accent-4--after:after{background-color:#ff6d00!important}.orange--text.text--accent-4{color:#ff6d00!important}.deep-orange{background-color:#ff5722!important;border-color:#ff5722!important}.deep-orange--text{color:#ff5722!important}.deep-orange--after:after{background:#ff5722!important}.deep-orange.lighten-5{border-color:#fbe9e7!important}.deep-orange.lighten-5,.deep-orange.lighten-5--after:after{background-color:#fbe9e7!important}.deep-orange--text.text--lighten-5{color:#fbe9e7!important}.deep-orange.lighten-4{border-color:#ffccbc!important}.deep-orange.lighten-4,.deep-orange.lighten-4--after:after{background-color:#ffccbc!important}.deep-orange--text.text--lighten-4{color:#ffccbc!important}.deep-orange.lighten-3{border-color:#ffab91!important}.deep-orange.lighten-3,.deep-orange.lighten-3--after:after{background-color:#ffab91!important}.deep-orange--text.text--lighten-3{color:#ffab91!important}.deep-orange.lighten-2{border-color:#ff8a65!important}.deep-orange.lighten-2,.deep-orange.lighten-2--after:after{background-color:#ff8a65!important}.deep-orange--text.text--lighten-2{color:#ff8a65!important}.deep-orange.lighten-1{border-color:#ff7043!important}.deep-orange.lighten-1,.deep-orange.lighten-1--after:after{background-color:#ff7043!important}.deep-orange--text.text--lighten-1{color:#ff7043!important}.deep-orange.darken-1{border-color:#f4511e!important}.deep-orange.darken-1,.deep-orange.darken-1--after:after{background-color:#f4511e!important}.deep-orange--text.text--darken-1{color:#f4511e!important}.deep-orange.darken-2{border-color:#e64a19!important}.deep-orange.darken-2,.deep-orange.darken-2--after:after{background-color:#e64a19!important}.deep-orange--text.text--darken-2{color:#e64a19!important}.deep-orange.darken-3{border-color:#d84315!important}.deep-orange.darken-3,.deep-orange.darken-3--after:after{background-color:#d84315!important}.deep-orange--text.text--darken-3{color:#d84315!important}.deep-orange.darken-4{border-color:#bf360c!important}.deep-orange.darken-4,.deep-orange.darken-4--after:after{background-color:#bf360c!important}.deep-orange--text.text--darken-4{color:#bf360c!important}.deep-orange.accent-1{border-color:#ff9e80!important}.deep-orange.accent-1,.deep-orange.accent-1--after:after{background-color:#ff9e80!important}.deep-orange--text.text--accent-1{color:#ff9e80!important}.deep-orange.accent-2{border-color:#ff6e40!important}.deep-orange.accent-2,.deep-orange.accent-2--after:after{background-color:#ff6e40!important}.deep-orange--text.text--accent-2{color:#ff6e40!important}.deep-orange.accent-3{border-color:#ff3d00!important}.deep-orange.accent-3,.deep-orange.accent-3--after:after{background-color:#ff3d00!important}.deep-orange--text.text--accent-3{color:#ff3d00!important}.deep-orange.accent-4{border-color:#dd2c00!important}.deep-orange.accent-4,.deep-orange.accent-4--after:after{background-color:#dd2c00!important}.deep-orange--text.text--accent-4{color:#dd2c00!important}.brown{background-color:#795548!important;border-color:#795548!important}.brown--text{color:#795548!important}.brown--after:after{background:#795548!important}.brown.lighten-5{border-color:#efebe9!important}.brown.lighten-5,.brown.lighten-5--after:after{background-color:#efebe9!important}.brown--text.text--lighten-5{color:#efebe9!important}.brown.lighten-4{border-color:#d7ccc8!important}.brown.lighten-4,.brown.lighten-4--after:after{background-color:#d7ccc8!important}.brown--text.text--lighten-4{color:#d7ccc8!important}.brown.lighten-3{border-color:#bcaaa4!important}.brown.lighten-3,.brown.lighten-3--after:after{background-color:#bcaaa4!important}.brown--text.text--lighten-3{color:#bcaaa4!important}.brown.lighten-2{border-color:#a1887f!important}.brown.lighten-2,.brown.lighten-2--after:after{background-color:#a1887f!important}.brown--text.text--lighten-2{color:#a1887f!important}.brown.lighten-1{border-color:#8d6e63!important}.brown.lighten-1,.brown.lighten-1--after:after{background-color:#8d6e63!important}.brown--text.text--lighten-1{color:#8d6e63!important}.brown.darken-1{border-color:#6d4c41!important}.brown.darken-1,.brown.darken-1--after:after{background-color:#6d4c41!important}.brown--text.text--darken-1{color:#6d4c41!important}.brown.darken-2{border-color:#5d4037!important}.brown.darken-2,.brown.darken-2--after:after{background-color:#5d4037!important}.brown--text.text--darken-2{color:#5d4037!important}.brown.darken-3{border-color:#4e342e!important}.brown.darken-3,.brown.darken-3--after:after{background-color:#4e342e!important}.brown--text.text--darken-3{color:#4e342e!important}.brown.darken-4{border-color:#3e2723!important}.brown.darken-4,.brown.darken-4--after:after{background-color:#3e2723!important}.brown--text.text--darken-4{color:#3e2723!important}.blue-grey{background-color:#607d8b!important;border-color:#607d8b!important}.blue-grey--text{color:#607d8b!important}.blue-grey--after:after{background:#607d8b!important}.blue-grey.lighten-5{border-color:#eceff1!important}.blue-grey.lighten-5,.blue-grey.lighten-5--after:after{background-color:#eceff1!important}.blue-grey--text.text--lighten-5{color:#eceff1!important}.blue-grey.lighten-4{border-color:#cfd8dc!important}.blue-grey.lighten-4,.blue-grey.lighten-4--after:after{background-color:#cfd8dc!important}.blue-grey--text.text--lighten-4{color:#cfd8dc!important}.blue-grey.lighten-3{border-color:#b0bec5!important}.blue-grey.lighten-3,.blue-grey.lighten-3--after:after{background-color:#b0bec5!important}.blue-grey--text.text--lighten-3{color:#b0bec5!important}.blue-grey.lighten-2{border-color:#90a4ae!important}.blue-grey.lighten-2,.blue-grey.lighten-2--after:after{background-color:#90a4ae!important}.blue-grey--text.text--lighten-2{color:#90a4ae!important}.blue-grey.lighten-1{border-color:#78909c!important}.blue-grey.lighten-1,.blue-grey.lighten-1--after:after{background-color:#78909c!important}.blue-grey--text.text--lighten-1{color:#78909c!important}.blue-grey.darken-1{border-color:#546e7a!important}.blue-grey.darken-1,.blue-grey.darken-1--after:after{background-color:#546e7a!important}.blue-grey--text.text--darken-1{color:#546e7a!important}.blue-grey.darken-2{border-color:#455a64!important}.blue-grey.darken-2,.blue-grey.darken-2--after:after{background-color:#455a64!important}.blue-grey--text.text--darken-2{color:#455a64!important}.blue-grey.darken-3{border-color:#37474f!important}.blue-grey.darken-3,.blue-grey.darken-3--after:after{background-color:#37474f!important}.blue-grey--text.text--darken-3{color:#37474f!important}.blue-grey.darken-4{border-color:#263238!important}.blue-grey.darken-4,.blue-grey.darken-4--after:after{background-color:#263238!important}.blue-grey--text.text--darken-4{color:#263238!important}.grey{background-color:#9e9e9e!important;border-color:#9e9e9e!important}.grey--text{color:#9e9e9e!important}.grey--after:after{background:#9e9e9e!important}.grey.lighten-5{border-color:#fafafa!important}.grey.lighten-5,.grey.lighten-5--after:after{background-color:#fafafa!important}.grey--text.text--lighten-5{color:#fafafa!important}.grey.lighten-4{border-color:#f5f5f5!important}.grey.lighten-4,.grey.lighten-4--after:after{background-color:#f5f5f5!important}.grey--text.text--lighten-4{color:#f5f5f5!important}.grey.lighten-3{border-color:#eee!important}.grey.lighten-3,.grey.lighten-3--after:after{background-color:#eee!important}.grey--text.text--lighten-3{color:#eee!important}.grey.lighten-2{border-color:#e0e0e0!important}.grey.lighten-2,.grey.lighten-2--after:after{background-color:#e0e0e0!important}.grey--text.text--lighten-2{color:#e0e0e0!important}.grey.lighten-1{border-color:#bdbdbd!important}.grey.lighten-1,.grey.lighten-1--after:after{background-color:#bdbdbd!important}.grey--text.text--lighten-1{color:#bdbdbd!important}.grey.darken-1{border-color:#757575!important}.grey.darken-1,.grey.darken-1--after:after{background-color:#757575!important}.grey--text.text--darken-1{color:#757575!important}.grey.darken-2{border-color:#616161!important}.grey.darken-2,.grey.darken-2--after:after{background-color:#616161!important}.grey--text.text--darken-2{color:#616161!important}.grey.darken-3{border-color:#424242!important}.grey.darken-3,.grey.darken-3--after:after{background-color:#424242!important}.grey--text.text--darken-3{color:#424242!important}.grey.darken-4{border-color:#212121!important}.grey.darken-4,.grey.darken-4--after:after{background-color:#212121!important}.grey--text.text--darken-4{color:#212121!important}.shades.black{border-color:#000!important}.shades.black,.shades.black--after:after{background-color:#000!important}.shades--text.text--black{color:#000!important}.shades.white{border-color:#fff!important}.shades.white,.shades.white--after:after{background-color:#fff!important}.shades--text.text--white{color:#fff!important}.shades.transparent{border-color:transparent!important}.shades.transparent,.shades.transparent--after:after{background-color:transparent!important}.shades--text.text--transparent{color:transparent!important}.container{margin-right:auto;margin-left:auto;-ms-flex-preferred-size:100%;flex-basis:100%;padding:24px}@media only screen and (max-width:599px){.container{padding:16px}}@media only screen and (min-width:540px){.container{max-width:540px}}@media only screen and (min-width:921.6px){.container{max-width:921.6px}}@media only screen and (min-width:1281.6000000000001px){.container{max-width:1281.6000000000001px}}@media only screen and (min-width:1713.6000000000001px){.container{max-width:1713.6000000000001px}}.container--fluid{max-width:100%;width:100%}.layout{display:-webkit-box;display:-ms-flexbox;display:flex;margin-right:-12px;margin-left:-12px}.layout.column,.layout.row{-webkit-box-flex:0;-ms-flex:0 1 auto;flex:0 1 auto}.layout.column.grow,.layout.row.grow{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1}.layout.row{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}.layout.row.reverse{-webkit-box-orient:horizontal;-webkit-box-direction:reverse;-ms-flex-direction:row-reverse;flex-direction:row-reverse}.layout.column{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.layout.column.reverse{-webkit-box-orient:vertical;-webkit-box-direction:reverse;-ms-flex-direction:column-reverse;flex-direction:column-reverse}.layout.wrap{-ms-flex-wrap:wrap;flex-wrap:wrap}.layout.align-start{-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start}.layout.align-end{-webkit-box-align:end;-ms-flex-align:end;align-items:flex-end}.layout.align-center{-webkit-box-align:center;-ms-flex-align:center;align-items:center}.layout.align-baseline{-webkit-box-align:baseline;-ms-flex-align:baseline;align-items:baseline}.layout.justify-start{-webkit-box-pack:start;-ms-flex-pack:start;justify-content:flex-start}.layout.justify-end{-webkit-box-pack:end;-ms-flex-pack:end;justify-content:flex-end}.layout.justify-center{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}.layout.justify-space-around{-ms-flex-pack:distribute;justify-content:space-around}.layout.justify-space-between{-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}.layout.child-flex>*,.layout.flex{-webkit-box-flex:1;-ms-flex:1;flex:1}.layout .flex{padding-right:12px;padding-left:12px}.layout .flex.xs{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}@media only screen and (min-width:0){.layout.row-xs{-ms-flex:0 1 auto;flex:0 1 auto;margin-left:24px;margin-right:24px;-webkit-box-orient:horizontal;-ms-flex-direction:row;flex-direction:row}.layout.column-xs,.layout.row-xs{-webkit-box-flex:0;-webkit-box-direction:normal}.layout.column-xs{-ms-flex:0 1 auto;flex:0 1 auto;-webkit-box-orient:vertical;-ms-flex-direction:column;flex-direction:column}.layout.child-flex-xs>*,.layout.flex{-webkit-box-flex:1;-ms-flex:1;flex:1}.layout .flex.xs1{-ms-flex-preferred-size:8.333333333333332%;flex-basis:8.333333333333332%;max-width:8.333333333333332%}.layout .flex.offset-xs1{margin-left:8.333333333333332%}.layout .flex.order-xs1{-webkit-box-ordinal-group:2;-ms-flex-order:1;order:1}.layout .flex.xs2{-ms-flex-preferred-size:16.666666666666664%;flex-basis:16.666666666666664%;max-width:16.666666666666664%}.layout .flex.offset-xs2{margin-left:16.666666666666664%}.layout .flex.order-xs2{-webkit-box-ordinal-group:3;-ms-flex-order:2;order:2}.layout .flex.xs3{-ms-flex-preferred-size:25%;flex-basis:25%;max-width:25%}.layout .flex.offset-xs3{margin-left:25%}.layout .flex.order-xs3{-webkit-box-ordinal-group:4;-ms-flex-order:3;order:3}.layout .flex.xs4{-ms-flex-preferred-size:33.33333333333333%;flex-basis:33.33333333333333%;max-width:33.33333333333333%}.layout .flex.offset-xs4{margin-left:33.33333333333333%}.layout .flex.order-xs4{-webkit-box-ordinal-group:5;-ms-flex-order:4;order:4}.layout .flex.xs5{-ms-flex-preferred-size:41.66666666666667%;flex-basis:41.66666666666667%;max-width:41.66666666666667%}.layout .flex.offset-xs5{margin-left:41.66666666666667%}.layout .flex.order-xs5{-webkit-box-ordinal-group:6;-ms-flex-order:5;order:5}.layout .flex.xs6{-ms-flex-preferred-size:50%;flex-basis:50%;max-width:50%}.layout .flex.offset-xs6{margin-left:50%}.layout .flex.order-xs6{-webkit-box-ordinal-group:7;-ms-flex-order:6;order:6}.layout .flex.xs7{-ms-flex-preferred-size:58.333333333333336%;flex-basis:58.333333333333336%;max-width:58.333333333333336%}.layout .flex.offset-xs7{margin-left:58.333333333333336%}.layout .flex.order-xs7{-webkit-box-ordinal-group:8;-ms-flex-order:7;order:7}.layout .flex.xs8{-ms-flex-preferred-size:66.66666666666666%;flex-basis:66.66666666666666%;max-width:66.66666666666666%}.layout .flex.offset-xs8{margin-left:66.66666666666666%}.layout .flex.order-xs8{-webkit-box-ordinal-group:9;-ms-flex-order:8;order:8}.layout .flex.xs9{-ms-flex-preferred-size:75%;flex-basis:75%;max-width:75%}.layout .flex.offset-xs9{margin-left:75%}.layout .flex.order-xs9{-webkit-box-ordinal-group:10;-ms-flex-order:9;order:9}.layout .flex.xs10{-ms-flex-preferred-size:83.33333333333334%;flex-basis:83.33333333333334%;max-width:83.33333333333334%}.layout .flex.offset-xs10{margin-left:83.33333333333334%}.layout .flex.order-xs10{-webkit-box-ordinal-group:11;-ms-flex-order:10;order:10}.layout .flex.xs11{-ms-flex-preferred-size:91.66666666666666%;flex-basis:91.66666666666666%;max-width:91.66666666666666%}.layout .flex.offset-xs11{margin-left:91.66666666666666%}.layout .flex.order-xs11{-webkit-box-ordinal-group:12;-ms-flex-order:11;order:11}.layout .flex.xs12{-ms-flex-preferred-size:100%;flex-basis:100%;max-width:100%}.layout .flex.offset-xs12{margin-left:100%}.layout .flex.order-xs12{-webkit-box-ordinal-group:13;-ms-flex-order:12;order:12}}.layout .flex.sm{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}@media only screen and (min-width:600px){.layout.row-sm{-ms-flex:0 1 auto;flex:0 1 auto;margin-left:24px;margin-right:24px;-webkit-box-orient:horizontal;-ms-flex-direction:row;flex-direction:row}.layout.column-sm,.layout.row-sm{-webkit-box-flex:0;-webkit-box-direction:normal}.layout.column-sm{-ms-flex:0 1 auto;flex:0 1 auto;-webkit-box-orient:vertical;-ms-flex-direction:column;flex-direction:column}.layout.child-flex-sm>*,.layout.flex{-webkit-box-flex:1;-ms-flex:1;flex:1}.layout .flex.sm1{-ms-flex-preferred-size:8.333333333333332%;flex-basis:8.333333333333332%;max-width:8.333333333333332%}.layout .flex.offset-sm1{margin-left:8.333333333333332%}.layout .flex.order-sm1{-webkit-box-ordinal-group:2;-ms-flex-order:1;order:1}.layout .flex.sm2{-ms-flex-preferred-size:16.666666666666664%;flex-basis:16.666666666666664%;max-width:16.666666666666664%}.layout .flex.offset-sm2{margin-left:16.666666666666664%}.layout .flex.order-sm2{-webkit-box-ordinal-group:3;-ms-flex-order:2;order:2}.layout .flex.sm3{-ms-flex-preferred-size:25%;flex-basis:25%;max-width:25%}.layout .flex.offset-sm3{margin-left:25%}.layout .flex.order-sm3{-webkit-box-ordinal-group:4;-ms-flex-order:3;order:3}.layout .flex.sm4{-ms-flex-preferred-size:33.33333333333333%;flex-basis:33.33333333333333%;max-width:33.33333333333333%}.layout .flex.offset-sm4{margin-left:33.33333333333333%}.layout .flex.order-sm4{-webkit-box-ordinal-group:5;-ms-flex-order:4;order:4}.layout .flex.sm5{-ms-flex-preferred-size:41.66666666666667%;flex-basis:41.66666666666667%;max-width:41.66666666666667%}.layout .flex.offset-sm5{margin-left:41.66666666666667%}.layout .flex.order-sm5{-webkit-box-ordinal-group:6;-ms-flex-order:5;order:5}.layout .flex.sm6{-ms-flex-preferred-size:50%;flex-basis:50%;max-width:50%}.layout .flex.offset-sm6{margin-left:50%}.layout .flex.order-sm6{-webkit-box-ordinal-group:7;-ms-flex-order:6;order:6}.layout .flex.sm7{-ms-flex-preferred-size:58.333333333333336%;flex-basis:58.333333333333336%;max-width:58.333333333333336%}.layout .flex.offset-sm7{margin-left:58.333333333333336%}.layout .flex.order-sm7{-webkit-box-ordinal-group:8;-ms-flex-order:7;order:7}.layout .flex.sm8{-ms-flex-preferred-size:66.66666666666666%;flex-basis:66.66666666666666%;max-width:66.66666666666666%}.layout .flex.offset-sm8{margin-left:66.66666666666666%}.layout .flex.order-sm8{-webkit-box-ordinal-group:9;-ms-flex-order:8;order:8}.layout .flex.sm9{-ms-flex-preferred-size:75%;flex-basis:75%;max-width:75%}.layout .flex.offset-sm9{margin-left:75%}.layout .flex.order-sm9{-webkit-box-ordinal-group:10;-ms-flex-order:9;order:9}.layout .flex.sm10{-ms-flex-preferred-size:83.33333333333334%;flex-basis:83.33333333333334%;max-width:83.33333333333334%}.layout .flex.offset-sm10{margin-left:83.33333333333334%}.layout .flex.order-sm10{-webkit-box-ordinal-group:11;-ms-flex-order:10;order:10}.layout .flex.sm11{-ms-flex-preferred-size:91.66666666666666%;flex-basis:91.66666666666666%;max-width:91.66666666666666%}.layout .flex.offset-sm11{margin-left:91.66666666666666%}.layout .flex.order-sm11{-webkit-box-ordinal-group:12;-ms-flex-order:11;order:11}.layout .flex.sm12{-ms-flex-preferred-size:100%;flex-basis:100%;max-width:100%}.layout .flex.offset-sm12{margin-left:100%}.layout .flex.order-sm12{-webkit-box-ordinal-group:13;-ms-flex-order:12;order:12}}.layout .flex.md{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}@media only screen and (min-width:1024px){.layout.row-md{-ms-flex:0 1 auto;flex:0 1 auto;margin-left:24px;margin-right:24px;-webkit-box-orient:horizontal;-ms-flex-direction:row;flex-direction:row}.layout.column-md,.layout.row-md{-webkit-box-flex:0;-webkit-box-direction:normal}.layout.column-md{-ms-flex:0 1 auto;flex:0 1 auto;-webkit-box-orient:vertical;-ms-flex-direction:column;flex-direction:column}.layout.child-flex-md>*,.layout.flex{-webkit-box-flex:1;-ms-flex:1;flex:1}.layout .flex.md1{-ms-flex-preferred-size:8.333333333333332%;flex-basis:8.333333333333332%;max-width:8.333333333333332%}.layout .flex.offset-md1{margin-left:8.333333333333332%}.layout .flex.order-md1{-webkit-box-ordinal-group:2;-ms-flex-order:1;order:1}.layout .flex.md2{-ms-flex-preferred-size:16.666666666666664%;flex-basis:16.666666666666664%;max-width:16.666666666666664%}.layout .flex.offset-md2{margin-left:16.666666666666664%}.layout .flex.order-md2{-webkit-box-ordinal-group:3;-ms-flex-order:2;order:2}.layout .flex.md3{-ms-flex-preferred-size:25%;flex-basis:25%;max-width:25%}.layout .flex.offset-md3{margin-left:25%}.layout .flex.order-md3{-webkit-box-ordinal-group:4;-ms-flex-order:3;order:3}.layout .flex.md4{-ms-flex-preferred-size:33.33333333333333%;flex-basis:33.33333333333333%;max-width:33.33333333333333%}.layout .flex.offset-md4{margin-left:33.33333333333333%}.layout .flex.order-md4{-webkit-box-ordinal-group:5;-ms-flex-order:4;order:4}.layout .flex.md5{-ms-flex-preferred-size:41.66666666666667%;flex-basis:41.66666666666667%;max-width:41.66666666666667%}.layout .flex.offset-md5{margin-left:41.66666666666667%}.layout .flex.order-md5{-webkit-box-ordinal-group:6;-ms-flex-order:5;order:5}.layout .flex.md6{-ms-flex-preferred-size:50%;flex-basis:50%;max-width:50%}.layout .flex.offset-md6{margin-left:50%}.layout .flex.order-md6{-webkit-box-ordinal-group:7;-ms-flex-order:6;order:6}.layout .flex.md7{-ms-flex-preferred-size:58.333333333333336%;flex-basis:58.333333333333336%;max-width:58.333333333333336%}.layout .flex.offset-md7{margin-left:58.333333333333336%}.layout .flex.order-md7{-webkit-box-ordinal-group:8;-ms-flex-order:7;order:7}.layout .flex.md8{-ms-flex-preferred-size:66.66666666666666%;flex-basis:66.66666666666666%;max-width:66.66666666666666%}.layout .flex.offset-md8{margin-left:66.66666666666666%}.layout .flex.order-md8{-webkit-box-ordinal-group:9;-ms-flex-order:8;order:8}.layout .flex.md9{-ms-flex-preferred-size:75%;flex-basis:75%;max-width:75%}.layout .flex.offset-md9{margin-left:75%}.layout .flex.order-md9{-webkit-box-ordinal-group:10;-ms-flex-order:9;order:9}.layout .flex.md10{-ms-flex-preferred-size:83.33333333333334%;flex-basis:83.33333333333334%;max-width:83.33333333333334%}.layout .flex.offset-md10{margin-left:83.33333333333334%}.layout .flex.order-md10{-webkit-box-ordinal-group:11;-ms-flex-order:10;order:10}.layout .flex.md11{-ms-flex-preferred-size:91.66666666666666%;flex-basis:91.66666666666666%;max-width:91.66666666666666%}.layout .flex.offset-md11{margin-left:91.66666666666666%}.layout .flex.order-md11{-webkit-box-ordinal-group:12;-ms-flex-order:11;order:11}.layout .flex.md12{-ms-flex-preferred-size:100%;flex-basis:100%;max-width:100%}.layout .flex.offset-md12{margin-left:100%}.layout .flex.order-md12{-webkit-box-ordinal-group:13;-ms-flex-order:12;order:12}}.layout .flex.lg{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}@media only screen and (min-width:1424px){.layout.row-lg{-ms-flex:0 1 auto;flex:0 1 auto;margin-left:24px;margin-right:24px;-webkit-box-orient:horizontal;-ms-flex-direction:row;flex-direction:row}.layout.column-lg,.layout.row-lg{-webkit-box-flex:0;-webkit-box-direction:normal}.layout.column-lg{-ms-flex:0 1 auto;flex:0 1 auto;-webkit-box-orient:vertical;-ms-flex-direction:column;flex-direction:column}.layout.child-flex-lg>*,.layout.flex{-webkit-box-flex:1;-ms-flex:1;flex:1}.layout .flex.lg1{-ms-flex-preferred-size:8.333333333333332%;flex-basis:8.333333333333332%;max-width:8.333333333333332%}.layout .flex.offset-lg1{margin-left:8.333333333333332%}.layout .flex.order-lg1{-webkit-box-ordinal-group:2;-ms-flex-order:1;order:1}.layout .flex.lg2{-ms-flex-preferred-size:16.666666666666664%;flex-basis:16.666666666666664%;max-width:16.666666666666664%}.layout .flex.offset-lg2{margin-left:16.666666666666664%}.layout .flex.order-lg2{-webkit-box-ordinal-group:3;-ms-flex-order:2;order:2}.layout .flex.lg3{-ms-flex-preferred-size:25%;flex-basis:25%;max-width:25%}.layout .flex.offset-lg3{margin-left:25%}.layout .flex.order-lg3{-webkit-box-ordinal-group:4;-ms-flex-order:3;order:3}.layout .flex.lg4{-ms-flex-preferred-size:33.33333333333333%;flex-basis:33.33333333333333%;max-width:33.33333333333333%}.layout .flex.offset-lg4{margin-left:33.33333333333333%}.layout .flex.order-lg4{-webkit-box-ordinal-group:5;-ms-flex-order:4;order:4}.layout .flex.lg5{-ms-flex-preferred-size:41.66666666666667%;flex-basis:41.66666666666667%;max-width:41.66666666666667%}.layout .flex.offset-lg5{margin-left:41.66666666666667%}.layout .flex.order-lg5{-webkit-box-ordinal-group:6;-ms-flex-order:5;order:5}.layout .flex.lg6{-ms-flex-preferred-size:50%;flex-basis:50%;max-width:50%}.layout .flex.offset-lg6{margin-left:50%}.layout .flex.order-lg6{-webkit-box-ordinal-group:7;-ms-flex-order:6;order:6}.layout .flex.lg7{-ms-flex-preferred-size:58.333333333333336%;flex-basis:58.333333333333336%;max-width:58.333333333333336%}.layout .flex.offset-lg7{margin-left:58.333333333333336%}.layout .flex.order-lg7{-webkit-box-ordinal-group:8;-ms-flex-order:7;order:7}.layout .flex.lg8{-ms-flex-preferred-size:66.66666666666666%;flex-basis:66.66666666666666%;max-width:66.66666666666666%}.layout .flex.offset-lg8{margin-left:66.66666666666666%}.layout .flex.order-lg8{-webkit-box-ordinal-group:9;-ms-flex-order:8;order:8}.layout .flex.lg9{-ms-flex-preferred-size:75%;flex-basis:75%;max-width:75%}.layout .flex.offset-lg9{margin-left:75%}.layout .flex.order-lg9{-webkit-box-ordinal-group:10;-ms-flex-order:9;order:9}.layout .flex.lg10{-ms-flex-preferred-size:83.33333333333334%;flex-basis:83.33333333333334%;max-width:83.33333333333334%}.layout .flex.offset-lg10{margin-left:83.33333333333334%}.layout .flex.order-lg10{-webkit-box-ordinal-group:11;-ms-flex-order:10;order:10}.layout .flex.lg11{-ms-flex-preferred-size:91.66666666666666%;flex-basis:91.66666666666666%;max-width:91.66666666666666%}.layout .flex.offset-lg11{margin-left:91.66666666666666%}.layout .flex.order-lg11{-webkit-box-ordinal-group:12;-ms-flex-order:11;order:11}.layout .flex.lg12{-ms-flex-preferred-size:100%;flex-basis:100%;max-width:100%}.layout .flex.offset-lg12{margin-left:100%}.layout .flex.order-lg12{-webkit-box-ordinal-group:13;-ms-flex-order:12;order:12}}.layout .flex.xl{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1}@media only screen and (min-width:1904px){.layout.row-xl{-ms-flex:0 1 auto;flex:0 1 auto;margin-left:24px;margin-right:24px;-webkit-box-orient:horizontal;-ms-flex-direction:row;flex-direction:row}.layout.column-xl,.layout.row-xl{-webkit-box-flex:0;-webkit-box-direction:normal}.layout.column-xl{-ms-flex:0 1 auto;flex:0 1 auto;-webkit-box-orient:vertical;-ms-flex-direction:column;flex-direction:column}.layout.child-flex-xl>*,.layout.flex{-webkit-box-flex:1;-ms-flex:1;flex:1}.layout .flex.xl1{-ms-flex-preferred-size:8.333333333333332%;flex-basis:8.333333333333332%;max-width:8.333333333333332%}.layout .flex.offset-xl1{margin-left:8.333333333333332%}.layout .flex.order-xl1{-webkit-box-ordinal-group:2;-ms-flex-order:1;order:1}.layout .flex.xl2{-ms-flex-preferred-size:16.666666666666664%;flex-basis:16.666666666666664%;max-width:16.666666666666664%}.layout .flex.offset-xl2{margin-left:16.666666666666664%}.layout .flex.order-xl2{-webkit-box-ordinal-group:3;-ms-flex-order:2;order:2}.layout .flex.xl3{-ms-flex-preferred-size:25%;flex-basis:25%;max-width:25%}.layout .flex.offset-xl3{margin-left:25%}.layout .flex.order-xl3{-webkit-box-ordinal-group:4;-ms-flex-order:3;order:3}.layout .flex.xl4{-ms-flex-preferred-size:33.33333333333333%;flex-basis:33.33333333333333%;max-width:33.33333333333333%}.layout .flex.offset-xl4{margin-left:33.33333333333333%}.layout .flex.order-xl4{-webkit-box-ordinal-group:5;-ms-flex-order:4;order:4}.layout .flex.xl5{-ms-flex-preferred-size:41.66666666666667%;flex-basis:41.66666666666667%;max-width:41.66666666666667%}.layout .flex.offset-xl5{margin-left:41.66666666666667%}.layout .flex.order-xl5{-webkit-box-ordinal-group:6;-ms-flex-order:5;order:5}.layout .flex.xl6{-ms-flex-preferred-size:50%;flex-basis:50%;max-width:50%}.layout .flex.offset-xl6{margin-left:50%}.layout .flex.order-xl6{-webkit-box-ordinal-group:7;-ms-flex-order:6;order:6}.layout .flex.xl7{-ms-flex-preferred-size:58.333333333333336%;flex-basis:58.333333333333336%;max-width:58.333333333333336%}.layout .flex.offset-xl7{margin-left:58.333333333333336%}.layout .flex.order-xl7{-webkit-box-ordinal-group:8;-ms-flex-order:7;order:7}.layout .flex.xl8{-ms-flex-preferred-size:66.66666666666666%;flex-basis:66.66666666666666%;max-width:66.66666666666666%}.layout .flex.offset-xl8{margin-left:66.66666666666666%}.layout .flex.order-xl8{-webkit-box-ordinal-group:9;-ms-flex-order:8;order:8}.layout .flex.xl9{-ms-flex-preferred-size:75%;flex-basis:75%;max-width:75%}.layout .flex.offset-xl9{margin-left:75%}.layout .flex.order-xl9{-webkit-box-ordinal-group:10;-ms-flex-order:9;order:9}.layout .flex.xl10{-ms-flex-preferred-size:83.33333333333334%;flex-basis:83.33333333333334%;max-width:83.33333333333334%}.layout .flex.offset-xl10{margin-left:83.33333333333334%}.layout .flex.order-xl10{-webkit-box-ordinal-group:11;-ms-flex-order:10;order:10}.layout .flex.xl11{-ms-flex-preferred-size:91.66666666666666%;flex-basis:91.66666666666666%;max-width:91.66666666666666%}.layout .flex.offset-xl11{margin-left:91.66666666666666%}.layout .flex.order-xl11{-webkit-box-ordinal-group:12;-ms-flex-order:11;order:11}.layout .flex.xl12{-ms-flex-preferred-size:100%;flex-basis:100%;max-width:100%}.layout .flex.offset-xl12{margin-left:100%}.layout .flex.order-xl12{-webkit-box-ordinal-group:13;-ms-flex-order:12;order:12}}.spacer{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1}.scroll-y{overflow-y:auto}.fill-height{height:100%}.show-overflow{overflow:visible!important}html{box-sizing:border-box;overflow-y:scroll;-webkit-text-size-adjust:100%}*,:after,:before{box-sizing:inherit}:after,:before{text-decoration:inherit;vertical-align:inherit}*{background-repeat:no-repeat;padding:0;margin:0}audio:not([controls]){display:none;height:0}hr{overflow:visible}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}summary{display:list-item}small{font-size:80%}[hidden],template{display:none}abbr[title]{border-bottom:1px dotted;text-decoration:none}a{background-color:transparent;-webkit-text-decoration-skip:objects}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace,monospace}b,strong{font-weight:bolder}dfn{font-style:italic}mark{background-color:#ff0;color:#000}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}input{border-radius:0}[role=button],[type=button],[type=reset],[type=submit],button{cursor:pointer}[disabled]{cursor:default}[type=number]{width:auto}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit}optgroup{font-weight:700}button{overflow:visible}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:0;padding:0}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button:-moz-focusring{outline:1px dotted ButtonText}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}button,select{text-transform:none}button,input,select,textarea{background-color:transparent;border-style:none;color:inherit}select{-moz-appearance:none;-webkit-appearance:none}select::-ms-expand{display:none}select::-ms-value{color:currentColor}legend{border:0;color:inherit;display:table;max-width:100%;white-space:normal}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}img{border-style:none}progress{vertical-align:baseline}svg:not(:root){overflow:hidden}audio,canvas,progress,video{display:inline-block}@media screen{[hidden~=screen]{display:inherit}[hidden~=screen]:not(:active):not(:focus):not(:target){position:absolute!important;clip:rect(0 0 0 0)!important}}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled]{cursor:default}::-moz-selection{background-color:#b3d4fc;color:#000;text-shadow:none}::selection{background-color:#b3d4fc;color:#000;text-shadow:none}.carousel-transition-enter{-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}.carousel-transition-leave,.carousel-transition-leave-to{position:absolute;top:0}.carousel-reverse-transition-enter,.carousel-transition-leave,.carousel-transition-leave-to{-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}.carousel-reverse-transition-leave,.carousel-reverse-transition-leave-to{position:absolute;top:0;-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}.dialog-transition-enter,.dialog-transition-leave-to{-webkit-transform:scale(.5);transform:scale(.5);opacity:0}.dialog-transition-enter-to,.dialog-transition-leave{opacity:1}.dialog-bottom-transition-enter,.dialog-bottom-transition-leave-to{-webkit-transform:translateY(100%);transform:translateY(100%)}.tab-transition-enter{-webkit-transform:translate(100%);transform:translate(100%)}.tab-transition-enter-to{-webkit-transform:translate(0);transform:translate(0)}.tab-transition-leave,.tab-transition-leave-active{position:absolute;top:0}.tab-transition-leave-to{position:absolute}.tab-reverse-transition-enter,.tab-transition-leave-to{-webkit-transform:translate(-100%);transform:translate(-100%)}.tab-reverse-transition-leave,.tab-reverse-transition-leave-to{top:0;position:absolute;-webkit-transform:translate(100%);transform:translate(100%)}.scale-transition-enter-active,.scale-transition-leave-active{transition:.3s cubic-bezier(.25,.8,.25,1)}.scale-transition-enter,.scale-transition-leave,.scale-transition-leave-to{opacity:0;-webkit-transform:scale(0);transform:scale(0)}.slide-y-transition-enter-active,.slide-y-transition-leave-active{transition:.3s cubic-bezier(.25,.8,.25,1)}.slide-y-transition-enter,.slide-y-transition-leave-to{opacity:0;-webkit-transform:translateY(-15px);transform:translateY(-15px)}.slide-y-reverse-transition-enter-active,.slide-y-reverse-transition-leave-active{transition:.3s cubic-bezier(.25,.8,.25,1)}.slide-y-reverse-transition-enter,.slide-y-reverse-transition-leave-to{opacity:0;-webkit-transform:translateY(15px);transform:translateY(15px)}.slide-x-transition-enter-active,.slide-x-transition-leave-active{transition:.3s cubic-bezier(.25,.8,.25,1)}.slide-x-transition-enter,.slide-x-transition-leave-to{opacity:0;-webkit-transform:translateX(-15px);transform:translateX(-15px)}.slide-x-reverse-transition-enter-active,.slide-x-reverse-transition-leave-active{transition:.3s cubic-bezier(.25,.8,.25,1)}.slide-x-reverse-transition-enter,.slide-x-reverse-transition-leave-to{opacity:0;-webkit-transform:translateX(15px);transform:translateX(15px)}.fade-transition-enter-active,.fade-transition-leave-active{transition:.3s cubic-bezier(.25,.8,.25,1)}.fade-transition-enter,.fade-transition-leave-to{opacity:0}blockquote{border-left:5px solid #1976d2;padding:16px 0 16px 24px;font-size:18px;font-weight:300}code,kbd{background:#9e9e9e;color:#bd4147;display:inline-block;background-color:#f5f5f5;border-radius:3px;white-space:pre-wrap;font-size:85%;font-weight:100!important;font-weight:900!important}code:after,code:before,kbd:after,kbd:before{content:\"\\A0\";letter-spacing:-1px}kbd{background:#424242;color:#fff}body,html{height:100%;min-height:100%;position:relative}html{font-size:14px;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:rgba(0,0,0,0);overflow-x:hidden}body{font-family:Roboto,sans-serif;line-height:1.5}header{width:100%;z-index:1}header,main{transition:padding .3s cubic-bezier(.25,.8,.25,1)}main{will-change:padding-left}a{color:#1976d2}::-ms-clear,::-ms-reveal{display:none}h1{color:#424242;font-size:112px;font-weight:300;line-height:1;letter-spacing:-.04em;margin-bottom:16px}@media screen and (max-width:600px){h1{font-size:67.2px}}h2{color:#424242;font-size:56px;font-weight:400;line-height:1.35;letter-spacing:-.02em;margin-bottom:16px}@media screen and (max-width:600px){h2{font-size:33.6px}}h3{color:#424242;font-size:45px;font-weight:400;line-height:48px;letter-spacing:normal;margin-bottom:16px}@media screen and (max-width:600px){h3{font-size:27px}}h4{color:#424242;font-size:34px;font-weight:400;line-height:40px;letter-spacing:normal;margin-bottom:16px}@media screen and (max-width:600px){h4{font-size:20.4px}}h5{color:#424242;font-size:24px;font-weight:400;line-height:32px;letter-spacing:normal;margin-bottom:16px}@media screen and (max-width:600px){h5{font-size:14.399999999999999px}}h6{color:#424242;font-size:20px;font-weight:500;line-height:1;letter-spacing:.02em;margin-bottom:16px}@media screen and (max-width:600px){h6{font-size:12px}}subheading{color:#424242;font-size:16px;font-weight:400;margin-bottom:16px}@media screen and (max-width:600px){subheading{font-size:9.6px}}body-2{color:#424242;font-size:14px;font-weight:500;margin-bottom:16px}@media screen and (max-width:600px){body-2{font-size:8.4px}}body-1{color:#424242;font-size:14px;font-weight:400;margin-bottom:16px}@media screen and (max-width:600px){body-1{font-size:8.4px}}caption{color:#424242;font-size:12px;font-weight:400;margin-bottom:16px}@media screen and (max-width:600px){caption{font-size:7.199999999999999px}}button{color:#424242;font-size:14px;font-weight:500;margin-bottom:16px}@media screen and (max-width:600px){button{font-size:8.4px}}ol,ul{padding-left:24px}.display-4{font-size:112px;font-weight:300;line-height:1;letter-spacing:-.04em}.display-3{font-size:56px;font-weight:400;line-height:1.35;letter-spacing:-.02em}.display-2{font-size:45px;line-height:48px}.display-1,.display-2{font-weight:400;letter-spacing:normal}.display-1{font-size:34px;line-height:40px}.headline{font-size:24px;font-weight:400;line-height:32px;letter-spacing:normal}.title{font-size:20px;font-weight:500;line-height:1;letter-spacing:.02em}.subheading{font-size:16px;font-weight:400}.body-2{font-size:14px;font-weight:500}.body-1{font-size:14px;font-weight:400}.caption{font-size:12px;font-weight:400}p{margin-bottom:16px}.alert{border-radius:0;border-width:4px 0 0;border-style:solid;border-color:rgba(0,0,0,.8);color:inherit;display:-webkit-box;display:-ms-flexbox;display:flex;font-size:14px;text-align:left;padding:16px;position:relative;margin:4px auto}.alert__dismissible .icon,.alert__icon.icon{-ms-flex-item-align:center;-ms-grid-row-align:center;align-self:center;color:rgba(0,0,0,.3);font-size:24px}.alert__icon{margin-right:16px}.alert__dismissible{margin-right:0;margin-left:16px;transition:.3s cubic-bezier(.25,.8,.25,1);-ms-flex-item-align:start;align-self:flex-start;text-decoration:none}.alert__dismissible:hover{color:rgba(26,26,26,.3)}.alert>div{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;width:100%}.alert--primary,.alert--secondary{color:#fff;background-color:#1976d2;border-color:rgba(0,0,0,.2)}.alert--info{background-color:#2196f3}.alert--error,.alert--info{color:#fff;border-color:rgba(0,0,0,.2)}.alert--error{background-color:#ff5252}.alert--success{background-color:#4caf50}.alert--success,.alert--warning{color:#fff;border-color:rgba(0,0,0,.2)}.alert--warning{background-color:#ffc107}.alert--no-icon .alert__icon{display:none}@media screen and (max-width:600px){.alert__icon{display:none}}.app__bar{-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:#eee;display:-webkit-box;display:-ms-flexbox;display:flex;width:100%}.app__bar .btn-dropdown--overflow .input-group{border:none;margin:0}.app__bar .input-group__details{display:none}.app__bar>div{min-width:130px}.app__bar>div:not(:first-child){margin-left:1px}.app__bar>div:not(:first-child):before{content:\"\";position:absolute;height:60%;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);left:-1px;background:rgba(0,0,0,.12);width:1px;z-index:0}.app__bar .input-group:not(.input-group--focused) .input-group__input:hover{background:#f5f5f5}.app__bar .btn-toggle{box-shadow:none;background:transparent;position:relative;padding:0 8px}.app__bar .btn-toggle .btn{background:transparent;border:none!important;height:42px;margin:0 8px}.app__bar .btn-toggle .btn .icon{font-size:26px;width:26px}.avatar{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;text-align:center}.avatar .icon,.avatar img{height:42px;width:42px;border-radius:50%}.badge{position:relative}.badge:after{color:#fff;content:attr(data-badge);display:-webkit-box;display:-ms-flexbox;display:flex;position:absolute;font-family:Roboto,sans-serif;top:-11px;right:-22px;background-color:#1976d2;border-radius:50%;height:22px;width:22px;font-size:14px;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:wrap;flex-wrap:wrap}.badge--overlap:after{top:-8px}.badge--overlap.badge--left:after{left:-8px;right:auto}.badge--overlap:after{right:-8px}.badge--icon:after{font-family:Material Icons}.badge--left:after{left:-22px}.bottom-nav{background:#1976d2;bottom:0;box-shadow:0 3px 14px 2px rgba(0,0,0,.12);display:-webkit-box;display:-ms-flexbox;display:flex;height:56px;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;position:fixed;-webkit-transform:translate3d(0,60px,0);transform:translate3d(0,60px,0);transition:all .4s cubic-bezier(.25,.8,.5,1);width:100%;z-index:4}.bottom-nav--absolute{position:absolute}.bottom-nav--active{-webkit-transform:translateZ(0);transform:translateZ(0)}.bottom-nav .btn{border-radius:0;-webkit-box-flex:1;-ms-flex:1 1 32px;flex:1 1 32px;height:100%;margin:0;max-width:168px;min-width:80px;padding:0 12px;opacity:.5;text-transform:capitalize;-webkit-transform-origin:50% 50%;transform-origin:50% 50%}.bottom-nav .btn .icon{color:inherit;transition:all .4s cubic-bezier(.25,.8,.5,1)}.bottom-nav .btn .btn__content{-webkit-box-orient:vertical;-webkit-box-direction:reverse;-ms-flex-direction:column-reverse;flex-direction:column-reverse;height:56px;font-size:12px;-webkit-transform:scaleX(1) translate3d(0,1px,0);transform:scaleX(1) translate3d(0,1px,0);white-space:nowrap;will-change:font-size}.bottom-nav .btn--active{opacity:1}.bottom-nav .btn--active .btn__content{font-size:14px;-webkit-transform:scaleX(1) translateZ(0);transform:scaleX(1) translateZ(0)}.bottom-nav .btn:not(.btn--active){-webkit-filter:grayscale(100%);filter:grayscale(100%)}.bottom-nav--shift .btn__content{font-size:14px}.bottom-nav--shift .btn__content span{height:21px}.bottom-nav--shift .btn{transition:all .3s;min-width:56px;max-width:96px}.bottom-nav--shift .btn--active{min-width:96px;max-width:168px;-webkit-box-flex:1;-ms-flex:1 1 72px;flex:1 1 72px}.bottom-nav--shift .btn--active .btn__content{-webkit-transform:scaleX(1) translate3d(0,2px,0);transform:scaleX(1) translate3d(0,2px,0)}.bottom-nav--shift .btn:not(.btn--active) .btn__content{-webkit-transform:scaleX(1) translate3d(0,10px,0);transform:scaleX(1) translate3d(0,10px,0)}.bottom-nav--shift .btn:not(.btn--active) .btn__content span{color:transparent}.breadcrumbs{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-flex:0;-ms-flex:0 1 auto;flex:0 1 auto;margin:0;list-style-type:none}.breadcrumbs li:not(:last-child):after{color:#bdbdbd;content:attr(data-divider);vertical-align:middle}.breadcrumbs li:last-child a{color:#bdbdbd;pointer-events:none;cursor:default}.breadcrumbs--with-icons li:not(:last-child):after{font-family:Material Icons}.breadcrumbs__item{-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#1976d2;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;font-size:14px;padding:0 14px;height:40px;text-decoration:none;line-height:40px;transition:.3s cubic-bezier(.25,.8,.25,1)}.breadcrumbs__item:hover{color:#757575}.breadcrumbs__item--disabled{color:#e0e0e0;pointer-events:none}.btn-dropdown{display:block;position:relative}.btn-dropdown input{text-align:left;border-right:1px solid transparent;transition:border-right .3s cubic-bezier(.4,0,.6,1)}.btn-dropdown .input-group--focused input+.icon{-webkit-transform:rotate(-180deg);transform:rotate(-180deg)}.btn-dropdown .menu,.btn-dropdown .menu__activator{width:100%}.btn-dropdown .menu__content{border-top-left-radius:0;border-top-right-radius:0}.btn-dropdown--editable .input-group input,.btn-dropdown--editable .input-group label,.btn-dropdown--overflow .input-group input,.btn-dropdown--overflow .input-group label,.btn-dropdown--segmented .input-group input,.btn-dropdown--segmented .input-group label{height:40px;line-height:40px}.btn-dropdown--editable input,.btn-dropdown--editable label,.btn-dropdown--overflow input,.btn-dropdown--overflow label,.btn-dropdown--segmented input,.btn-dropdown--segmented label{padding-left:16px}.btn-dropdown--editable .input-group--focused .input-group__input,.btn-dropdown--overflow .input-group--focused .input-group__input,.btn-dropdown--segmented .input-group--focused .input-group__input{background-color:#fff;box-shadow:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12)}.btn-dropdown--editable .input-group__input,.btn-dropdown--overflow .input-group__input,.btn-dropdown--segmented .input-group__input{transition:.3s cubic-bezier(.4,0,.6,1)}.btn-dropdown--editable .input-group__input:hover,.btn-dropdown--overflow .input-group__input:hover,.btn-dropdown--segmented .input-group__input:hover{background-color:#fff}.btn-dropdown--editable .input-group__details,.btn-dropdown--overflow .input-group__details,.btn-dropdown--segmented .input-group__details{height:0;min-height:0;padding:0}.btn-dropdown--editable .input-group__details:after,.btn-dropdown--editable .input-group__hint,.btn-dropdown--overflow .input-group__details:after,.btn-dropdown--overflow .input-group__hint,.btn-dropdown--segmented .input-group__details:after,.btn-dropdown--segmented .input-group__hint{display:none}.btn-dropdown--light.btn-dropdown--editable .input-group--focused input,.btn-dropdown--light.btn-dropdown--segmented input{border-right-color:rgba(0,0,0,.12)}.btn-dropdown--light.btn-dropdown--editable .input-group,.btn-dropdown--light.btn-dropdown--overflow .input-group,.btn-dropdown--light.btn-dropdown--segmented .input-group{border-top:1px solid rgba(0,0,0,.12)}.btn-dropdown--light .input-group__hint:after{display:none}.btn-dropdown--dark.btn-dropdown--editable .input-group--focused input,.btn-dropdown--dark.btn-dropdown--segmented input{border-right-color:hsla(0,0%,100%,.12)}.btn-dropdown--dark.btn-dropdown--editable .input-group,.btn-dropdown--dark.btn-dropdown--overflow .input-group,.btn-dropdown--dark.btn-dropdown--segmented .input-group{border-top:1px solid hsla(0,0%,100%,.12)}.btn-dropdown--dark .input-group__hint:after{display:none}.btn-toggle{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;border-radius:2px;transition:.3s cubic-bezier(.25,.8,.25,1);will-change:background,box-shadow}.btn-toggle .btn{color:rgba(0,0,0,.87);-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;min-width:auto;padding:0 8px;margin:0;opacity:.4;border-radius:0}.btn-toggle .btn:not(:last-child){border-right:1px solid transparent}.btn-toggle .btn:after{display:none}.btn-toggle .btn[data-selected]{opacity:1;background:rgba(0,0,0,.12)}.btn-toggle .btn[data-selected]:not(:last-child):not([data-only-child]){border-right-color:rgba(0,0,0,.12)}.btn-toggle .btn .icon{font-size:30px}.btn-toggle .btn span+.icon{font-size:medium;margin-left:10px}.btn-toggle--selected{background:#fff;box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}.btn{-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:#e0e0e0;border-radius:2px;color:#000;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;height:36px;font-size:14px;font-weight:500;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;margin:6px;min-width:88px;outline:0;padding:0 16px;text-transform:uppercase;text-decoration:none;position:relative;vertical-align:middle}.btn,.btn:after{transition:.3s cubic-bezier(.25,.8,.25,1)}.btn:after{border-radius:inherit;bottom:0;content:\"\";left:0;position:absolute;top:0;right:0}.btn.btn--disabled{box-shadow:none!important;pointer-events:none;opacity:.4}.btn.btn--disabled:not(.btn--loader){color:rgba(0,0,0,.3)}.btn__content{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:1 0 auto;flex:1 0 auto;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;transition:.3s cubic-bezier(.25,.8,.25,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.btn--flat{background-color:transparent!important;box-shadow:none!important}.btn--flat.btn--light:hover:after{background-color:hsla(0,0%,100%,.12)}.btn--flat.btn--light.btn--disabled{color:hsla(0,0%,100%,.26)}.btn--flat.btn--dark:hover:after{background-color:rgba(0,0,0,.12)}.btn--flat.btn--dark.btn--disabled{color:rgba(0,0,0,.3)}.btn--raised{will-change:box-shadow;box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}.btn--raised:active{box-shadow:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12)}.btn--icon{background:transparent;box-shadow:none!important;border-radius:50%;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;height:36px;width:36px;min-width:0;padding:0}.btn--icon .icon{color:inherit}.btn--icon:after{opacity:.12}.btn--icon:after,.btn--icon:hover{border-radius:50%}.btn--icon:hover:after{background-color:currentColor;opacity:.12}.btn--icon.btn--disabled{background-color:transparent!important;color:hsla(0,0%,100%,.26)!important;pointer-events:none}.btn--icon.btn--small{width:28px}.btn--icon.btn--large{width:44px}.btn--floating{min-width:0;height:56px;width:56px;padding:0}.btn--floating,.btn--floating:after{border-radius:50%}.btn--floating .icon{height:24px;width:24px}.btn--floating.btn--small{height:40px;width:40px}.btn--floating.btn--small .icon{font-size:18px;height:18px;width:18px}.btn--floating.btn--large{height:72px;width:72px}.btn--floating.btn--large .icon{font-size:30px;height:30px;width:30px}.btn--light{color:#fff}.btn--light:hover:after{background-color:hsla(0,0%,100%,.12)}.btn--light.btn--disabled:not(.btn--loader){color:hsla(0,0%,100%,.26)!important;opacity:1}.btn--light.btn--disabled:not(.btn--loader):not(.btn--flat):not(.btn--icon){background-color:hsla(0,0%,100%,.12)!important}.btn--dark{color:rgba(0,0,0,.87)}.btn--dark:hover:after{background-color:rgba(0,0,0,.12)}.btn--dark.btn--disabled:not(.btn--loader){color:rgba(0,0,0,.3)!important;opacity:1}.btn--dark.btn--disabled:not(.btn--loader):not(.btn--flat):not(.btn--icon){background-color:rgba(0,0,0,.12)!important}.btn--small{font-size:13px;height:28px}.btn--large{font-size:15px;height:44px}.btn--loader{pointer-events:none}.btn--loader .btn__content{opacity:0}.btn__loading{position:absolute;width:100%;height:100%;left:0;top:0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.btn__loading .icon--left{margin-right:1rem;line-height:inherit}.btn__loading .icon--right{margin-left:1rem;line-height:inherit}.btn--outline{border:1px solid currentColor;background:transparent!important}.btn--outline,.btn--outline:hover{box-shadow:none}.btn--block{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:1;flex:1;margin:6px 0;width:100%}.btn--round,.btn--round:after{border-radius:28px}.btn .icon--right{margin-left:16px}.btn .icon--left{margin-right:16px}.application--dark .card{background:#424242}.application--light .card{background:#fff}.card{box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12);position:relative;border-radius:2px;min-width:0}.card--raised{box-shadow:0 1px 8px rgba(0,0,0,.2),0 3px 4px rgba(0,0,0,.14),0 3px 3px -2px rgba(0,0,0,.12)!important}.card--flat{box-shadow:none!important}.card--hover{cursor:pointer;transition:all .4s cubic-bezier(.25,.8,.25,1);transition-property:box-shadow}.card--hover:hover{box-shadow:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12)!important}.card--horizontal{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-flow:row nowrap;flex-flow:row nowrap}.card--horizontal>.card__row{-webkit-box-flex:0;-ms-flex:0 1 30%;flex:0 1 30%}.card--horizontal>.card__column,.card--horizontal>.card__row{overflow:hidden}.card--horizontal>.card__column:first-child,.card--horizontal>.card__row:first-child{border-radius:2px 0 0 2px}.card--horizontal>.card__column:last-child,.card--horizontal>.card__row:last-child{border-radius:0 2px 2px 0}.card--horizontal>.card__column:last-child>:first-child,.card--horizontal>.card__row:last-child>:first-child{border-top-right-radius:2px}.card--horizontal>.card__column:last-child>:last-child,.card--horizontal>.card__row:last-child>:last-child{border-bottom-right-raidius:2px}.card__column,.card__row{display:-webkit-box;display:-ms-flexbox;display:flex}.card__column{-ms-flex:1;flex:1;-webkit-box-orient:vertical;-ms-flex-flow:column nowrap;flex-flow:column nowrap}.card__column,.card__row{-webkit-box-flex:1;-webkit-box-direction:normal}.card__row{-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:auto;-ms-flex:1 1 auto;flex:1 1 auto;-webkit-box-orient:horizontal;-ms-flex-flow:row nowrap;flex-flow:row nowrap;min-height:36px}.card__row .card__text{height:100%}.card__row--actions{padding:8px;height:52px;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;-webkit-box-pack:end;-ms-flex-pack:end;justify-content:flex-end;width:100%}.card__row--actions .btn{margin:0;padding:0 8px}.card__row--actions-stacked{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;margin:0!important;padding:0 0 8px!important}.card__row--actions-stacked>.btn{width:100%;height:48px;margin:0!important;padding:0 16px!important;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:reverse;-ms-flex-direction:row-reverse;flex-direction:row-reverse}.card__row--actions-stacked>.btn span{display:table}.card__title{border-top-left-radius:inherit;border-top-right-radius:inherit;font-size:24px;font-weight:400;letter-spacing:1px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:1;flex:1;-ms-flex-item-align:center;align-self:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;padding:16px}.card__title .btn{margin:0}.card__text{padding:16px;width:100%}.carousel{height:500px;width:100%;background:#000;position:relative;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}.carousel__item{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-flex:1;-ms-flex:1 0 100%;flex:1 0 100%;height:100%;width:100%;background-size:cover;background-position:50%;transition:.2s ease-out}.carousel__left,.carousel__right{position:absolute;top:50%;z-index:1;left:5px;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.carousel__left .btn,.carousel__right .btn{color:#fff;margin:0!important;height:auto;width:auto}.carousel__left .btn i,.carousel__right .btn i{font-size:48px}.carousel__left .btn:hover,.carousel__right .btn:hover{background:none}.carousel__right{left:auto;right:5px}.carousel__controls{background:rgba(0,0,0,.5);-webkit-box-align:center;-ms-flex-align:center;align-items:center;bottom:0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;left:0;position:absolute;height:50px;list-style-type:none;width:100%;z-index:1}.carousel__controls__item{color:#fff;margin:0 1rem!important}.carousel__controls__item i{opacity:.5;transition:.3s cubic-bezier(.25,.8,.25,1)}.carousel__controls__item--active i{opacity:1;vertical-align:middle;font-size:2rem!important}.carousel__controls__item:hover{background:none}.carousel__controls__item:hover i{opacity:.8}.chip{-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:#e0e0e0;border:1px solid #e0e0e0;border-radius:28px;cursor:default;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;font-size:14px;padding:0 12px;margin:8px;height:32px;transition:.3s cubic-bezier(.4,0,.6,1);vertical-align:middle;white-space:nowrap}.chip .avatar{border-radius:50%;height:32px;width:32px;min-width:32px;margin-left:-14px;margin-right:8px;color:#fff}.chip .avatar img{width:100%;height:100%}.chip:focus{box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12);outline:none}.chip--label{border-radius:2px}.chip--outline{background:transparent!important;color:#9e9e9e}.chip--small{height:26px}.chip--small .avatar{height:26px;width:26px;min-width:26px}.chip__close{color:inherit;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;text-decoration:none;font-size:24px;margin-left:4px;margin-right:-2px;transition:.3s cubic-bezier(.4,0,.6,1)}.chip__close:hover{opacity:.8}.chip--removable{padding:0 4px 0 12px}.chip--select-multi{margin:8px 8px 8px 0}.chip .icon{color:inherit}.chip .icon--right{margin-left:4px}.chip .icon--left{margin-right:4px}.datatable thead th.column.sortable{cursor:pointer}.datatable thead th.column.sortable i{color:rgba(0,0,0,.38);font-size:16px;vertical-align:sub;display:inline-block;opacity:0;transition:.3s cubic-bezier(.25,.8,.25,1)}.datatable thead th.column.sortable:hover{color:rgba(0,0,0,.87)}.datatable thead th.column.sortable:hover i{opacity:.6}.datatable thead th.column.sortable.active{-webkit-transform:none;transform:none;color:rgba(0,0,0,.87)}.datatable thead th.column.sortable.active i{color:rgba(0,0,0,.87);opacity:1}.datatable thead th.column.sortable.active.desc i{-webkit-transform:rotate(-180deg);transform:rotate(-180deg)}.datatable tfoot .input-group__details{display:none}.datatable__actions{color:rgba(0,0,0,.54);display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:end;-ms-flex-pack:end;justify-content:flex-end;-webkit-box-align:center;-ms-flex-align:center;align-items:center;font-size:12px}.datatable__actions .btn{color:inherit}.datatable__actions .btn:last-of-type{margin-left:18px}.datatable__actions__pagination{text-align:center;margin:0 26px 0 32px}.datatable__actions__select{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}.datatable__actions__select .input-group--select{margin:13px 0 13px 34px;position:static}.datatable__actions__select .input-group--select .input-group__selections__comma{color:rgba(0,0,0,.54)!important;font-size:12px;padding-top:6px}.datatable__actions__select .input-group--select .input-group__append-icon{color:rgba(0,0,0,.54)!important}.datatable__progress tr{height:auto!important}.datatable__progress th{padding:0!important}.datatable__progress th .progress-linear{top:-3px;margin:0 0 -3px}.picker--date{color:#fff;width:100%}.picker--date__years{background:#fff;color:#000;font-size:18px;font-weight:400;list-style-type:none;max-height:300px;overflow:auto;padding:0;text-align:center}.picker--date__years li{cursor:pointer;margin:16px 0;transition:.3s cubic-bezier(.25,.8,.25,1)}.picker--date__years li:hover{color:#1976d2}.picker--date__years li.active{color:#1976d2;font-size:24px;font-weight:500;margin:20px 0}.picker--date__title{-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-ms-flex-wrap:wrap;flex-wrap:wrap}.picker--date__title-year{font-size:14px}.picker--date__title-date{font-size:34px}.picker--date__title-date>div{position:relative}.picker--date__title-date,.picker--date__title-year{font-weight:500;transition:.3s cubic-bezier(.25,.8,.25,1);width:100%}.picker--date__title-date:not(.active),.picker--date__title-year:not(.active){cursor:pointer;opacity:.6}.picker--date__title-date:hover,.picker--date__title-year:hover{opacity:1}.picker--date__header{color:#000;padding:4px 16px}.picker--date__header-selector{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;position:relative}.picker--date__header-selector .btn{color:#000;margin:0}.picker--date__header-selector .icon{cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.picker--date__header-selector-date{-webkit-box-flex:1;-ms-flex:1;flex:1;text-align:center;position:relative;overflow:hidden}.picker--date__header-selector-date strong{transition:.3s cubic-bezier(.25,.8,.25,1);display:block;width:100%}.picker--date__table{position:relative}.picker--date table{transition:.3s cubic-bezier(.25,.8,.25,1);top:0}.picker--date table thead th{padding:8px 0}.picker--date table th{color:rgba(0,0,0,.54);font-weight:600;font-size:12px}.picker--date table td,.picker--date table th{text-align:center;width:45px}.picker--date table .btn{margin:0}.picker--date table .btn__content{overflow:visible;transition:none;z-index:1}.picker--date table .btn.btn--floating.btn--current:not(.btn--active){color:rgba(25,118,210,.6)}.picker--date table .btn.btn--floating{height:32px;width:32px}.picker--date table .btn.btn--floating:after{background:#1976d2!important;opacity:0;-webkit-transform:scale(0);transform:scale(0)}.picker--date table .btn.btn--floating:not(.btn--active):hover{color:#fff}.picker--date table .btn.btn--floating:not(.btn--active):hover:after{opacity:.6;-webkit-transform:scale(1);transform:scale(1)}.picker--date table .btn.btn--floating.btn--active{color:#fff}.picker--date table .btn.btn--floating.btn--active:after{background:#1976d2!important;opacity:1;-webkit-transform:none;transform:none}.picker--date.picker--dark .picker--date__header,.picker--date.picker--dark .picker--date__years{background:#424242;color:#fff}.picker--date.picker--dark .picker--date__header .btn,.picker--date.picker--dark .picker--date__table table .btn,.picker--date.picker--dark .picker--date__table table td,.picker--date.picker--dark .picker--date__table table th,.picker--date.picker--dark .picker--date__years .btn{color:#fff}.picker--date.picker--dark .picker--date__table table .btn.btn--floating:after{background:#448aff!important}.picker--date.picker--dark .picker--date__table table .btn--active{color:#000}.picker--date.picker--dark .picker--date__table table .btn--floating.btn--current:not(.btn--active){color:#448aff}.picker--landscape .picker--date__years{margin-left:170px;width:330px}.dialog{box-shadow:0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14),0 9px 46px 8px rgba(0,0,0,.12);border-radius:2px;margin:24px 40px;pointer-events:auto}.dialog,.dialog__content{transition:.3s ease-in-out}.dialog__content{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-box;display:-ms-flexbox;display:flex;height:100%;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;left:0;pointer-events:none;position:fixed;top:0;width:100%;z-index:5}.dialog:not(.dialog--fullscreen){max-width:90%;max-height:90%}.dialog__container{display:inline-block;vertical-align:middle}.dialog>.card .card__title{padding:24px 24px 20px}.dialog>.card .card__text{padding:0 24px 24px}.dialog>.card .card__row--actions{padding:8px 0}.dialog>.card .card__row--actions .btn{min-width:64px;margin-right:8px}.dialog--fullscreen{margin:0;width:100%;height:100%;position:fixed;overflow-y:auto;top:0;left:0;padding-top:56px}.dialog--fullscreen .toolbar{height:56px;padding:0!important;position:fixed;top:0}.dialog--fullscreen .toolbar__title{font-size:20px;padding:20px 0}.dialog--fullscreen .toolbar .btn:first-child{max-width:24px;max-height:24px;margin:0 32px 0 16px!important}.dialog--fullscreen .toolbar .btn:last-child{margin:0!important;height:100%;font-size:14px}.dialog--fullscreen>.card{min-height:100%;min-width:100%;margin:0!important;padding:0!important}.dialog--scrollable .card__row:not(.card__row--actions){overflow-y:auto}.application--light .divider{background:rgba(0,0,0,.12)}.application--dark .divider{background:hsla(0,0%,100%,.12)}.divider{border:none;display:block;height:1px;-webkit-box-flex:1;-ms-flex:1;flex:1;width:100%}.divider--inset{margin-left:72px;width:calc(100% - 72px)}.divider.divider--dark{background:hsla(0,0%,100%,.12)}.divider.divider--light{background:rgba(0,0,0,.12)}.application--dark .expansion-panel{color:#fff}.expansion-panel{background:#fff;text-align:left;list-style-type:none;padding:0;width:100%;box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}.expansion-panel>li{border:1px solid #ddd}.expansion-panel>li:not(:first-child){border-top:none}.expansion-panel__header{display:-webkit-box;display:-ms-flexbox;display:flex;cursor:pointer;-webkit-box-align:center;-ms-flex-align:center;align-items:center;height:48px;position:relative;padding-left:1rem}.expansion-panel__header i{margin-right:1rem}.expansion-panel__header:after{content:\"\\E313\";font-family:Material Icons;font-size:1.5rem;position:absolute;right:15px;top:calc(50% - 16px);color:inherit;transition:-webkit-transform .3s cubic-bezier(0,0,.2,1);transition:transform .3s cubic-bezier(0,0,.2,1);transition:transform .3s cubic-bezier(0,0,.2,1),-webkit-transform .3s cubic-bezier(0,0,.2,1)}.expansion-panel__header--active:after{-webkit-transform:rotate(-180deg);transform:rotate(-180deg)}.expansion-panel__body{background-color:rgba(0,0,0,.03);transition:.3s cubic-bezier(.25,.8,.25,1)}.expansion-panel__body .card{border-radius:0;box-shadow:0 0 0 rgba(0,0,0,.2),0 0 0 rgba(0,0,0,.14),0 0 0 rgba(0,0,0,.12)}.footer{-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:#1976d2;color:#fff;display:-webkit-box;display:-ms-flexbox;display:flex;height:36px;transition:.3s cubic-bezier(.25,.8,.25,1)}.footer--absolute,.footer--fixed{bottom:0;left:0;width:100%;z-index:3}.footer--absolute{position:absolute}.footer--fixed{position:fixed}.footer>:first-child{margin-left:24px}.footer>:last-child{margin-right:24px}@media only screen and (max-width:599px){.footer>:first-child{margin-left:16px}.footer>:last-child{margin-right:16px}}.icon{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;font-size:24px;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;vertical-align:middle}.icon--dark{color:rgba(0,0,0,.54)}.icon--dark.icon--disabled{color:rgba(0,0,0,.38)}.icon--light{color:#fff}.icon--light.icon--disabled{color:hsla(0,0%,100%,.5)}.icon--large{font-size:2.5rem}.icon--medium{font-size:2rem}.icon--x-large{font-size:3rem}.input-group{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:1;flex:1;-ms-flex-wrap:wrap;flex-wrap:wrap;min-width:24px;margin:18px 0;position:relative;width:100%;outline:none}.input-group label{font-size:16px;line-height:32px;height:30px;max-width:80%;transition:.4s cubic-bezier(.25,.8,.25,1);z-index:0}.input-group__input{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:1 0 100%;flex:1 0 100%;min-width:0;min-height:30px}.input-group--disabled .input-group__details:before{background-color:transparent;background-position:bottom;background-size:3px 1px;background-repeat:repeat-x}.input-group--disabled.input-group--light .input-group__details:before{background-image:linear-gradient(90deg,hsla(0,0%,100%,.38) 0,hsla(0,0%,100%,.38) 33%,transparent 0)}.input-group--disabled.input-group--dark .input-group__details:before{background-image:linear-gradient(90deg,rgba(0,0,0,.38) 0,rgba(0,0,0,.38) 33%,transparent 0)}.input-group--focused .input-group__details:after{width:100%}.input-group--error .input-group__details:after{background-color:#ff5252}.input-group--light .input-group__hint{color:hsla(0,0%,100%,.54)}.input-group--light .input-group__details:before{background-color:hsla(0,0%,100%,.12)}.input-group--light .icon{color:hsla(0,0%,100%,.6)}.input-group--dark .input-group__hint{color:rgba(0,0,0,.7)}.input-group--dark .input-group__details:before{background-color:rgba(0,0,0,.12)}.input-group--dark .icon{color:rgba(0,0,0,.6)}.input-group__icon-cb{cursor:pointer}.input-group .slide-y-transition-leave,.input-group .slide-y-transition-leave-to{position:absolute}.input-group__details{display:-webkit-box;display:-ms-flexbox;display:flex;padding-top:4px;-webkit-box-flex:1;-ms-flex:1 0 100%;flex:1 0 100%;font-size:12px;min-height:22px;position:relative;width:100%}.input-group__details:after,.input-group__details:before{content:\"\";position:absolute;left:0}.input-group__details:after{background-color:#1976d2;top:-1px;height:2px;transition:.3s cubic-bezier(.4,0,.2,1);width:0;z-index:1}.input-group__details:before{top:0;height:1px;width:100%;z-index:0}.input-group--hide-details .input-group__details{min-height:0}.input-group .input-group__error,.input-group__hint{transition:.3s cubic-bezier(.25,.8,.25,1)}.input-group .input-group__error{-webkit-box-flex:1;-ms-flex:1 0;flex:1 0;color:#ff5252}.list{list-style-type:none;padding:0;padding-top:8px;padding-bottom:8px;transition:height .4s cubic-bezier(.4,0,.2,1)}.list .input-group{margin:0}.list>.list__item~.list__item{margin-top:0}.list__item,.list__tile{position:relative}.list__tile{color:rgba(0,0,0,.87);display:-webkit-box;display:-ms-flexbox;display:flex;height:48px;text-decoration:none;-webkit-box-align:center;-ms-flex-align:center;align-items:center;padding:0 16px;margin:0}.list__tile,.list__tile:after{transition:.3s cubic-bezier(.25,.8,.25,1)}.list__tile:after{content:\"\";position:absolute;left:0;top:0;height:1px;opacity:0;width:100%;background-color:rgba(0,0,0,.12)}.list__tile--highlighted,a.list__tile:hover{background:rgba(0,0,0,.12)}.list__tile__action,.list__tile__avatar,.list__tile__content{height:100%}.list__tile__sub-title,.list__tile__title{white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;width:100%}.list__tile__title{font-size:16px;font-weight:500;transition:.3s cubic-bezier(.25,.8,.25,1);position:relative;text-align:left}.list__tile__sub-title{color:#9e9e9e;font-size:14px;font-weight:400}.list__tile .avatar,.list__tile__action{-webkit-box-pack:start;-ms-flex-pack:start;justify-content:flex-start;min-width:56px}.list__tile__action{display:-webkit-box;display:-ms-flexbox;display:flex}.list__tile__action,.list__tile__action .input-group{-webkit-box-align:center;-ms-flex-align:center;align-items:center}.list__tile__action .input-group__details{display:none}.list__tile__action .icon{transition:.3s cubic-bezier(.25,.8,.25,1)}.list__tile__action-text{color:#9e9e9e;font-size:12px}.list__tile__action--stack{-webkit-box-align:end;-ms-flex-align:end;align-items:flex-end;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;padding-top:8px;padding-bottom:8px;white-space:nowrap;-ms-flex-direction:column;flex-direction:column}.list__tile__action--stack,.list__tile__content{-webkit-box-orient:vertical;-webkit-box-direction:normal}.list__tile__content{text-align:left;-webkit-box-flex:0;-ms-flex:0 1 100%;flex:0 1 100%;font-size:15px;overflow:hidden;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-ms-flex-direction:column;flex-direction:column}.list__tile__content+.avatar,.list__tile__content+.list__tile__action:not(.list__tile__action--stack){-webkit-box-pack:end;-ms-flex-pack:end;justify-content:flex-end}.list__tile--active .list__tile__title{color:#1976d2}.list__tile--disabled{opacity:.4;pointer-events:none}.list__tile--avatar{height:56px}.list__tile--select-multi{padding:0 10px}.list--dense{padding-top:4px}.list--dense .list__tile{height:40px;font-size:13px}.list--dense .list__tile__sub-title,.list--dense .list__tile__title{font-size:13px}.list--two-line .list__tile{height:72px}.list--two-line.list--dense .list__tile{height:60px}.list--three-line .list__tile{height:88px}.list--three-line .list__tile__sub-title{white-space:normal;-webkit-line-clamp:2;-webkit-box-orient:vertical;display:-webkit-box}.list--three-line.list--dense .list__tile{height:76px}.list--group{position:relative;padding:0}.list--group:after{content:\"\";position:absolute;left:0;bottom:0;height:1px;opacity:0;width:100%;background-color:rgba(0,0,0,.12)}.list--group .list__tile{padding-left:72px}.list--group .list__tile .list__tile__title{font-weight:300}.list--group .list__tile--active .list__tile__title{color:#1976d2;font-weight:300}.list--group__header+.list--group:after{opacity:1}.list--group__header--active .list__tile{background:rgba(0,0,0,.12)}.list--group__header--active .list__tile:after{opacity:1}.list--group__header--active .list__tile .list__tile__title{color:inherit}.list--group__header--active .list__tile .list__tile__action:last-of-type .icon{-webkit-transform:rotate(-180deg);transform:rotate(-180deg)}.list--group__header--no-action+.list--group .list__tile{padding-left:16px}.list--subheader{padding-top:0}.menu{display:inline-block;position:relative;vertical-align:middle}.menu--disabled,.menu--disabled .menu__activator{cursor:not-allowed}.menu__activator{-webkit-box-align:center;-ms-flex-align:center;align-items:center;cursor:pointer;position:relative}.menu__content{background:#fff;position:absolute;display:inline-block;border-radius:2px;overflow-y:auto;overflow-x:hidden;z-index:4;box-shadow:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12)}.menu-transition-enter .list__tile{min-width:0;transition-delay:.3s;opacity:0;-webkit-transform:translateY(-15px);transform:translateY(-15px);pointer-events:none}.menu-transition-enter-to .list__tile{pointer-events:auto;opacity:1}.menu-transition-leave-to{-webkit-transform:translateY(-10px);transform:translateY(-10px)}.menu-transition-enter,.menu-transition-leave-to{opacity:0}.menu-transition-enter-to,.menu-transition-leave{opacity:1}.menu-transition-enter-active,.menu-transition-leave-active{transition:all .4s cubic-bezier(.25,.8,.25,1)}.navigation-drawer{max-width:100%;overflow-y:auto;overflow-x:hidden;padding:0 0 100px;pointer-events:auto;position:fixed;transition:.3s cubic-bezier(.25,.8,.25,1);width:300px;top:0;left:0;will-change:transform;z-index:3}.navigation-drawer--close:not(.navigation--permanent).navigation-drawer:not(.navigation-drawer--right){-webkit-transform:translate3d(-300px,0,0);transform:translate3d(-300px,0,0)}.navigation-drawer--close:not(.navigation--permanent).navigation-drawer--right{-webkit-transform:translate3d(300px,0,0);transform:translate3d(300px,0,0)}.navigation-drawer--right{left:auto;right:0}.navigation-drawer--absolute{position:absolute}.navigation-drawer--dark{background-color:#424242}.navigation-drawer--dark>.list .list__tile{color:#fff}.navigation-drawer--dark .divider,.navigation-drawer--dark>.list .list--group__header--active+.list--group:after,.navigation-drawer--dark>.list .list--group__header--active .list__tile:after{background:hsla(0,0%,100%,.12)}.navigation-drawer--light{background:#fff;border-right:1px solid rgba(0,0,0,.12)}.navigation-drawer--light>.list .list__tile{color:rgba(0,0,0,.87)}.navigation-drawer--light .divider,.navigation-drawer--light>.list .list--group__header--active+.list--group:after,.navigation-drawer--light>.list .list--group__header--active .list__tile:after{background:rgba(0,0,0,.12)}.navigation-drawer--permanent.navigation-drawer--clipped,.navigation-drawer--permanent.navigation-drawer--floating,.navigation-drawer--persistent.navigation-drawer--clipped,.navigation-drawer--persistent.navigation-drawer--floating{margin-top:56px;max-height:calc(100vh - 56px)}.navigation-drawer--permanent.navigation-drawer--clipped+.toolbar,.navigation-drawer--permanent.navigation-drawer--clipped~.footer.footer--absolute,.navigation-drawer--permanent.navigation-drawer--clipped~.footer.footer--fixed,.navigation-drawer--permanent.navigation-drawer--floating+.toolbar,.navigation-drawer--permanent.navigation-drawer--floating~.footer.footer--absolute,.navigation-drawer--permanent.navigation-drawer--floating~.footer.footer--fixed,.navigation-drawer--persistent.navigation-drawer--clipped+.toolbar,.navigation-drawer--persistent.navigation-drawer--clipped~.footer.footer--absolute,.navigation-drawer--persistent.navigation-drawer--clipped~.footer.footer--fixed,.navigation-drawer--persistent.navigation-drawer--floating+.toolbar,.navigation-drawer--persistent.navigation-drawer--floating~.footer.footer--absolute,.navigation-drawer--persistent.navigation-drawer--floating~.footer.footer--fixed{padding-left:0;z-index:3}.navigation-drawer--permanent.navigation-drawer--floating,.navigation-drawer--persistent.navigation-drawer--floating{border-color:transparent}.navigation-drawer--permanent:not(.navigation-drawer--clipped):not(.navigation-drawer--floating)+.toolbar,.navigation-drawer--permanent:not(.navigation-drawer--clipped):not(.navigation-drawer--floating)~.footer,.navigation-drawer--permanent:not(.navigation-drawer--clipped):not(.navigation-drawer--floating)~main,.navigation-drawer--persistent.navigation-drawer--open:not(.navigation-drawer--is-mobile):not(.navigation-drawer--clipped)+.toolbar,.navigation-drawer--persistent.navigation-drawer--open:not(.navigation-drawer--is-mobile)~.footer:not(.footer--fixed):not(.footer--absolute),.navigation-drawer--persistent.navigation-drawer--open:not(.navigation-drawer--is-mobile)~main{padding-left:300px}.navigation-drawer--mini-variant{margin-top:56px;max-height:calc(100vh - 56px);overflow:hidden;width:80px}.navigation-drawer--mini-variant .list__tile__action,.navigation-drawer--mini-variant .list__tile__avatar{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;min-width:48px}.navigation-drawer--mini-variant .list__tile__content{opacity:0}.navigation-drawer--mini-variant .divider,.navigation-drawer--mini-variant .subheader{display:none}.navigation-drawer--mini-variant~.toolbar{padding-left:0!important}.navigation-drawer--mini-variant:not(.navigation-drawer--close)~.footer:not(.footer--fixed):not(.footer--absolute),.navigation-drawer--mini-variant:not(.navigation-drawer--close)~main{padding-left:80px!important}.navigation-drawer--is-mobile:not(.navigation-drawer--permanent),.navigation-drawer--temporary{z-index:5}.navigation-drawer--is-mobile:not(.navigation-drawer--permanent):not(.navigation-drawer--close),.navigation-drawer--temporary:not(.navigation-drawer--close){box-shadow:0 8px 10px -5px rgba(0,0,0,.2),0 16px 24px 2px rgba(0,0,0,.14),0 6px 30px 5px rgba(0,0,0,.12)}.navigation-drawer+toolbar+main{min-height:calc(100vh - 56px)}.navigation-drawer>.list .list__tile{transition:none}.navigation-drawer>.list .list__tile--active .list__tile__title{color:inherit}.navigation-drawer>.list .list__tile--active:first-child .icon{color:#1976d2}.navigation-drawer>.list .list--group__header--active:after{background:transparent}.navigation-drawer>.list .list--group__container .list__tile--active .list__tile__title,.navigation-drawer>.list .list--group__header--active .list__tile__action:first-of-type .icon{color:#1976d2}.overlay{position:fixed;pointer-events:none;top:0;left:0;right:0;bottom:0;z-index:4}.overlay--absolute,.overlay:before{position:absolute}.overlay:before{background-color:#212121;bottom:0;content:\"\";-webkit-filter:blur(10%);filter:blur(10%);height:100%;left:0;opacity:0;right:0;top:0;transition:.3s cubic-bezier(.25,.8,.25,1);width:100%}.overlay--active{pointer-events:auto}.overlay--active:before{opacity:.46}.pagination{list-style-type:none;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;padding:0;margin:0;height:40px}.pagination,.pagination>li{-webkit-box-align:center;-ms-flex-align:center;align-items:center}.pagination>li{display:-webkit-box;display:-ms-flexbox;display:flex}.pagination a{transition:.3s cubic-bezier(0,0,.2,1)}.pagination a:hover{box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}.pagination--circle .pagination__item,.pagination--circle .pagination__more,.pagination--circle .pagination__navigation{border-radius:50%}.pagination--disabled{pointer-events:none;opacity:.6}.pagination__item{box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12);border-radius:4px;color:rgba(0,0,0,.87);display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:transparent;height:34px;width:34px;margin:.3rem;text-decoration:none}.pagination__item--active{box-shadow:0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px rgba(0,0,0,.14),0 1px 10px rgba(0,0,0,.12);background:#1976d2;color:#fff}.pagination__navigation{box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12);display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;text-decoration:none;color:rgba(0,0,0,.87);height:2rem;border-radius:4px;width:2rem;margin:.3rem 15px}.pagination__navigation .icon{font-size:2rem;transition:.2s cubic-bezier(.4,0,.6,1);vertical-align:middle;color:rgba(0,0,0,.54)}.pagination__navigation--disabled{opacity:.6;pointer-events:none}.pagination__more{margin:.3rem;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-align:end;-ms-flex-align:end;align-items:flex-end;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;height:2rem;width:2rem}.parallax{position:relative;overflow:hidden;z-index:0}.parallax__image-container{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1}.parallax__image{position:absolute;bottom:0;left:50%;min-width:100%;min-height:100%;display:none;z-index:1}.parallax__content{height:100%;z-index:2;position:relative;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;padding:0 1rem}.parallax__content,.picker{color:#fff;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.picker{border-radius:2px;width:290px}.picker .card__row--actions{border:none;margin-top:-20px}.picker__title{background:#1976d2;height:105px;border-top-left-radius:2px;border-top-right-radius:2px;padding:16px}.picker__body{color:#000;height:290px;overflow:hidden;position:relative}.picker .btn{color:rgba(0,0,0,.87)}.picker--dark{color:#fff}.picker--dark .picker__body{background:#424242}.picker--dark .picker__title{background:#616161}.picker--landscape{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:wrap;flex-wrap:wrap;width:500px}.picker--landscape .picker__title{border-top-right-radius:0;border-bottom-right-radius:0;-webkit-box-flex:0;-ms-flex:0 1 170px;flex:0 1 170px;width:170px;height:auto;position:absolute;top:0;left:0;height:100%;z-index:1}.picker--landscape .picker__body{-webkit-box-flex:1;-ms-flex:1 0;flex:1 0;width:330px;margin-left:170px}.picker--landscape .card__row--actions{margin-left:170px;width:330px}.progress-circular{position:relative;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex}.progress-circular--indeterminate svg{-webkit-animation:progress-circular-rotate 1.4s linear infinite;animation:progress-circular-rotate 1.4s linear infinite;-webkit-transform-origin:center center;transform-origin:center center;width:100%;height:100%;margin:auto;position:absolute;top:0;bottom:0;left:0;right:0;transition:all .2s ease-in-out;z-index:0}.progress-circular--indeterminate .progress-circular__overlay{-webkit-animation:progress-circular-dash 1.4s ease-in-out infinite;animation:progress-circular-dash 1.4s ease-in-out infinite;stroke-linecap:round;stroke-dasharray:1,200;stroke-dashoffset:0px}.progress-circular__underlay{stroke:rgba(0,0,0,.1);z-index:1}.progress-circular__overlay{stroke:currentColor;z-index:2;transition:all .6s ease-in-out}.progress-circular__info{position:absolute;top:50%;left:50%;-webkit-transform:translate3d(-50%,-50%,0);transform:translate3d(-50%,-50%,0)}@-webkit-keyframes progress-circular-dash{0%{stroke-dasharray:1,200;stroke-dashoffset:0px}50%{stroke-dasharray:100,200;stroke-dashoffset:-15px}to{stroke-dasharray:100,200;stroke-dashoffset:-125px}}@keyframes progress-circular-dash{0%{stroke-dasharray:1,200;stroke-dashoffset:0px}50%{stroke-dasharray:100,200;stroke-dashoffset:-15px}to{stroke-dasharray:100,200;stroke-dashoffset:-125px}}@-webkit-keyframes progress-circular-rotate{to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@keyframes progress-circular-rotate{to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}.progress-linear{background:transparent;margin:1rem 0;overflow:hidden;width:100%;position:relative}.progress-linear .progress-linear__bar{background:#84bbf0}.progress-linear .progress-linear__bar__determinate,.progress-linear .progress-linear__bar__indeterminate:after,.progress-linear .progress-linear__bar__indeterminate:before{background:#1976d2}.progress-linear__bar{width:100%;position:relative;z-index:1}.progress-linear__bar,.progress-linear__bar__determinate{height:inherit;transition:.3s ease-in}.progress-linear__bar__indeterminate:after,.progress-linear__bar__indeterminate:before{content:\"\";height:inherit;position:absolute;left:0;top:0;bottom:0;will-change:left,right;width:auto}.progress-linear__bar__indeterminate:before{-webkit-animation:indeterminate;animation:indeterminate;-webkit-animation-duration:2.2s;animation-duration:2.2s;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.progress-linear__bar__indeterminate:after{-webkit-animation:indeterminate-short;animation:indeterminate-short;-webkit-animation-duration:2.2s;animation-duration:2.2s;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.progress-linear--query .progress-linear__bar__indeterminate:before{-webkit-animation:query;animation:query;-webkit-animation-duration:2s;animation-duration:2s;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.progress-linear--query .progress-linear__bar__indeterminate:after{-webkit-animation:query-short;animation:query-short;-webkit-animation-duration:2s;animation-duration:2s;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.progress-linear--secondary .progress-linear__bar{background:#a1a1a1}.progress-linear--secondary .progress-linear__bar__determinate,.progress-linear--secondary .progress-linear__bar__indeterminate:after,.progress-linear--secondary .progress-linear__bar__indeterminate:before{background:#424242}.progress-linear--success .progress-linear__bar{background:#a5d8a7}.progress-linear--success .progress-linear__bar__determinate,.progress-linear--success .progress-linear__bar__indeterminate:after,.progress-linear--success .progress-linear__bar__indeterminate:before{background:#4caf50}.progress-linear--info .progress-linear__bar{background:#90cbf9}.progress-linear--info .progress-linear__bar__determinate,.progress-linear--info .progress-linear__bar__indeterminate:after,.progress-linear--info .progress-linear__bar__indeterminate:before{background:#2196f3}.progress-linear--warning .progress-linear__bar{background:#ffe083}.progress-linear--warning .progress-linear__bar__determinate,.progress-linear--warning .progress-linear__bar__indeterminate:after,.progress-linear--warning .progress-linear__bar__indeterminate:before{background:#ffc107}.progress-linear--error .progress-linear__bar{background:#ffa8a8}.progress-linear--error .progress-linear__bar__determinate,.progress-linear--error .progress-linear__bar__indeterminate:after,.progress-linear--error .progress-linear__bar__indeterminate:before{background:#ff5252}@-webkit-keyframes indeterminate{0%{left:-90%;right:100%}60%{left:-90%;right:100%}to{left:100%;right:-35%}}@keyframes indeterminate{0%{left:-90%;right:100%}60%{left:-90%;right:100%}to{left:100%;right:-35%}}@-webkit-keyframes indeterminate-short{0%{left:-200%;right:100%}60%{left:107%;right:-8%}to{left:107%;right:-8%}}@keyframes indeterminate-short{0%{left:-200%;right:100%}60%{left:107%;right:-8%}to{left:107%;right:-8%}}@-webkit-keyframes query{0%{right:-90%;left:100%}60%{right:-90%;left:100%}to{right:100%;left:-35%}}@keyframes query{0%{right:-90%;left:100%}60%{right:-90%;left:100%}to{right:100%;left:-35%}}@-webkit-keyframes query-short{0%{right:-200%;left:100%}60%{right:107%;left:-8%}to{right:107%;left:-8%}}@keyframes query-short{0%{right:-200%;left:100%}60%{right:107%;left:-8%}to{right:107%;left:-8%}}.ripple__container{border-radius:inherit;width:100%;height:100%;z-index:0}.ripple__animation,.ripple__container{color:inherit;position:absolute;left:0;top:0;overflow:hidden;pointer-events:none}.ripple__animation{border-radius:50%;background:currentColor;opacity:0;transition:.4s cubic-bezier(0,0,.2,1);will-change:opacity}.ripple__animation--enter{transition:none}.ripple__animation--visible{opacity:.15}.input-group--select .input-group--select__autocomplete{opacity:0;height:0}.input-group--select .input-group__append-icon{transition:.3s cubic-bezier(0,0,.2,1)}.input-group--select.input-group--focused.input-group--dirty .input-group--select__autocomplete{margin:8px 0}.input-group--select.input-group--focused .input-group--select__autocomplete{opacity:1;height:30px}.input-group--select.input-group--focused .input-group__append-icon{-webkit-transform:rotate(-180deg);transform:rotate(-180deg)}.input-group--select .input-group__input,.input-group--select input{cursor:pointer}.input-group--select.input-group--disabled{cursor:not-allowed;pointer-events:none}.input-group--select .input-group__selections{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;width:100%;position:relative}.input-group--select .input-group__selections>div{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-flex:1;-ms-flex:1;flex:1}.input-group--select .input-group__selections__comma{display:inline-block;font-size:16px;height:30px;padding-top:4px;padding-right:4px}.input-group--select.input-group--light .input-group__selections__comma{color:#fff}.input-group--select.input-group--light .input-group__selections__comma--active{color:#1976d2}.input-group--select.input-group--dark .input-group__selections__comma{color:rgba(0,0,0,.87)}.input-group--select .menu{display:inline}.input-group--select .fade-transition-leave-active{position:absolute;left:0}.input-group--select:not(.input-group--multiple) .menu-transition-enter .list__tile--active{opacity:1;-webkit-transform:none;transform:none;pointer-events:auto}.input-group--select:not(.input-group--multiple) .menu-transition-enter-to .list__tile--active{-webkit-transform:none;transform:none}.input-group.input-group--selection-controls{display:-webkit-box;display:-ms-flexbox;display:flex}.input-group.input-group--selection-controls .icon{cursor:pointer;position:absolute;left:0;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;transition:.3s cubic-bezier(.4,0,.6,1)}.input-group.input-group--selection-controls .input-group__details:after,.input-group.input-group--selection-controls .input-group__details:before{display:none}.input-group.input-group--selection-controls .input-group__input{width:100%;position:relative}.input-group.input-group--selection-controls .input-group__input .icon{-ms-flex-item-align:center;-ms-grid-row-align:center;align-self:center;height:24px;margin:auto}.input-group--selection-controls label{cursor:pointer;margin-left:32px;position:absolute;left:0;z-index:1}.input-group--selection-controls__ripple{border-radius:50%;height:48px;width:48px;cursor:pointer;position:absolute;-webkit-transform:translate3d(-12px,-50%,0);transform:translate3d(-12px,-50%,0);-webkit-transform-origin:center center;transform-origin:center center;top:50%;left:0}.input-group--selection-controls__ripple:before{content:\"\";position:absolute;width:36px;height:36px;background:currentColor;border-radius:50%;left:50%;top:50%;-webkit-transform:translate3d(-50%,-50%,0) scale(.3);transform:translate3d(-50%,-50%,0) scale(.3);opacity:0;transition:.4s cubic-bezier(0,0,.2,1);-webkit-transform-origin:center center;transform-origin:center center}.input-group.input-group--selection-controls{z-index:0}.input-group.input-group--selection-controls.switch .input-group--selection-controls__container{position:relative}.input-group.input-group--selection-controls.switch .input-group--selection-controls__container.error--text .input-group--selection-controls__ripple--active:after,.input-group.input-group--selection-controls.switch .input-group--selection-controls__container.info--text .input-group--selection-controls__ripple--active:after,.input-group.input-group--selection-controls.switch .input-group--selection-controls__container.primary--text .input-group--selection-controls__ripple--active:after,.input-group.input-group--selection-controls.switch .input-group--selection-controls__container.secondary--text .input-group--selection-controls__ripple--active:after,.input-group.input-group--selection-controls.switch .input-group--selection-controls__container.success--text .input-group--selection-controls__ripple--active:after,.input-group.input-group--selection-controls.switch .input-group--selection-controls__container.warning--text .input-group--selection-controls__ripple--active:after{background:currentColor!important}.input-group.input-group--selection-controls.switch .input-group--selection-controls__toggle{color:inherit;position:absolute;height:14px;top:50%;left:0;width:34px;border-radius:8px;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.input-group.input-group--selection-controls.switch .input-group--selection-controls__ripple{-webkit-transform:translate3d(-15px,-24px,0);transform:translate3d(-15px,-24px,0);transition:.3s cubic-bezier(.25,.8,.25,1);z-index:1}.input-group.input-group--selection-controls.switch .input-group--selection-controls__ripple:after{content:\"\";position:absolute;display:inline-block;cursor:pointer;width:20px;border-radius:50%;top:50%;left:50%;-webkit-transform:translate3d(-50%,-50%,0);transform:translate3d(-50%,-50%,0);height:20px;box-shadow:0 1px 3px rgba(0,0,0,.2),0 1px 1px rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);transition:all .1s linear}.input-group.input-group--selection-controls.switch .input-group--selection-controls__ripple--active{-webkit-transform:translate3d(2px,-24px,0);transform:translate3d(2px,-24px,0)}.input-group.input-group--selection-controls.switch label{margin-left:44px}.input-group--selection-controls.input-group--tab-focused .input-group--selection-controls__ripple:before{-webkit-transform:translate3d(-50%,-50%,0) scale(1);transform:translate3d(-50%,-50%,0) scale(1);opacity:.15}.input-group--selection-controls.switch.input-group--light{color:#80cbc4}.input-group--selection-controls.switch.input-group--light label{color:#fff}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__toggle{background:hsla(0,0%,100%,.3)}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__toggle--active{background:currentColor;opacity:.5}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__ripple{color:currentColor}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__ripple:after{background:#bdbdbd}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__ripple--active:after{background:currentColor}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__container--disabled{color:#424242}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__container--disabled .input-group--selection-controls__toggle{background:hsla(0,0%,100%,.1);opacity:1}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__container--disabled .input-group--selection-controls__ripple{color:#424242}.input-group--selection-controls.switch.input-group--light .input-group--selection-controls__container--disabled .input-group--selection-controls__ripple:after{background:#424242}.input-group--selection-controls.switch.input-group--dark{color:#009688}.input-group--selection-controls.switch.input-group--dark label{color:#424242}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__toggle{background:rgba(0,0,0,.38)}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__toggle--active{background:currentColor;opacity:.5}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__ripple{color:currentColor}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__ripple:after{background:#fafafa}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__ripple--active:after{background:currentColor}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__container--disabled{color:#bdbdbd}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__container--disabled .input-group--selection-controls__toggle{background:rgba(0,0,0,.12);opacity:1}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__container--disabled .input-group--selection-controls__ripple{color:#bdbdbd}.input-group--selection-controls.switch.input-group--dark .input-group--selection-controls__container--disabled .input-group--selection-controls__ripple:after{background:#bdbdbd}.input-group--selection-controls.checkbox.input-group--light label,.input-group--selection-controls.radio.input-group--light label{color:#fff}.input-group--selection-controls.checkbox.input-group--light .icon,.input-group--selection-controls.radio.input-group--light .icon{color:hsla(0,0%,100%,.54)}.input-group--selection-controls.checkbox.input-group--light.input-group--active .icon,.input-group--selection-controls.checkbox.input-group--light.input-group--active .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group--light.input-group--active .icon,.input-group--selection-controls.radio.input-group--light.input-group--active .input-group--selection-controls__ripple{color:#009688}.input-group--selection-controls.checkbox.input-group--light.input-group--disabled .icon,.input-group--selection-controls.checkbox.input-group--light.input-group--disabled .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group--light.input-group--disabled .icon,.input-group--selection-controls.radio.input-group--light.input-group--disabled .input-group--selection-controls__ripple{color:hsla(0,0%,100%,.26)}.input-group--selection-controls.checkbox.input-group--dark label,.input-group--selection-controls.radio.input-group--dark label{color:#000}.input-group--selection-controls.checkbox.input-group--dark .icon,.input-group--selection-controls.radio.input-group--dark .icon{color:rgba(0,0,0,.7)}.input-group--selection-controls.checkbox.input-group--dark.input-group--active .icon,.input-group--selection-controls.checkbox.input-group--dark.input-group--active .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group--dark.input-group--active .icon,.input-group--selection-controls.radio.input-group--dark.input-group--active .input-group--selection-controls__ripple{color:#009688}.input-group--selection-controls.checkbox.input-group--dark.input-group--disabled .icon,.input-group--selection-controls.checkbox.input-group--dark.input-group--disabled .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group--dark.input-group--disabled .icon,.input-group--selection-controls.radio.input-group--dark.input-group--disabled .input-group--selection-controls__ripple{color:rgba(0,0,0,.3)}.input-group--selection-controls.checkbox.input-group.input-group--active.error--text .icon,.input-group--selection-controls.checkbox.input-group.input-group--active.error--text .input-group--selection-controls__ripple,.input-group--selection-controls.checkbox.input-group.input-group--active.info--text .icon,.input-group--selection-controls.checkbox.input-group.input-group--active.info--text .input-group--selection-controls__ripple,.input-group--selection-controls.checkbox.input-group.input-group--active.primary--text .icon,.input-group--selection-controls.checkbox.input-group.input-group--active.primary--text .input-group--selection-controls__ripple,.input-group--selection-controls.checkbox.input-group.input-group--active.secondary--text .icon,.input-group--selection-controls.checkbox.input-group.input-group--active.secondary--text .input-group--selection-controls__ripple,.input-group--selection-controls.checkbox.input-group.input-group--active.success--text .icon,.input-group--selection-controls.checkbox.input-group.input-group--active.success--text .input-group--selection-controls__ripple,.input-group--selection-controls.checkbox.input-group.input-group--active.warning--text .icon,.input-group--selection-controls.checkbox.input-group.input-group--active.warning--text .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group.input-group--active.error--text .icon,.input-group--selection-controls.radio.input-group.input-group--active.error--text .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group.input-group--active.info--text .icon,.input-group--selection-controls.radio.input-group.input-group--active.info--text .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group.input-group--active.primary--text .icon,.input-group--selection-controls.radio.input-group.input-group--active.primary--text .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group.input-group--active.secondary--text .icon,.input-group--selection-controls.radio.input-group.input-group--active.secondary--text .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group.input-group--active.success--text .icon,.input-group--selection-controls.radio.input-group.input-group--active.success--text .input-group--selection-controls__ripple,.input-group--selection-controls.radio.input-group.input-group--active.warning--text .icon,.input-group--selection-controls.radio.input-group.input-group--active.warning--text .input-group--selection-controls__ripple{color:currentColor!important}.input-group--slider.input-group--light label{-webkit-transform:none;transform:none;-ms-flex-preferred-size:56px;flex-basis:56px;color:hsla(0,0%,100%,.87);display:-webkit-box;display:-ms-flexbox;display:flex;font-size:18px;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.input-group--slider.input-group--light .slider__track{background:hsla(0,0%,100%,.26)}.input-group--slider.input-group--light .slider__track__container:after{border:0 solid hsla(0,0%,100%,.6);border-left-width:2px}.input-group--slider.input-group--light .slider__thumb{border:4px solid hsla(0,0%,100%,.26)}.input-group--slider.input-group--light .slider__thumb--label{background:hsla(0,0%,100%,.26)}.input-group--slider.input-group--light .slider__ticks{background:repeating-linear-gradient(90deg,hsla(0,0%,100%,.6),hsla(0,0%,100%,.6) 2px,transparent 0,transparent)}.input-group--slider.input-group--light.input-group--disabled .slider__thumb{background:hsla(0,0%,100%,.38);border-color:transparent}.input-group--slider.input-group--light.input-group--disabled.input-group--dirty .slider__track-fill{background:hsla(0,0%,100%,.26)}.input-group--slider.input-group--light:not(.input-group--dirty) .slider__thumb-container--label .slider__thumb{background:#fff}.input-group--slider.input-group--dark label{-webkit-transform:none;transform:none;-ms-flex-preferred-size:56px;flex-basis:56px;color:#000;display:-webkit-box;display:-ms-flexbox;display:flex;font-size:18px;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.input-group--slider.input-group--dark .slider__track{background:rgba(0,0,0,.3)}.input-group--slider.input-group--dark .slider__track__container:after{border:0 solid rgba(0,0,0,.6);border-left-width:2px}.input-group--slider.input-group--dark .slider__thumb{border:4px solid rgba(0,0,0,.3)}.input-group--slider.input-group--dark .slider__thumb--label{background:rgba(0,0,0,.3)}.input-group--slider.input-group--dark .slider__ticks{background:repeating-linear-gradient(90deg,rgba(0,0,0,.6),rgba(0,0,0,.6) 2px,transparent 0,transparent)}.input-group--slider.input-group--dark.input-group--disabled .slider__thumb{background:rgba(0,0,0,.3);border-color:transparent}.input-group--slider.input-group--dark.input-group--disabled.input-group--dirty .slider__track-fill{background:rgba(0,0,0,.3)}.input-group--slider.input-group--dark:not(.input-group--dirty) .slider__thumb-container--label .slider__thumb{background:#000}.input-group--slider{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:wrap;flex-wrap:wrap}.input-group--slider .input-group__details:after,.input-group--slider .input-group__details:before{display:none}.input-group--slider .input-group__input{-webkit-box-flex:1;-ms-flex:1 1 100%;flex:1 1 100%}.input-group--slider label+.input-group__input{margin-left:16px;-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}.input-group--slider.input-group--active .slider__thumb{-webkit-transform:translateY(-50%) scale(1);transform:translateY(-50%) scale(1)}.input-group--slider.input-group--active .slider__track{transition:none}.input-group--slider.input-group--active .slider__thumb-container--label .slider__thumb,.input-group--slider.input-group--active .slider__thumb-container--label .slider__thumb:hover{-webkit-transform:translateY(-50%) scale(0);transform:translateY(-50%) scale(0)}.input-group--slider.input-group--active .slider__thumb-container,.input-group--slider.input-group--active .slider__track-fill{transition:none}.input-group--slider.input-group--dirty .slider__thumb{background:#1976d2;border-color:#1976d2}.input-group--slider.input-group--dirty .slider__thumb--label{background:#1976d2}.input-group--slider.input-group--disabled{pointer-events:none}.input-group--slider.input-group--disabled .slider__thumb{-webkit-transform:translateY(-50%) scale(.5);transform:translateY(-50%) scale(.5);background:transparent}.input-group--slider.input-group--disabled.input-group--dirty{border-color:transparent}.input-group--slider.input-group--prepend-icon .slider{margin-left:56px}.slider{cursor:default;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;position:relative;height:30px;-webkit-box-flex:1;-ms-flex:1;flex:1;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.input-group--ticks:hover .slider__ticks,.input-group--ticks:hover .slider__track__container:after{opacity:1}.slider__track__container{position:absolute;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);height:2px;width:100%;overflow:hidden}.slider__track__container:after{content:\"\";position:absolute;right:0;top:0;height:2px;transition:.3s ease-in-out;width:2px;opacity:0}.slider__thumb,.slider__ticks,.slider__track{position:absolute;top:0}.slider__track{-webkit-transform-origin:right;transform-origin:right;overflow:hidden}.slider__track,.slider__track-fill{height:2px;left:0;transition:.3s ease-in-out;width:100%}.slider__track-fill{position:absolute;background:#1976d2;-webkit-transform-origin:left;transform-origin:left}.slider__ticks,.slider__ticks-container{position:absolute;left:0;height:2px;width:100%}.slider__ticks-container{top:50%;overflow:hidden}.slider__ticks{transition:.3s ease-in-out;opacity:0}.slider__thumb-container{position:absolute;top:50%;transition:.3s ease-in-out}.slider__thumb{width:20px;height:20px;left:-10px;top:50%;border-radius:50%;background:transparent;transition:.3s ease-in-out;-webkit-transform:translateY(-50%) scale(.8);transform:translateY(-50%) scale(.8);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.slider__thumb:hover{-webkit-transform:translateY(-50%) scale(1);transform:translateY(-50%) scale(1)}.slider__thumb--label__container{position:absolute;left:0;top:0;transition:.3s ease-in-out}.slider__thumb--label{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;font-size:12px;color:#fff;width:28px;height:28px;border-radius:50% 50% 0;position:absolute;left:-14px;top:-40px;-webkit-transform:rotate(45deg);transform:rotate(45deg);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;transition:.3s ease-in-out}.slider__thumb--label span{-webkit-transform:rotate(-45deg) translateZ(0);transform:rotate(-45deg) translateZ(0)}.small-dialog{display:block;height:100%}.small-dialog__content{padding:0 24px}.small-dialog__actions{text-align:right}.small-dialog a{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:rgba(0,0,0,.87);height:100%;text-decoration:none}.small-dialog a>*{width:100%}.small-dialog .menu__activator{height:100%}.snack{background-color:#323232;position:fixed;display:-webkit-box;display:-ms-flexbox;display:flex;height:0;pointer-events:none;z-index:1000;visibility:visible}.snack--absolute{position:absolute}.snack--top{top:0}.snack--bottom,.snack--top{left:50%;-webkit-transform:translate3d(-50%,0,0) translateZ(0);transform:translate3d(-50%,0,0) translateZ(0)}.snack--bottom{bottom:48px}.snack--left{left:8px;right:auto;-webkit-transform:none;transform:none}.snack--left.snack--top{top:8px}.snack--left.snack--bottom{bottom:56px}.snack--right{left:auto;right:8px;-webkit-transform:none;transform:none}.snack--right.snack--top{top:8px}.snack--right.snack--bottom{top:auto;bottom:56px}.snack__content{background-color:inherit;padding:14px 24px;border-radius:2px;pointer-events:auto;max-width:568px;min-width:288px;height:48px;-webkit-box-align:center;-ms-flex-align:center;align-items:center;color:#fff;display:-webkit-box;display:-ms-flexbox;display:flex;font-size:14px;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;transition:.4s cubic-bezier(.25,.8,.25,1);position:relative!important;box-shadow:0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px rgba(0,0,0,.14),0 1px 18px rgba(0,0,0,.12)}.snack__content .btn{margin:0 0 0 48px}@media only screen and (max-width:599px){.snack{width:100%;left:0;right:auto;-webkit-transform:none;transform:none}.snack--left.snack--top,.snack--right.snack--top{top:0}.snack--left.snack--bottom,.snack--right.snack--bottom{bottom:48px}.snack__content{border-radius:0;max-width:100%;width:100%}.snack__content .btn{margin:0 0 0 24px}.snack--multi-line .snack__content{height:80px;padding:24px}.snack--bottom.snack--multi-line,.snack--right.snack--multi-line{bottom:80px}.snack--vertical .snack__content{height:112px;padding:24px 24px 14px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:initial;-ms-flex-align:initial;align-items:initial}.snack--vertical .snack__content .btn{-ms-flex-item-align:end;align-self:flex-end}.snack--bottom.snack--vertical,.snack--right.snack--vertical{bottom:112px}}.stepper{overflow:hidden;position:relative;box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}.stepper .divider{-ms-flex-item-align:center;-ms-grid-row-align:center;align-self:center;margin:0 -16px}.stepper__header{-webkit-box-align:stretch;-ms-flex-align:stretch;align-items:stretch;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}.stepper__header,.stepper__step__step{display:-webkit-box;display:-ms-flexbox;display:flex}.stepper__step__step{-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:rgba(0,0,0,.38);border-radius:50%;color:#fff;font-size:12px;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;height:24px;margin-right:8px;width:24px;transition:.3s cubic-bezier(.25,.8,.25,1)}.stepper__step__step .icon{font-size:18px;color:#fff}.stepper__step{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:24px;position:relative}.stepper__step--active .stepper__label{text-shadow:0 0 0 #000;transition:.3s cubic-bezier(.4,0,.6,1)}.stepper__step--active .stepper__step__step{background:#1976d2}.stepper__step--editable{cursor:pointer}.stepper__step--editable:hover{background:rgba(0,0,0,.06);text-shadow:0 0 0 #000}.stepper__step--inactive .stepper__label,.stepper__step--inactive .stepper__label small{color:rgba(0,0,0,.38)}.stepper__step__step:not(.stepper__step--inactive.stepper__step--error){color:#fff;background:rgba(0,0,0,.38)}.stepper__step--inactive.stepper__step--editable:hover .stepper__step__step,.stepper__step__step:not(.stepper__step--inactive.stepper__step--error):hover{background:rgba(0,0,0,.5)}.stepper__step--error .stepper__step__step{background:transparent;color:#ff5252}.stepper__step--error .stepper__step__step .icon{font-size:24px;color:#ff5252}.stepper__step--error .stepper__label{color:#ff5252;text-shadow:none;font-weight:500}.stepper__step--error .stepper__label small{color:#ff5252}.stepper__step--complete .stepper__label{color:rgba(0,0,0,.87)}.stepper__step--complete .stepper__step__step{background:#1976d2}.stepper__label{-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;text-align:left;color:rgba(0,0,0,.38)}.stepper__label small{font-size:12px;font-weight:300;color:rgba(0,0,0,.54);text-shadow:none}.stepper__wrapper{-webkit-transform:translateZ(0);transform:translateZ(0)}.stepper__content,.stepper__wrapper{overflow:hidden;transition:.4s cubic-bezier(.4,0,.6,1)}.stepper__content{top:auto;bottom:0;padding:16px;-webkit-box-flex:1;-ms-flex:1;flex:1;width:100%}.stepper__content .btn{margin-left:0}.stepper--non-linear .stepper__step:not(.stepper__step--complete) .stepper__label{color:rgba(0,0,0,.54)}.stepper--vertical{padding-bottom:36px}.stepper--vertical .stepper__content{margin:-8px 0 -16px 36px;padding:16px 60px 16px 23px;width:auto}.stepper--vertical .stepper__content:not(:last-child){border-left:1px solid rgba(0,0,0,.12)}.stepper--vertical .stepper__step{padding:24px 24px 16px}.stepper--vertical .stepper__step__step{margin-right:12px}.stepper--alt-labels .divider{margin:35px -67px 0;-ms-flex-item-align:start;align-self:flex-start}.stepper--alt-labels .stepper__step{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:start;-ms-flex-pack:start;justify-content:flex-start;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-preferred-size:175px;flex-basis:175px}.stepper--alt-labels .stepper__step small{-ms-flex-item-align:center;-ms-grid-row-align:center;align-self:center}.stepper--alt-labels .stepper__step__step{margin-right:0;margin-bottom:12px}@media only screen and (max-width:1023px){.stepper:not(.stepper--vertical) .stepper__label{display:none}.stepper:not(.stepper--vertical) .stepper__step__step{margin-right:0}}.subheader{height:48px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;font-size:14px;color:#757575;font-weight:500;padding:0 16px}.subheader--inset{margin-left:56px}.table__overflow{width:100%;overflow-x:auto;overflow-y:hidden}table.table{border-radius:2px;border-collapse:collapse;border-spacing:0;width:100%;max-width:100%}table.table tr:not(:last-child){border-bottom:1px solid #e0e0e0}table.table tbody td:first-child,table.table tbody td:not(:first-child),table.table tbody th:first-child,table.table tbody th:not(:first-child),table.table thead td:first-child,table.table thead td:not(:first-child),table.table thead th:first-child,table.table thead th:not(:first-child){padding:0 24px}table.table thead tr{height:56px}table.table thead th{color:rgba(0,0,0,.54);font-weight:600;font-size:12px;transition:.3s cubic-bezier(.25,.8,.25,1);white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}table.table thead th.sortable{pointer-events:auto}table.table thead th>div{width:100%}table.table tbody tr{transition:background .3s cubic-bezier(.25,.8,.25,1);will-change:background}table.table tbody tr[active]{background:#f5f5f5}table.table tbody tr:hover{background:#eee}table.table tbody td,table.table tbody th{height:48px}table.table tbody td{font-weight:500;font-size:13px}table.table .input-group--selection-controls{margin:0}table.table .input-group--selection-controls .input-group__details{display:none}table.table .input-group--selection-controls.checkbox .icon{left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}table.table .input-group--selection-controls.checkbox .input-group--selection-controls__ripple{left:50%;-webkit-transform:translate3d(-50%,-50%,0);transform:translate3d(-50%,-50%,0)}table.table tfoot tr{height:56px;border-top:1px solid #e0e0e0}.tabs{position:relative;width:100%}.tabs--overflow,.tabs--overflow .tabs__item,.tabs--overflow .tabs__items{overflow:hidden}.tabs>.card{border-radius:0}.tabs--grow .tabs__container>li{-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1}.tabs--centered .tabs__container>li:first-of-type{margin-left:auto}.tabs--centered .tabs__container>li:last-of-type{margin-right:auto}.tabs--icons .tabs__bar{height:90px}.tabs--scroll-bars .tabs__bar--mobile{padding:0 35px}.tabs--scroll-bars .tabs__bar--mobile .icon--left,.tabs--scroll-bars .tabs__bar--mobile .icon--right{display:-webkit-box;display:-ms-flexbox;display:flex}.tabs--scroll-bars .tabs__bar--mobile .tabs__container{width:calc(100% - 70px)}.tabs__bar{background-color:#1976d2;width:100%;position:relative;height:60px}.tabs__bar .icon--left,.tabs__bar .icon--right{position:absolute;top:0;width:35px;display:none;color:#fff;-webkit-box-align:center;-ms-flex-align:center;align-items:center;height:100%;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.tabs__bar .icon--left{left:0}.tabs__bar .icon--right{right:0}.tabs__container{overflow-x:auto;overflow-y:hidden;display:-webkit-box;display:-ms-flexbox;display:flex;height:100%;width:100%;position:absolute;padding:0;top:0;-webkit-box-align:center;-ms-flex-align:center;align-items:center;list-style:none}.tabs__container>li:not(.tabs__slider){height:100%}.tabs__container-left{position:absolute;left:0;top:0;width:35px}.tabs__container-left,.tabs__item{height:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.tabs__item{-ms-flex-negative:0;flex-shrink:0;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;min-width:0;padding:1rem;position:relative;text-align:center;text-decoration:none;text-transform:uppercase;text-overflow:ellipsis;transition:.3s cubic-bezier(.25,.8,.25,1);white-space:nowrap}.tabs--dark .tabs__item{color:rgba(0,0,0,.38)}.tabs--dark .tabs__item--active{color:rgba(0,0,0,.54)}.tabs--light .tabs__item{color:hsla(0,0%,100%,.5)}.tabs--light .tabs__item--active{color:#fff}.tabs__item .icon{color:inherit;-webkit-box-flex:1;-ms-flex:1;flex:1;-ms-flex-preferred-size:100%;flex-basis:100%;font-size:32px;margin:.5rem 0}.tabs__item--disabled{pointer-events:none}.tabs__items{position:relative;border-width:0 1px 1px;border-style:solid;border-color:rgba(0,0,0,.1)}.tabs__content{width:100%}.tabs__content,.tabs__slider{transition:.3s cubic-bezier(.25,.8,.25,1)}.tabs__slider{position:absolute;bottom:0;height:4px;background:#448aff}.input-group--text-field label{pointer-events:none;position:absolute;top:0;left:0;min-width:0;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;text-align:left;-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-transform-origin:top left;transform-origin:top left;width:100%}.input-group--text-field.input-group--multi-line:not(.input-group--focused):not(.input-group--dirty) label{-webkit-transform:translateZ(0);transform:translateZ(0)}.input-group--text-field input{font-size:16px;-webkit-box-flex:1;-ms-flex:1;flex:1;margin:0;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;min-width:0;height:30px}.input-group--text-field input+.icon{padding:0 6px;transition:.3s cubic-bezier(.4,0,.6,1)}.input-group--text-field input:focus{outline:none}.input-group--text-field input:disabled{pointer-events:none}.input-group--text-field textarea{font-size:16px;-webkit-box-flex:1;-ms-flex:1 1;flex:1 1}.input-group--text-field textarea:focus{outline:none}.input-group--text-field .input-group__counter{margin-left:auto}.input-group--text-field .input-group__counter--error{color:#ff5252!important}.input-group--text-field.input-group--light.input-group--single-line.input-group--text-field.input-group--light.input-group--focused label,.input-group--text-field.input-group--light input,.input-group--text-field.input-group--light input:disabled,.input-group--text-field.input-group--light label,.input-group--text-field.input-group--light textarea,.input-group--text-field.input-group--light textarea:disabled{color:hsla(0,0%,100%,.5)}.input-group--text-field.input-group--light.input-group--dirty input,.input-group--text-field.input-group--light.input-group--dirty textarea{color:hsla(0,0%,100%,.87)}.input-group--text-field.input-group--light.input-group--disabled input,.input-group--text-field.input-group--light.input-group--disabled textarea,.input-group--text-field.input-group--light .input-group__counter,.input-group--text-field.input-group--light .input-group__details{color:hsla(0,0%,100%,.5)}.input-group--text-field.input-group--light.input-group--disabled .input-group__details:before{background-color:transparent}.input-group--text-field.input-group--light .input-group--text-field__prefix,.input-group--text-field.input-group--light .input-group--text-field__suffix{color:hsla(0,0%,100%,.5)}.input-group--text-field.input-group--dark.input-group--single-line.input-group--text-field.input-group--dark.input-group--focused label,.input-group--text-field.input-group--dark input,.input-group--text-field.input-group--dark input:disabled,.input-group--text-field.input-group--dark label,.input-group--text-field.input-group--dark textarea,.input-group--text-field.input-group--dark textarea:disabled{color:rgba(0,0,0,.38)}.input-group--text-field.input-group--dark.input-group--dirty input,.input-group--text-field.input-group--dark.input-group--dirty textarea{color:#000}.input-group--text-field.input-group--dark.input-group--disabled input,.input-group--text-field.input-group--dark.input-group--disabled textarea,.input-group--text-field.input-group--dark .input-group__counter,.input-group--text-field.input-group--dark .input-group__details{color:rgba(0,0,0,.38)}.input-group--text-field.input-group--dark.input-group--disabled .input-group__details:before{background-color:transparent}.input-group--text-field.input-group--dark .input-group--text-field__prefix,.input-group--text-field.input-group--dark .input-group--text-field__suffix{color:rgba(0,0,0,.38)}.input-group--text-field.input-group--focused label{opacity:1;color:#1976d2}.input-group--text-field.input-group--dirty label,.input-group--text-field.input-group--focused label{-webkit-transform:translate3d(0,-18px,0) scale(.75);transform:translate3d(0,-18px,0) scale(.75)}.input-group--text-field.input-group--placeholder:not(.input-group--focused):not(.input-group--dirty) label{opacity:0}.input-group--text-field.input-group--error .input-group__details:after{background-color:#ff5252}.input-group--text-field.input-group--prepend-icon .input-group__prepend-icon{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:start;-ms-flex-pack:start;justify-content:flex-start;min-width:40px;transition:.3s cubic-bezier(.25,.8,.25,1)}.input-group--text-field.input-group--prepend-icon .input-group__details{margin-left:40px}.input-group--text-field.input-group--prepend-icon .input-group__details:after,.input-group--text-field.input-group--prepend-icon .input-group__details:before{max-width:calc(100% - 56px)}.input-group--text-field.input-group--prepend-icon label{margin-left:40px}.input-group--text-field.input-group--prepend-icon input{-webkit-box-flex:1;-ms-flex:auto;flex:auto}.input-group--text-field.input-group--prepend-icon.input-group--focused .icon{color:#1976d2}.input-group--text-field.input-group--single-line label{-webkit-transform:translateZ(0);transform:translateZ(0)}.input-group--text-field.input-group--single-line.input-group--dirty label{display:none}.input-group--text-field.input-group--required label:after{content:\"*\"}.input-group--text-field.input-group--error label,.input-group--text-field.input-group--required.input-group--focused label:after{color:#ff5252}.input-group--text-field.input-group--error .input-group__details:after,.input-group--text-field.input-group--error .input-group__details:before{background-color:#ff5252}.input-group--text-field.input-group--full-width{padding:0 16px}.input-group--text-field.input-group--full-width .input-group__details:after,.input-group--text-field.input-group--full-width .input-group__details:before{display:none}.input-group--text-field__prefix,.input-group--text-field__suffix{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;font-size:16px;margin-top:1px}.input-group--text-field__prefix{margin-right:3px}.input-group--text-field__suffix{margin-left:3px}.picker--time .card__row--actions{margin-top:-10px}.picker--time.picker--dark .picker--time__clock{background:#616161}.picker--time.picker--dark .picker--time__clock-hand:before{border-color:#448aff}.picker--time.picker--dark .picker--time__clock-hand,.picker--time.picker--dark .picker--time__clock:after{background:#448aff}.picker--time.picker--dark .picker--time__clock>span{color:#fff}.picker--time.picker--dark .picker--time__clock>span.active{color:#000}.picker--time.picker--dark .picker--time__clock>span.active:before{background:#448aff}.picker--time.picker--landscape{-ms-flex-wrap:wrap;flex-wrap:wrap}.picker--time.picker--landscape .picker__title{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}.picker--time.picker--landscape .picker__title div:first-child{text-align:right}.picker--time.picker--landscape .picker__title div:first-child span{height:55px;font-size:55px}.picker--time.picker--landscape .picker__title div:last-child{margin:16px 0 0;-ms-flex-item-align:initial;-ms-grid-row-align:initial;align-self:auto;text-align:center}.picker--time.picker--landscape .picker--time__clock{height:250px;width:250px}.picker--time.picker--landscape .picker--time__clock-hand{height:97px}.picker--time .picker__title{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:end;-ms-flex-pack:end;justify-content:flex-end}.picker--time .picker__title div:first-child{white-space:nowrap}.picker--time .picker__title div:first-child span{-webkit-box-align:center;-ms-flex-align:center;align-items:center;cursor:pointer;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;height:70px;font-size:70px;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;opacity:.6;transition:.3s cubic-bezier(.25,.8,.25,1)}.picker--time .picker__title div:first-child span.active{opacity:1}.picker--time .picker__title div:last-child{-ms-flex-item-align:end;align-self:flex-end;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;font-size:16px;margin:8px 0 6px 8px}.picker--time .picker__title div:last-child span{cursor:pointer;opacity:.6;transition:.3s cubic-bezier(.25,.8,.25,1)}.picker--time .picker__title div:last-child span.active{opacity:1}.picker--time .picker__title div:only-child{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}.picker--time__clock{height:270px;width:270px;border-radius:100%;background:#e0e0e0;position:absolute;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;top:50%;left:50%;transition:.5s cubic-bezier(.25,.8,.25,1);-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.picker--time__clock-hand{height:40%;width:2px;background:#1976d2;bottom:50%;left:calc(50% - 1px);-webkit-transform-origin:center bottom;transform-origin:center bottom;position:absolute}.picker--time__clock-hand:before{background:transparent;border:2px solid #1976d2;border-radius:100%;width:10px;height:10px;top:-3%}.picker--time__clock-hand:before,.picker--time__clock:after{content:\"\";position:absolute;left:50%;-webkit-transform:translate3d(-50%,-50%,0);transform:translate3d(-50%,-50%,0)}.picker--time__clock:after{height:8px;width:8px;top:50%;background:#2196f3;border-radius:100%}.picker--time__clock>span{-webkit-box-align:center;-ms-flex-align:center;align-items:center;border-radius:100%;cursor:default;display:-webkit-box;display:-ms-flexbox;display:flex;font-size:16px;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;left:calc(50% - 16px);height:32px;position:absolute;text-align:center;top:calc(50% - 16px);width:32px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.picker--time__clock>span>span{z-index:1}.picker--time__clock>span:after,.picker--time__clock>span:before{content:\"\";border-radius:100%;position:absolute;top:50%;left:50%;height:14px;width:14px;-webkit-transform:translate3d(-50%,-50%,0);transform:translate3d(-50%,-50%,0);height:40px;width:40px}.picker--time__clock>span.active{color:#fff;cursor:default}.picker--time__clock>span.active:before{background:#1976d2}.picker--time .card__row--actions{border:none}.toast{position:fixed;z-index:99999999999999}.toast--right{top:5%;right:2%}.toast--left{top:5%;left:2%}.toast--top{top:5%}.toast--bottom,.toast--top{left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}.toast--bottom{bottom:5%}.toast--snack{bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}.toast--snack .toast__content{margin-bottom:0;opacity:1}.toast--snack .toast__content--remove{margin-top:0}.toast__content{background:#424242;border-radius:2px;color:#fff;padding:1rem 2rem;margin:1rem 0;opacity:0;-webkit-transform:translate3d(0,3rem,0);transform:translate3d(0,3rem,0);transition:.3s cubic-bezier(.25,.8,.25,1);box-shadow:0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px rgba(0,0,0,.14),0 1px 18px rgba(0,0,0,.12)}.toast__content--active{-webkit-transform:translateZ(0);transform:translateZ(0);opacity:1}.toast__content--remove{margin-top:-3rem;opacity:0}.application--dark .toolbar{background:#212121}.toolbar{-webkit-box-align:center;-ms-flex-align:center;align-items:center;background-color:#1976d2;display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;height:56px;position:relative;padding:0;transition:.3s cubic-bezier(.25,.8,.25,1);width:100%;will-change:padding-left;box-shadow:0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px rgba(0,0,0,.14),0 1px 10px rgba(0,0,0,.12);z-index:2}.toolbar>:first-child{margin-left:24px}.toolbar>:last-child{margin-right:24px}@media only screen and (max-width:599px){.toolbar>:first-child{margin-left:16px}.toolbar>:last-child{margin-right:16px}}.toolbar ul{list-style:none}.toolbar li{height:100%}.toolbar i{font-size:24px}.toolbar .menu__activator{height:100%}.toolbar--absolute+main,.toolbar--fixed+main{padding-top:56px}.toolbar--fixed{position:fixed}.toolbar--absolute{position:absolute}.toolbar__sub{-webkit-box-flex:1;-ms-flex:1 0 100%;flex:1 0 100%;padding:24px 0 24px 72px}.toolbar__side-icon{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;position:relative;margin-left:10px}.toolbar__logo{color:#fff;font-size:3rem;-webkit-box-flex:1;-ms-flex:1;flex:1;text-decoration:none;padding:0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.toolbar__title{color:#fff;font-size:20px;-webkit-box-flex:1;-ms-flex:1;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.toolbar__title:not(:first-child){padding:0 16px}.toolbar__items{list-style-type:none;padding:0;height:100%;max-width:100%}.toolbar__item,.toolbar__items,.toolbar__items>li{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.toolbar__item{color:#fff;padding:0 16px;text-decoration:none;transition:all .3s ease-out;position:relative;height:100%;white-space:nowrap}.toolbar__item i{font-size:2rem}.toolbar__item--active,.toolbar__item:hover{background:rgba(0,0,0,.1)}.toolbar__item--disabled{opacity:.5;pointer-events:none}.toolbar .input-group{margin:0 0 0 16px;-webkit-box-flex:1;-ms-flex:1;flex:1}.toolbar .input-group--dark .icon{color:rgba(0,0,0,.54)}.toolbar .input-group--light .icon{color:#fff}.toolbar .input-group--dark.input-group--focused.input-group--append-icon .icon,.toolbar .input-group--dark.input-group--focused.input-group--prepend-icon .icon{color:rgba(0,0,0,.54)}.toolbar .input-group--light.input-group--focused.input-group--append-icon .icon,.toolbar .input-group--light.input-group--focused.input-group--prepend-icon .icon{color:#fff}[data-tooltip]{position:relative}[data-tooltip]:before{background:#616161;border-radius:2px;color:#fff;content:attr(data-tooltip);font-size:12px;display:inline-block;opacity:0;padding:5px 8px;position:absolute;pointer-events:none;text-transform:none;transition:.2s cubic-bezier(.4,0,.6,1);visibility:hidden;width:auto;white-space:pre;z-index:99;box-shadow:0 1px 5px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12)}[data-tooltip]:hover:before{opacity:1;visibility:visible}[data-tooltip][data-tooltip-location=bottom]:before{top:100%;left:50%;-webkit-transform:translate(-50%,-14px) scale(.1);transform:translate(-50%,-14px) scale(.1);-webkit-transform-origin:center top;transform-origin:center top}[data-tooltip][data-tooltip-location=bottom]:hover:before{-webkit-transform:translate(-50%,14px) scale(1.01);transform:translate(-50%,14px) scale(1.01)}[data-tooltip][data-tooltip-location=top]:before{bottom:100%;left:50%;-webkit-transform:translate(-50%,14px) scale(.1);transform:translate(-50%,14px) scale(.1);-webkit-transform-origin:center bottom;transform-origin:center bottom}[data-tooltip][data-tooltip-location=top]:hover:before{-webkit-transform:translate(-50%,-14px) scale(1.01);transform:translate(-50%,-14px) scale(1.01)}[data-tooltip][data-tooltip-location=left]:before{right:100%;-webkit-transform:translate(14px) scale(.1);transform:translate(14px) scale(.1);-webkit-transform-origin:center right;transform-origin:center right}[data-tooltip][data-tooltip-location=left]:hover:before{-webkit-transform:translate(-14px) scale(1.01);transform:translate(-14px) scale(1.01)}[data-tooltip][data-tooltip-location=right]:before{left:100%;-webkit-transform:translate(-14px) scale(.1);transform:translate(-14px) scale(.1);-webkit-transform-origin:center left;transform-origin:center left}[data-tooltip][data-tooltip-location=right]:hover:before{-webkit-transform:translate(14px) scale(1.01);transform:translate(14px) scale(1.01)}@media only screen and (max-width:1023px){[data-tooltip]:before{padding:10px 16px}[data-tooltip][data-tooltip-location=bottom]:hover:before{-webkit-transform:translate(-50%,24px) scale(1.01);transform:translate(-50%,24px) scale(1.01)}[data-tooltip][data-tooltip-location=top]:hover:before{-webkit-transform:translate(-50%,-24px) scale(1.01);transform:translate(-50%,-24px) scale(1.01)}[data-tooltip][data-tooltip-location=left]:hover:before{-webkit-transform:translate(-24px) scale(1.01);transform:translate(-24px) scale(1.01)}[data-tooltip][data-tooltip-location=right]:hover:before{-webkit-transform:translate(24px) scale(1.01);transform:translate(24px) scale(1.01)}}@media only screen and (max-width:599px){.hidden-xs-only{display:none!important}}@media only screen and (max-width:1023px){.hidden-sm-and-down{display:none!important}}@media only screen and (min-width:600px){.hidden-sm-and-up{display:none!important}}@media only screen and (min-width:1024px) and (max-width){.hidden-md-only{display:none!important}}@media only screen and (max-width:1423px){.hidden-md-and-down{display:none!important}}@media only screen and (min-width:1024px){.hidden-md-and-up{display:none!important}}@media only screen and (min-width:1424px) and (max-width){.hidden-lg-only{display:none!important}}@media only screen and (max-width:1903px){.hidden-lg-and-down{display:none!important}}@media only screen and (min-width:1424px){.hidden-lg-and-up{display:none!important}}@media only screen and (min-width:1904px){.hidden-xl-only{display:none!important}}.right{float:right!important}.left{float:left!important}.mt-0{margin-top:0!important}.mr-0{margin-right:0!important}.mb-0{margin-bottom:0!important}.ml-0,.mx-0{margin-left:0!important}.mx-0{margin-right:0!important}.my-0{margin-top:0!important;margin-bottom:0!important}.ma-0{margin:0!important}.pt-0{padding-top:0!important}.pr-0{padding-right:0!important}.pb-0{padding-bottom:0!important}.pl-0,.px-0{padding-left:0!important}.px-0{padding-right:0!important}.py-0{padding-top:0!important;padding-bottom:0!important}.pa-0{padding:0!important}.mt-1{margin-top:4px!important}.mr-1{margin-right:4px!important}.mb-1{margin-bottom:4px!important}.ml-1,.mx-1{margin-left:4px!important}.mx-1{margin-right:4px!important}.my-1{margin-top:4px!important;margin-bottom:4px!important}.ma-1{margin:4px!important}.pt-1{padding-top:4px!important}.pr-1{padding-right:4px!important}.pb-1{padding-bottom:4px!important}.pl-1,.px-1{padding-left:4px!important}.px-1{padding-right:4px!important}.py-1{padding-top:4px!important;padding-bottom:4px!important}.pa-1{padding:4px!important}.mt-2{margin-top:8px!important}.mr-2{margin-right:8px!important}.mb-2{margin-bottom:8px!important}.ml-2,.mx-2{margin-left:8px!important}.mx-2{margin-right:8px!important}.my-2{margin-top:8px!important;margin-bottom:8px!important}.ma-2{margin:8px!important}.pt-2{padding-top:8px!important}.pr-2{padding-right:8px!important}.pb-2{padding-bottom:8px!important}.pl-2,.px-2{padding-left:8px!important}.px-2{padding-right:8px!important}.py-2{padding-top:8px!important;padding-bottom:8px!important}.pa-2{padding:8px!important}.mt-3{margin-top:16px!important}.mr-3{margin-right:16px!important}.mb-3{margin-bottom:16px!important}.ml-3,.mx-3{margin-left:16px!important}.mx-3{margin-right:16px!important}.my-3{margin-top:16px!important;margin-bottom:16px!important}.ma-3{margin:16px!important}.pt-3{padding-top:16px!important}.pr-3{padding-right:16px!important}.pb-3{padding-bottom:16px!important}.pl-3,.px-3{padding-left:16px!important}.px-3{padding-right:16px!important}.py-3{padding-top:16px!important;padding-bottom:16px!important}.pa-3{padding:16px!important}.mt-4{margin-top:24px!important}.mr-4{margin-right:24px!important}.mb-4{margin-bottom:24px!important}.ml-4,.mx-4{margin-left:24px!important}.mx-4{margin-right:24px!important}.my-4{margin-top:24px!important;margin-bottom:24px!important}.ma-4{margin:24px!important}.pt-4{padding-top:24px!important}.pr-4{padding-right:24px!important}.pb-4{padding-bottom:24px!important}.pl-4,.px-4{padding-left:24px!important}.px-4{padding-right:24px!important}.py-4{padding-top:24px!important;padding-bottom:24px!important}.pa-4{padding:24px!important}.mt-5{margin-top:48px!important}.mr-5{margin-right:48px!important}.mb-5{margin-bottom:48px!important}.ml-5,.mx-5{margin-left:48px!important}.mx-5{margin-right:48px!important}.my-5{margin-top:48px!important;margin-bottom:48px!important}.ma-5{margin:48px!important}.pt-5{padding-top:48px!important}.pr-5{padding-right:48px!important}.pb-5{padding-bottom:48px!important}.pl-5,.px-5{padding-left:48px!important}.px-5{padding-right:48px!important}.py-5{padding-top:48px!important;padding-bottom:48px!important}.pa-5{padding:48px!important}@media only screen and (min-width:0){.text-xs-left{text-align:left!important}.text-xs-center{text-align:center!important}.text-xs-right{text-align:right!important}.text-xs-justify{text-align:justify!important}}@media only screen and (min-width:600px){.text-sm-left{text-align:left!important}.text-sm-center{text-align:center!important}.text-sm-right{text-align:right!important}.text-sm-justify{text-align:justify!important}}@media only screen and (min-width:1024px){.text-md-left{text-align:left!important}.text-md-center{text-align:center!important}.text-md-right{text-align:right!important}.text-md-justify{text-align:justify!important}}@media only screen and (min-width:1424px){.text-lg-left{text-align:left!important}.text-lg-center{text-align:center!important}.text-lg-right{text-align:right!important}.text-lg-justify{text-align:justify!important}}@media only screen and (min-width:1904px){.text-xl-left{text-align:left!important}.text-xl-center{text-align:center!important}.text-xl-right{text-align:right!important}.text-xl-justify{text-align:justify!important}}\n/*# sourceMappingURL=vuetify.min.css.map*/", ""]);
+exports.push([module.i, "\n.completion-container {\n  margin: 60px 0;\n  position: relative;\n}\n.guide-complete {\n  margin: 0;\n  background-color: #f2f8fd;\n  border: 1px solid #b3d4f0;\n  border-raidus: 4px;\n  padding: 26px;\n}\n#guideConclusion {\n  text-align: center;\n}\n.finish-line {\n  margin: 0 auto 30px;\n  position: relative;\n  display: inline-block;\n  padding: 0 15px;\n  z-index: 1;\n  font-size: 20px;\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.conclusionText {\n  font-size: 1.2em;\n  font-weight: 500;\n}\n", ""]);
 
 /***/ }),
 /* 189 */
@@ -46683,236 +46732,236 @@ if (true) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 18,
-	"./af.js": 18,
-	"./ar": 25,
-	"./ar-dz": 19,
-	"./ar-dz.js": 19,
-	"./ar-kw": 20,
-	"./ar-kw.js": 20,
-	"./ar-ly": 21,
-	"./ar-ly.js": 21,
-	"./ar-ma": 22,
-	"./ar-ma.js": 22,
-	"./ar-sa": 23,
-	"./ar-sa.js": 23,
-	"./ar-tn": 24,
-	"./ar-tn.js": 24,
-	"./ar.js": 25,
-	"./az": 26,
-	"./az.js": 26,
-	"./be": 27,
-	"./be.js": 27,
-	"./bg": 28,
-	"./bg.js": 28,
-	"./bn": 29,
-	"./bn.js": 29,
-	"./bo": 30,
-	"./bo.js": 30,
-	"./br": 31,
-	"./br.js": 31,
-	"./bs": 32,
-	"./bs.js": 32,
-	"./ca": 33,
-	"./ca.js": 33,
-	"./cs": 34,
-	"./cs.js": 34,
-	"./cv": 35,
-	"./cv.js": 35,
-	"./cy": 36,
-	"./cy.js": 36,
-	"./da": 37,
-	"./da.js": 37,
-	"./de": 40,
-	"./de-at": 38,
-	"./de-at.js": 38,
-	"./de-ch": 39,
-	"./de-ch.js": 39,
-	"./de.js": 40,
-	"./dv": 41,
-	"./dv.js": 41,
-	"./el": 42,
-	"./el.js": 42,
-	"./en-au": 43,
-	"./en-au.js": 43,
-	"./en-ca": 44,
-	"./en-ca.js": 44,
-	"./en-gb": 45,
-	"./en-gb.js": 45,
-	"./en-ie": 46,
-	"./en-ie.js": 46,
-	"./en-nz": 47,
-	"./en-nz.js": 47,
-	"./eo": 48,
-	"./eo.js": 48,
-	"./es": 50,
-	"./es-do": 49,
-	"./es-do.js": 49,
-	"./es.js": 50,
-	"./et": 51,
-	"./et.js": 51,
-	"./eu": 52,
-	"./eu.js": 52,
-	"./fa": 53,
-	"./fa.js": 53,
-	"./fi": 54,
-	"./fi.js": 54,
-	"./fo": 55,
-	"./fo.js": 55,
-	"./fr": 58,
-	"./fr-ca": 56,
-	"./fr-ca.js": 56,
-	"./fr-ch": 57,
-	"./fr-ch.js": 57,
-	"./fr.js": 58,
-	"./fy": 59,
-	"./fy.js": 59,
-	"./gd": 60,
-	"./gd.js": 60,
-	"./gl": 61,
-	"./gl.js": 61,
-	"./gom-latn": 62,
-	"./gom-latn.js": 62,
-	"./he": 63,
-	"./he.js": 63,
-	"./hi": 64,
-	"./hi.js": 64,
-	"./hr": 65,
-	"./hr.js": 65,
-	"./hu": 66,
-	"./hu.js": 66,
-	"./hy-am": 67,
-	"./hy-am.js": 67,
-	"./id": 68,
-	"./id.js": 68,
-	"./is": 69,
-	"./is.js": 69,
-	"./it": 70,
-	"./it.js": 70,
-	"./ja": 71,
-	"./ja.js": 71,
-	"./jv": 72,
-	"./jv.js": 72,
-	"./ka": 73,
-	"./ka.js": 73,
-	"./kk": 74,
-	"./kk.js": 74,
-	"./km": 75,
-	"./km.js": 75,
-	"./kn": 76,
-	"./kn.js": 76,
-	"./ko": 77,
-	"./ko.js": 77,
-	"./ky": 78,
-	"./ky.js": 78,
-	"./lb": 79,
-	"./lb.js": 79,
-	"./lo": 80,
-	"./lo.js": 80,
-	"./lt": 81,
-	"./lt.js": 81,
-	"./lv": 82,
-	"./lv.js": 82,
-	"./me": 83,
-	"./me.js": 83,
-	"./mi": 84,
-	"./mi.js": 84,
-	"./mk": 85,
-	"./mk.js": 85,
-	"./ml": 86,
-	"./ml.js": 86,
-	"./mr": 87,
-	"./mr.js": 87,
-	"./ms": 89,
-	"./ms-my": 88,
-	"./ms-my.js": 88,
-	"./ms.js": 89,
-	"./my": 90,
-	"./my.js": 90,
-	"./nb": 91,
-	"./nb.js": 91,
-	"./ne": 92,
-	"./ne.js": 92,
-	"./nl": 94,
-	"./nl-be": 93,
-	"./nl-be.js": 93,
-	"./nl.js": 94,
-	"./nn": 95,
-	"./nn.js": 95,
-	"./pa-in": 96,
-	"./pa-in.js": 96,
-	"./pl": 97,
-	"./pl.js": 97,
-	"./pt": 99,
-	"./pt-br": 98,
-	"./pt-br.js": 98,
-	"./pt.js": 99,
-	"./ro": 100,
-	"./ro.js": 100,
-	"./ru": 101,
-	"./ru.js": 101,
-	"./sd": 102,
-	"./sd.js": 102,
-	"./se": 103,
-	"./se.js": 103,
-	"./si": 104,
-	"./si.js": 104,
-	"./sk": 105,
-	"./sk.js": 105,
-	"./sl": 106,
-	"./sl.js": 106,
-	"./sq": 107,
-	"./sq.js": 107,
-	"./sr": 109,
-	"./sr-cyrl": 108,
-	"./sr-cyrl.js": 108,
-	"./sr.js": 109,
-	"./ss": 110,
-	"./ss.js": 110,
-	"./sv": 111,
-	"./sv.js": 111,
-	"./sw": 112,
-	"./sw.js": 112,
-	"./ta": 113,
-	"./ta.js": 113,
-	"./te": 114,
-	"./te.js": 114,
-	"./tet": 115,
-	"./tet.js": 115,
-	"./th": 116,
-	"./th.js": 116,
-	"./tl-ph": 117,
-	"./tl-ph.js": 117,
-	"./tlh": 118,
-	"./tlh.js": 118,
-	"./tr": 119,
-	"./tr.js": 119,
-	"./tzl": 120,
-	"./tzl.js": 120,
-	"./tzm": 122,
-	"./tzm-latn": 121,
-	"./tzm-latn.js": 121,
-	"./tzm.js": 122,
-	"./uk": 123,
-	"./uk.js": 123,
-	"./ur": 124,
-	"./ur.js": 124,
-	"./uz": 126,
-	"./uz-latn": 125,
-	"./uz-latn.js": 125,
-	"./uz.js": 126,
-	"./vi": 127,
-	"./vi.js": 127,
-	"./x-pseudo": 128,
-	"./x-pseudo.js": 128,
-	"./yo": 129,
-	"./yo.js": 129,
-	"./zh-cn": 130,
-	"./zh-cn.js": 130,
-	"./zh-hk": 131,
-	"./zh-hk.js": 131,
-	"./zh-tw": 132,
-	"./zh-tw.js": 132
+	"./af": 17,
+	"./af.js": 17,
+	"./ar": 24,
+	"./ar-dz": 18,
+	"./ar-dz.js": 18,
+	"./ar-kw": 19,
+	"./ar-kw.js": 19,
+	"./ar-ly": 20,
+	"./ar-ly.js": 20,
+	"./ar-ma": 21,
+	"./ar-ma.js": 21,
+	"./ar-sa": 22,
+	"./ar-sa.js": 22,
+	"./ar-tn": 23,
+	"./ar-tn.js": 23,
+	"./ar.js": 24,
+	"./az": 25,
+	"./az.js": 25,
+	"./be": 26,
+	"./be.js": 26,
+	"./bg": 27,
+	"./bg.js": 27,
+	"./bn": 28,
+	"./bn.js": 28,
+	"./bo": 29,
+	"./bo.js": 29,
+	"./br": 30,
+	"./br.js": 30,
+	"./bs": 31,
+	"./bs.js": 31,
+	"./ca": 32,
+	"./ca.js": 32,
+	"./cs": 33,
+	"./cs.js": 33,
+	"./cv": 34,
+	"./cv.js": 34,
+	"./cy": 35,
+	"./cy.js": 35,
+	"./da": 36,
+	"./da.js": 36,
+	"./de": 39,
+	"./de-at": 37,
+	"./de-at.js": 37,
+	"./de-ch": 38,
+	"./de-ch.js": 38,
+	"./de.js": 39,
+	"./dv": 40,
+	"./dv.js": 40,
+	"./el": 41,
+	"./el.js": 41,
+	"./en-au": 42,
+	"./en-au.js": 42,
+	"./en-ca": 43,
+	"./en-ca.js": 43,
+	"./en-gb": 44,
+	"./en-gb.js": 44,
+	"./en-ie": 45,
+	"./en-ie.js": 45,
+	"./en-nz": 46,
+	"./en-nz.js": 46,
+	"./eo": 47,
+	"./eo.js": 47,
+	"./es": 49,
+	"./es-do": 48,
+	"./es-do.js": 48,
+	"./es.js": 49,
+	"./et": 50,
+	"./et.js": 50,
+	"./eu": 51,
+	"./eu.js": 51,
+	"./fa": 52,
+	"./fa.js": 52,
+	"./fi": 53,
+	"./fi.js": 53,
+	"./fo": 54,
+	"./fo.js": 54,
+	"./fr": 57,
+	"./fr-ca": 55,
+	"./fr-ca.js": 55,
+	"./fr-ch": 56,
+	"./fr-ch.js": 56,
+	"./fr.js": 57,
+	"./fy": 58,
+	"./fy.js": 58,
+	"./gd": 59,
+	"./gd.js": 59,
+	"./gl": 60,
+	"./gl.js": 60,
+	"./gom-latn": 61,
+	"./gom-latn.js": 61,
+	"./he": 62,
+	"./he.js": 62,
+	"./hi": 63,
+	"./hi.js": 63,
+	"./hr": 64,
+	"./hr.js": 64,
+	"./hu": 65,
+	"./hu.js": 65,
+	"./hy-am": 66,
+	"./hy-am.js": 66,
+	"./id": 67,
+	"./id.js": 67,
+	"./is": 68,
+	"./is.js": 68,
+	"./it": 69,
+	"./it.js": 69,
+	"./ja": 70,
+	"./ja.js": 70,
+	"./jv": 71,
+	"./jv.js": 71,
+	"./ka": 72,
+	"./ka.js": 72,
+	"./kk": 73,
+	"./kk.js": 73,
+	"./km": 74,
+	"./km.js": 74,
+	"./kn": 75,
+	"./kn.js": 75,
+	"./ko": 76,
+	"./ko.js": 76,
+	"./ky": 77,
+	"./ky.js": 77,
+	"./lb": 78,
+	"./lb.js": 78,
+	"./lo": 79,
+	"./lo.js": 79,
+	"./lt": 80,
+	"./lt.js": 80,
+	"./lv": 81,
+	"./lv.js": 81,
+	"./me": 82,
+	"./me.js": 82,
+	"./mi": 83,
+	"./mi.js": 83,
+	"./mk": 84,
+	"./mk.js": 84,
+	"./ml": 85,
+	"./ml.js": 85,
+	"./mr": 86,
+	"./mr.js": 86,
+	"./ms": 88,
+	"./ms-my": 87,
+	"./ms-my.js": 87,
+	"./ms.js": 88,
+	"./my": 89,
+	"./my.js": 89,
+	"./nb": 90,
+	"./nb.js": 90,
+	"./ne": 91,
+	"./ne.js": 91,
+	"./nl": 93,
+	"./nl-be": 92,
+	"./nl-be.js": 92,
+	"./nl.js": 93,
+	"./nn": 94,
+	"./nn.js": 94,
+	"./pa-in": 95,
+	"./pa-in.js": 95,
+	"./pl": 96,
+	"./pl.js": 96,
+	"./pt": 98,
+	"./pt-br": 97,
+	"./pt-br.js": 97,
+	"./pt.js": 98,
+	"./ro": 99,
+	"./ro.js": 99,
+	"./ru": 100,
+	"./ru.js": 100,
+	"./sd": 101,
+	"./sd.js": 101,
+	"./se": 102,
+	"./se.js": 102,
+	"./si": 103,
+	"./si.js": 103,
+	"./sk": 104,
+	"./sk.js": 104,
+	"./sl": 105,
+	"./sl.js": 105,
+	"./sq": 106,
+	"./sq.js": 106,
+	"./sr": 108,
+	"./sr-cyrl": 107,
+	"./sr-cyrl.js": 107,
+	"./sr.js": 108,
+	"./ss": 109,
+	"./ss.js": 109,
+	"./sv": 110,
+	"./sv.js": 110,
+	"./sw": 111,
+	"./sw.js": 111,
+	"./ta": 112,
+	"./ta.js": 112,
+	"./te": 113,
+	"./te.js": 113,
+	"./tet": 114,
+	"./tet.js": 114,
+	"./th": 115,
+	"./th.js": 115,
+	"./tl-ph": 116,
+	"./tl-ph.js": 116,
+	"./tlh": 117,
+	"./tlh.js": 117,
+	"./tr": 118,
+	"./tr.js": 118,
+	"./tzl": 119,
+	"./tzl.js": 119,
+	"./tzm": 121,
+	"./tzm-latn": 120,
+	"./tzm-latn.js": 120,
+	"./tzm.js": 121,
+	"./uk": 122,
+	"./uk.js": 122,
+	"./ur": 123,
+	"./ur.js": 123,
+	"./uz": 125,
+	"./uz-latn": 124,
+	"./uz-latn.js": 124,
+	"./uz.js": 125,
+	"./vi": 126,
+	"./vi.js": 126,
+	"./x-pseudo": 127,
+	"./x-pseudo.js": 127,
+	"./yo": 128,
+	"./yo.js": 128,
+	"./zh-cn": 129,
+	"./zh-cn.js": 129,
+	"./zh-hk": 130,
+	"./zh-hk.js": 130,
+	"./zh-tw": 131,
+	"./zh-tw.js": 131
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -49957,16 +50006,16 @@ CodeMirror.commands.shiftTabAndUnindentMarkdownList = function (cm) {
 /*global require,module*/
 
 var CodeMirror = __webpack_require__(3);
-__webpack_require__(178);
-__webpack_require__(195);
-__webpack_require__(176);
-__webpack_require__(16);
-__webpack_require__(15);
-__webpack_require__(177);
 __webpack_require__(179);
+__webpack_require__(195);
+__webpack_require__(177);
+__webpack_require__(15);
+__webpack_require__(14);
+__webpack_require__(178);
 __webpack_require__(180);
-__webpack_require__(17);
-var CodeMirrorSpellChecker = __webpack_require__(175);
+__webpack_require__(181);
+__webpack_require__(16);
+var CodeMirrorSpellChecker = __webpack_require__(176);
 var marked = __webpack_require__(191);
 
 
@@ -51990,10 +52039,10 @@ module.exports = SimpleMDE;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(183);
+var content = __webpack_require__(184);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(8)(content, {});
+var update = __webpack_require__(137)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -52013,32 +52062,6 @@ if(false) {
 /* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(188);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(8)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../css-loader/index.js!./vuetify.min.css", function() {
-			var newContent = require("!!../../css-loader/index.js!./vuetify.min.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 199 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 /*
  * to-markdown - an HTML to Markdown converter
@@ -52052,10 +52075,10 @@ if(false) {
 
 var toMarkdown
 var converters
-var mdConverters = __webpack_require__(202)
-var gfmConverters = __webpack_require__(200)
-var HtmlParser = __webpack_require__(201)
-var collapse = __webpack_require__(182)
+var mdConverters = __webpack_require__(201)
+var gfmConverters = __webpack_require__(199)
+var HtmlParser = __webpack_require__(200)
+var collapse = __webpack_require__(183)
 
 /*
  * Utilities
@@ -52276,7 +52299,7 @@ module.exports = toMarkdown
 
 
 /***/ }),
-/* 200 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52393,7 +52416,7 @@ module.exports = [
 
 
 /***/ }),
-/* 201 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -52427,7 +52450,7 @@ function createHtmlParser () {
 
   // For Node.js environments
   if (typeof document === 'undefined') {
-    var jsdom = __webpack_require__(237)
+    var jsdom = __webpack_require__(238)
     Parser.prototype.parseFromString = function (string) {
       return jsdom.jsdom(string, {
         features: {
@@ -52475,7 +52498,7 @@ module.exports = canParseHtmlNatively() ? _window.DOMParser : createHtmlParser()
 
 
 /***/ }),
-/* 202 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52633,7 +52656,7 @@ module.exports = [
 
 
 /***/ }),
-/* 203 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(__dirname, Buffer) {/* globals chrome: false */
@@ -52896,7 +52919,7 @@ Typo.prototype = {
 		}
 		else if (true) {
 			// Node.js
-			var fs = __webpack_require__(238);
+			var fs = __webpack_require__(239);
 			
 			try {
 				if (fs.existsSync(path)) {
@@ -53567,10 +53590,10 @@ Typo.prototype = {
 if (true) {
 	module.exports = Typo;
 }
-/* WEBPACK VAR INJECTION */}.call(exports, "/", __webpack_require__(173).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, "/", __webpack_require__(174).Buffer))
 
 /***/ }),
-/* 204 */
+/* 203 */
 /***/ (function(module, exports) {
 
 /**
@@ -53599,18 +53622,18 @@ module.exports = {
 
 
 /***/ }),
-/* 205 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(231)
+__webpack_require__(232)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(156),
   /* template */
-  __webpack_require__(220),
+  __webpack_require__(221),
   /* scopeId */
   null,
   /* cssModules */
@@ -53637,14 +53660,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 206 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(157),
   /* template */
-  __webpack_require__(227),
+  __webpack_require__(228),
   /* scopeId */
   null,
   /* cssModules */
@@ -53671,12 +53694,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 207 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(229)
+__webpack_require__(230)
 
 var Component = __webpack_require__(1)(
   /* script */
@@ -53709,14 +53732,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 208 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(159),
   /* template */
-  __webpack_require__(225),
+  __webpack_require__(226),
   /* scopeId */
   null,
   /* cssModules */
@@ -53743,18 +53766,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 209 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(230)
+__webpack_require__(231)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(160),
   /* template */
-  __webpack_require__(219),
+  __webpack_require__(220),
   /* scopeId */
   null,
   /* cssModules */
@@ -53781,18 +53804,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 210 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(232)
+__webpack_require__(233)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(161),
   /* template */
-  __webpack_require__(221),
+  __webpack_require__(222),
   /* scopeId */
   null,
   /* cssModules */
@@ -53819,14 +53842,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 211 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(162),
   /* template */
-  __webpack_require__(224),
+  __webpack_require__(225),
   /* scopeId */
   null,
   /* cssModules */
@@ -53853,7 +53876,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 212 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
@@ -53887,14 +53910,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 213 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(164),
   /* template */
-  __webpack_require__(222),
+  __webpack_require__(223),
   /* scopeId */
   null,
   /* cssModules */
@@ -53921,14 +53944,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 214 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(167),
   /* template */
-  __webpack_require__(223),
+  __webpack_require__(224),
   /* scopeId */
   null,
   /* cssModules */
@@ -53955,7 +53978,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 215 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
@@ -53982,6 +54005,40 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-09d555dd", Component.options)
   } else {
     hotAPI.reload("data-v-09d555dd", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 215 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(169),
+  /* template */
+  __webpack_require__(219),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/r/Sites/r-doc/resources/assets/js/pages/Login.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1f1f0bca", Component.options)
+  } else {
+    hotAPI.reload("data-v-1f1f0bca", Component.options)
   }
 })()}
 
@@ -54193,6 +54250,82 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('v-container', [_c('v-layout', {
+    attrs: {
+      "row": "row"
+    }
+  }, [_c('v-flex', {
+    attrs: {
+      "md8": "md8",
+      "xs12": "xs12",
+      "offset-md2": "offset-md2"
+    }
+  }, [_c('v-card', [_c('v-card-row', {
+    staticClass: "grey darken-4"
+  }, [_c('v-card-title', [_c('span', {
+    staticClass: "white--text"
+  }, [_vm._v("Login")])])], 1), _c('v-card-text', [_c('v-layout', {
+    staticClass: "pt-3",
+    attrs: {
+      "row": "row",
+      "wrap": "wrap"
+    }
+  }, [_c('v-flex', {
+    attrs: {
+      "md8": "md8",
+      "offset-md2": "offset-md2"
+    }
+  }, [_c('v-text-field', {
+    staticClass: "input-group--focused",
+    attrs: {
+      "name": "Email",
+      "label": "Email Address",
+      "value": _vm.email
+    }
+  })], 1), _c('v-flex', {
+    attrs: {
+      "md8": "md8",
+      "offset-md2": "offset-md2"
+    }
+  }, [_c('v-text-field', {
+    staticClass: "input-group--focused",
+    attrs: {
+      "name": "Password",
+      "label": "Password",
+      "type": "password",
+      "value": _vm.password
+    }
+  })], 1), _c('v-flex', {
+    attrs: {
+      "md8": "md8",
+      "offset-md2": "offset-md2"
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.login()
+      }
+    }
+  }, [_c('v-btn', {
+    staticClass: "grey darken-4 white--text",
+    attrs: {
+      "block": "block"
+    }
+  }, [_vm._v("Login")])], 1)], 1)], 1)], 1)], 1)], 1)], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-1f1f0bca", module.exports)
+  }
+}
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "col-md-5 col-md-push-7",
     attrs: {
@@ -54248,7 +54381,7 @@ if (false) {
 }
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54267,7 +54400,7 @@ if (false) {
 }
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54302,7 +54435,7 @@ if (false) {
 }
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54340,7 +54473,7 @@ if (false) {
 }
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54386,7 +54519,7 @@ if (false) {
 }
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54539,7 +54672,7 @@ if (false) {
 }
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54594,7 +54727,7 @@ if (false) {
 }
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54890,7 +55023,7 @@ if (false) {
 }
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -54911,7 +55044,7 @@ if (false) {
 }
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -55027,13 +55160,13 @@ if (false) {
 }
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(184);
+var content = __webpack_require__(185);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -55053,13 +55186,13 @@ if(false) {
 }
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(185);
+var content = __webpack_require__(186);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -55079,13 +55212,13 @@ if(false) {
 }
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(186);
+var content = __webpack_require__(187);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -55105,13 +55238,13 @@ if(false) {
 }
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(187);
+var content = __webpack_require__(188);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -55131,7 +55264,7 @@ if(false) {
 }
 
 /***/ }),
-/* 233 */
+/* 234 */
 /***/ (function(module, exports) {
 
 /**
@@ -55164,7 +55297,7 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 234 */
+/* 235 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64862,7 +64995,7 @@ module.exports = Vue$3;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 235 */
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -73690,7 +73823,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 //# sourceMappingURL=vuetify.js.map
 
 /***/ }),
-/* 236 */
+/* 237 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -73718,12 +73851,6 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 237 */
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
-/***/ }),
 /* 238 */
 /***/ (function(module, exports) {
 
@@ -73731,10 +73858,16 @@ module.exports = function(module) {
 
 /***/ }),
 /* 239 */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+/* 240 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(136);
-module.exports = __webpack_require__(137);
+__webpack_require__(135);
+module.exports = __webpack_require__(136);
 
 
 /***/ })

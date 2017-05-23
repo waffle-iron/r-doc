@@ -7,13 +7,14 @@
 require('./bootstrap');
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
+// import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
 // Root level components
 Vue.component('guide', require('./pages/Guide.vue'));
 Vue.component('edit-guide', require('./pages/EditGuide.vue'));
+Vue.component('login', require('./pages/Login.vue'));
 
 const app = new Vue({
   el: '#app'
