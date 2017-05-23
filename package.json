@@ -20,17 +20,16 @@
     "laravel-mix": "0.*",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
-    "showdown": "^1.6.4",
-    "simplemde": "^1.11.2",
-    "to-markdown": "^3.0.4",
-    "vue": "^2.1.10",
-    "vue-simplemde": "^0.3.8"
-  },
-  "dependencies": {
     "pug": "^2.0.0-rc.1",
     "pug-loader": "^2.3.0",
+    "showdown": "^1.6.4",
+    "simplemde": "^1.11.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
+    "to-markdown": "^3.0.4",
+    "vue": "^2.1.10",
+    "vue-router": "^2.5.3",
+    "vue-simplemde": "^0.3.8",
     "vuetify": "^0.12.1"
   }
 }
