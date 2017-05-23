@@ -31,15 +31,11 @@
     },
     methods: {
       login () {
-        console.log('attempting post request');
         axios.post('http://r-doc.dev/login', {
           email: this.email,
           password: this.password
         }).then(response => {
           window.location = response.responseURL;
-          console.log(response);
-        }).catch(error => {
-          console.log(error)
         })
       },
       test() {

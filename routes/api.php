@@ -18,6 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:api')->post('/logout', function() {
+  Auth::logout();
+});
+
 Route::group(['prefix' => 'v1'], function() {
 
   Route::get('/guides', 'GuideController@index');
