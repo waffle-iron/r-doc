@@ -25,5 +25,8 @@
     "to-markdown": "^3.0.4",
     "vue": "^2.1.10",
     "vue-simplemde": "^0.3.8"
+  },
+  "dependencies": {
+    "vuetify": "^0.12.1"
   }
 }
