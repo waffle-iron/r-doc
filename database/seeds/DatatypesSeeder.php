@@ -11,6 +11,6 @@ class DatatypesSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Datatype::class, 5)->create();
+        factory(App\Datatype::class, 2)->create();
     }
 }

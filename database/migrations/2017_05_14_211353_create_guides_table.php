@@ -17,7 +17,7 @@ class CreateGuidesTable extends Migration
       $table->increments('id');
       $table->integer('datatype_id')->unsigned();
       $table->boolean('can_edit')->default(true);
-      $table->integer('user_id')->unsigned();
+      $table->integer('user_id')->unsigned()->nullable();
       $table->string('url');
       $table->integer('category_id')->unsigned()->nullable();
       $table->string('revision')->default('-');

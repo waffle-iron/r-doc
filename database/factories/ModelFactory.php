@@ -28,7 +28,7 @@ $factory->define(App\Guide::class, function (Faker\Generator $faker) {
 
   return [
       'datatype_id' => 1,
-      'user_id' => factory(App\User::class)->create()->id,
+//      'user_id' => factory(App\User::class)->create()->id,
       'url' => $faker->url(),
       'revision_id' => 1,
       'type_id' => 1,

@@ -12,15 +12,17 @@ class GuidesSeeder extends Seeder
    */
   public function run(Faker\Generator $faker)
   {
-    factory(App\Guide::class, 200)->create()->each(function ($g) use ($faker) {
-      $datatype = App\Datatype::find($faker->numberBetween(1, 5));
+    factory(App\Guide::class, 50)->create()->each(function ($g) use ($faker) {
+      $user = App\User::find($faker->numberBetween(1, 5));
+      $g->user()->associate($user);
+      $datatype = App\Datatype::find($faker->numberBetween(1, 2));
       $datatype->guides()->save($g);
       $g->update(['url' => '/guide/' . $g->id]);
-      $category = App\Category::find($faker->numberBetween(1, 25));
+      $category = App\Category::find($faker->numberBetween(1, 3));
       $category->guides()->save($g);
-      $type = App\Type::find($faker->numberBetween(1, 10));
+      $type = App\Type::find($faker->numberBetween(1, 3));
       $type->guides()->save($g);
-      $device = App\Device::find($faker->numberBetween(1, 50));
+      $device = App\Device::find($faker->numberBetween(1, 2));
       $device->guides()->save($g);
       $g->image()->save(factory(App\Image::class)->make());
       $g->update([
@@ -31,7 +33,7 @@ class GuidesSeeder extends Seeder
           'conclusion' => $faker->paragraph,
       ]);
       $revision = factory(App\Revision::class)->create([
-          'owner_id' => $faker->numberBetween(1, 50),
+          'owner_id' => $faker->numberBetween(1, 5),
       ]);
       $status = App\Status::find(1);
       $revision->status()->associate($status);

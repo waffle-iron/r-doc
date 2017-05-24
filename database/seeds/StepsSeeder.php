@@ -25,7 +25,7 @@ class StepsSeeder extends Seeder
         'reminder',
     ];
 
-    for ($i = 1; $i <= 200; $i++) {
+    for ($i = 1; $i <= 50; $i++) {
       $steps = factory(App\Step::class, $faker->numberBetween(7, 15))->create();
       $steps->each(function ($s, $key) use ($i, $faker, $bullets) {
         $s->update(['orderby' => $key+1]);
@@ -55,7 +55,7 @@ class StepsSeeder extends Seeder
         });
         $s->lines()->saveMany($lines);
         $revision = factory(App\Revision::class)->create([
-            'owner_id' => $faker->numberBetween(1, 50),
+            'owner_id' => $faker->numberBetween(1, 5),
         ]);
         $status = App\Status::find(1);
         $revision->status()->associate($status);
