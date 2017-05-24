@@ -1,43 +1,55 @@
 <template>
-  <v-container>
-    <v-progress-circular indeterminate
-                         v-if="!show"
-                         class="center-on-page"
-                          :size="50"></v-progress-circular>
-    <v-layout row v-if="show">
-      <v-flex md10 offset-md1 lg6 offset-lg3>
-        <v-card>
-          <paginate name="guides" :list="data" :per="10" class="pr-4">
-            <v-list two-line>
-              <v-list-item v-for="guide in paginated('guides')"
-                           :key="guide.id"
-                           @click="goToGuide(guide.url)">
-                <v-list-tile ripple>
-                  <v-list-tile-content class="mr-3">
-                    <v-list-tile-title>{{ guide.title }}</v-list-tile-title>
-                    <v-list-tile-sub-title>{{ guide.category }}</v-list-tile-sub-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-                <v-divider class="grey lighten-3"></v-divider>
-              </v-list-item>
-            </v-list>
-          </paginate>
-          <div class="pa-3">
-            <div class="text-xs-center">
-              <paginate-links for="guides"
-                              :show-step-links="true"
-                              :classes="paginateClasses"
-                              :limit="7"></paginate-links>
+  <div id="home">
+    <v-toolbar class="grey darken-4">
+      <v-toolbar-title>r-doc</v-toolbar-title>
+      <v-toolbar-items @click="goToLogin()">
+        <v-btn primary light >Login</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-container>
+      <v-progress-circular indeterminate
+                           v-if="!show"
+                           class="center-on-page"
+                           :size="50"></v-progress-circular>
+      <v-layout row v-if="show">
+        <v-flex md10 offset-md1 lg6 offset-lg3>
+          <v-card>
+            <paginate name="guides"
+                      :list="data"
+                      :per="10"
+                      class="pr-4">
+              <v-list two-line>
+                <v-list-item v-for="guide in paginated('guides')"
+                             :key="guide.id"
+                             @click="goToGuide(guide.url)">
+                  <v-list-tile ripple>
+                    <v-list-tile-content class="mr-3">
+                      <v-list-tile-title>{{ guide.title }}</v-list-tile-title>
+                      <v-list-tile-sub-title>{{ guide.category }}</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-divider class="grey lighten-3"></v-divider>
+                </v-list-item>
+              </v-list>
+            </paginate>
+            <div class="pa-3">
+              <div class="text-xs-center">
+                <paginate-links for="guides"
+                                :show-step-links="true"
+                                :classes="paginateClasses"
+                                :limit="7"></paginate-links>
+              </div>
             </div>
-          </div>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 
 <script>
   import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
+  
   export default {
     components: {PaginateLinks},
     created () {
@@ -62,8 +74,10 @@
     },
     methods: {
       goToGuide(url) {
-        console.log(url)
         this.$router.push(url)
+      },
+      goToLogin() {
+        this.$router.push('/login')
       }
     }
   }
