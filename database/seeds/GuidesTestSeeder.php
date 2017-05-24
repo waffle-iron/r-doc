@@ -25,7 +25,7 @@ class GuidesTestSeeder extends Seeder
       $g = factory(Guide::class)->create();
       $datatype = factory(Datatype::class)->create();
       $datatype->guides()->save($g);
-      $g->update(['url' => env('APP_URL') . '/guide/' . $g->id]);
+      $g->update(['url' => '/guide/' . $g->id]);
       $category = factory(Category::class)->create();
       $category->guides()->save($g);
       $type = factory(Type::class)->create();

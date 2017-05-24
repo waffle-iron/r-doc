@@ -28,6 +28,7 @@
     "stylus-loader": "^3.0.1",
     "to-markdown": "^3.0.4",
     "vue": "^2.1.10",
+    "vue-paginate": "^3.5.0",
     "vue-router": "^2.5.3",
     "vue-simplemde": "^0.3.8",
     "vuetify": "^0.12.1"

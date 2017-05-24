@@ -15,7 +15,7 @@ class GuidesSeeder extends Seeder
     factory(App\Guide::class, 200)->create()->each(function ($g) use ($faker) {
       $datatype = App\Datatype::find($faker->numberBetween(1, 5));
       $datatype->guides()->save($g);
-      $g->update(['url' => env('APP_URL') . '/guide/' . $g->id]);
+      $g->update(['url' => '/guide/' . $g->id]);
       $category = App\Category::find($faker->numberBetween(1, 25));
       $category->guides()->save($g);
       $type = App\Type::find($faker->numberBetween(1, 10));
