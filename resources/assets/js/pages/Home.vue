@@ -17,7 +17,7 @@
             <h2 class="text-xs-center">Documentation Index</h2>
             <v-divider class="grey lighten-2"></v-divider>
             <paginate name="guides"
-                      :list="data"
+                      :list="query"
                       :per="10"
                       class="pr-4">
               <v-list two-line>
@@ -53,18 +53,22 @@
 
 <script>
   import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
+  import VueTypeahead from 'vue-typeahead';
   
   export default {
     components: {PaginateLinks},
+    mixins: [VueTypeahead],
     created () {
       axios.get('/api/v1/guides')
           .then(({data}) => {
-            this.data = data
+            this.query = data;
+            data.forEach(d => this.data.push(d.title));
             this.show = true
           });
     },
     data () {
       return {
+        query: [],
         data: [],
         paginate: ['guides'],
         shown: false,
