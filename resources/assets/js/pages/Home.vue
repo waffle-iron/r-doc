@@ -1,32 +1,39 @@
-<template lang="pug">
-  v-container
-    v-layout(row)
-      v-flex(md10 offset-md1 lg6 offset-lg3)
-        v-card
-          paginate(
-          name="guides"
-              :list="data",
-          :per="10"
-          ).pr-4
-            v-list(two-line)
-              v-list-item(
-              v-for="(guide, index) in paginated('guides')"
-              v-bind:key="guide.id"
-                  @click="goToGuide(guide.url)"
-              )
-                v-list-tile(ripple)
-                  v-list-tile-content.mr-3
-                    v-list-tile-title {{ guide.title }}
-                    v-list-tile-sub-title {{ guide.category }}
-                v-divider.grey.lighten-3
-          div.pa-3
-            .text-xs-center
-              paginate-links(
-              for="guides"
-                  :show-step-links="true"
-                  :classes="paginateClasses"
-                  :limit="7"
-              )
+<template>
+  <v-container>
+    <v-progress-circular indeterminate
+                         v-if="!show"
+                         class="center-on-page"
+                          :size="50"></v-progress-circular>
+    <v-layout row v-if="show">
+      <v-flex md10 offset-md1 lg6 offset-lg3>
+        <v-card>
+          <paginate name="guides" :list="data" :per="10" class="pr-4">
+            <v-list two-line>
+              <v-list-item v-for="guide in paginated('guides')"
+                           :key="guide.id"
+                           @click="goToGuide(guide.url)">
+                <v-list-tile ripple>
+                  <v-list-tile-content class="mr-3">
+                    <v-list-tile-title>{{ guide.title }}</v-list-tile-title>
+                    <v-list-tile-sub-title>{{ guide.category }}</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-divider class="grey lighten-3"></v-divider>
+              </v-list-item>
+            </v-list>
+          </paginate>
+          <div class="pa-3">
+            <div class="text-xs-center">
+              <paginate-links for="guides"
+                              :show-step-links="true"
+                              :classes="paginateClasses"
+                              :limit="7"></paginate-links>
+            </div>
+          </div>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -35,7 +42,10 @@
     components: {PaginateLinks},
     created () {
       axios.get('/api/v1/guides')
-          .then(({data}) => this.data = data)
+          .then(({data}) => {
+            this.data = data
+            this.show = true
+          });
     },
     data () {
       return {
@@ -46,13 +56,9 @@
           'li.left-arrow > a': 'pagination__navigation',
           'li.active > a': ['pagination_item--active', 'pagination__item'],
           'li > a': 'pagination__item'
-        }
+        },
+        show: false
       }
-    },
-    mounted () {
-      setTimeout(() => {
-        this.shown = true
-      }, 1000)
     },
     methods: {
       goToGuide(url) {
@@ -64,6 +70,14 @@
 </script>
 
 <style lang="stylus">
+  .center-on-page
+    position fixed
+    top 50%
+    left 50%
+    margin-top -50px
+    margin-left -50px
+    opacity .8
+
   .paginate-links
     align-items center
     list-style-type none
@@ -84,7 +98,7 @@
         color white
 
     a
-      transition .3s cubic-bezier(0,0,.2,1)
+      transition .3s cubic-bezier(0, 0, .2, 1)
 
     .disabled
       opacity .6
