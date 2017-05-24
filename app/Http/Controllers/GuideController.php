@@ -18,7 +18,9 @@ class GuideController extends Controller
   public function index()
   {
     $guide = DB::table('guides')
-        ->select('id', 'title', 'url')->get();
+        ->select('id', 'title', 'url')
+        ->orderBy('updated_at', 'desc')
+        ->get();
 
     $guide->map(function($g) {
       $g->image = Guide::find($g->id)->image()->get(['original']);

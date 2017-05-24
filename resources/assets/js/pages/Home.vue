@@ -14,6 +14,8 @@
       <v-layout row v-if="show">
         <v-flex md10 offset-md1 lg6 offset-lg3>
           <v-card>
+            <h2 class="text-xs-center">Documentation Index</h2>
+            <v-divider class="grey lighten-2"></v-divider>
             <paginate name="guides"
                       :list="data"
                       :per="10"
@@ -25,7 +27,9 @@
                   <v-list-tile ripple>
                     <v-list-tile-content class="mr-3">
                       <v-list-tile-title>{{ guide.title }}</v-list-tile-title>
-                      <v-list-tile-sub-title>{{ guide.category }}</v-list-tile-sub-title>
+                      <v-list-tile-sub-title>
+                        <v-chip>{{ guide.category }}</v-chip>
+                      </v-list-tile-sub-title>
                     </v-list-tile-content>
                   </v-list-tile>
                   <v-divider class="grey lighten-3"></v-divider>
@@ -88,8 +92,6 @@
     position fixed
     top 50%
     left 50%
-    margin-top -50px
-    margin-left -50px
     opacity .8
 
   .paginate-links
