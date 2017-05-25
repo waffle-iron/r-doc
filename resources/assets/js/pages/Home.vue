@@ -1,48 +1,45 @@
-<template>
-  <div id="home">
-    <toolbar title="Home"></toolbar>
-    <v-container>
-      <v-progress-circular indeterminate
-                           v-if="loading"
-                           class="center-on-page"
-                           :size="50"></v-progress-circular>
-      <v-layout row v-if="!loading">
-        <v-flex sm10 offset-sm1 lg6 offset-lg3>
-          <v-card hover raised height="75px" class="mb-3">
-            <v-card-row class="pt-2 pl-5 pr-5">
-              <v-text-field name="search-input"
-                            label="Search documentation"
-                            id="search-documentation-temp"
-                            v-model="search">
-              </v-text-field>
-            </v-card-row>
-          </v-card>
-          <v-card>
-            <h2 class="text-xs-center">Documentation Index</h2>
-            <v-divider class="grey lighten-2"></v-divider>
-            <paginate name="guides"
-                      :list="filteredList"
-                      :per="10"
-                      class="pr-4">
-              <div class="portrait mt-3"
-                   v-for="guide in paginated('guides')"
-                   :key="guide.id">
-                <index-card :data="guide"></index-card>
-              </div>
-            </paginate>
-            <div class="pa-3">
-              <div class="text-xs-center">
-                <paginate-links for="guides"
-                                :show-step-links="true"
-                                :classes="paginateClasses"
-                                :limit="7"></paginate-links>
-              </div>
-            </div>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </div>
+<template lang="pug">
+  #home
+    toolbar(title="Home")
+    v-container
+      v-progress-circular(
+        indeterminate
+        v-if="loading"
+        class="center-on-page"
+        v-bind:size="50"
+      )
+      v-layout(row v-if="!loading")
+        v-flex(sm10 offset-sm1 lg6 offset-lg3)
+          v-card.mb-3(hover raised height="75px")
+            v-card-row.pt-2.pl-5.pr-5
+              v-text-field(
+                name="search-input"
+                label="Search documentation"
+                id="search-documentation"
+                v-model="search"
+              )
+          v-card
+            h2.text-xs-center Documentation Index
+            v-divider
+            paginate(
+              name="guides"
+              v-bind:list="filteredList"
+              v-bind:per="10"
+              class="pr-4"
+            )
+              .portrait.mt-3(
+                v-for="guide in paginated('guides')"
+                v-bind:key="guide.id"
+              )
+                index-card(:data="guide")
+            .pa-3
+              .text-xs-center
+                paginate-links(
+                  for="guides"
+                  v-bind:show-step-links="true"
+                  v-bind:classes="paginateClasses"
+                  v-bind:limit="7"
+                )
 </template>
 
 <script>

@@ -1,19 +1,14 @@
-<template>
-  <v-card :img="data.image" height="200px" @click="goToGuide(data.id)">
-    <div class="transparent-image">
-      <v-card-row>
-        <v-card-title>
-          <h4 class="white--text mt-2 ml-2 mb-2">{{ data.title }}</h4> <br>
-        </v-card-title>
-      </v-card-row>
-      <v-card-row actions>
-        <v-chip>{{ data.category }}</v-chip>
-        <v-spacer></v-spacer>
-        <v-btn flat class="white--text">{{ data.modified_date }}</v-btn>
-        <v-icon class="white--text">event</v-icon>
-      </v-card-row>
-    </div>
-  </v-card>
+<template lang="pug">
+  v-card(:img="data.image" height="200px" v-on:click="goToGuide(data.id)")
+    .transparent-image
+      v-card-row
+        v-card-title
+          h4.white--text.mt-2.ml-2.mb-2 {{ data.title }}
+      v-card-row(actions)
+        v-chip {{ data.category }}
+        v-spacer
+        v-btn(flat class="white--text") {{ data.modified_date }}
+        v-icon.white--text event
 </template>
 
 <script>

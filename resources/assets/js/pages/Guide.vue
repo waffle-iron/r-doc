@@ -1,34 +1,22 @@
-<template>
-  <div id="guide">
-    <toolbar :title="icon"></toolbar>
-    <div class="portrait">
-      <v-card :img="image" height="300px">
-        <div class="transparent-image">
-          <v-card-row class="image--banner">
-            <p class="datatype card__title yellow">{{ data.type }}</p>
-            <v-card-title class="white--text">
-              <h4 class="white--text">{{ data.title }}</h4>
-            </v-card-title>
-            <h6 class="text-xs-center yellow" v-if="data.published">Published: {{ data.published }}</h6>
-            <h6 class="text-xs-center yellow" v-else>Unpublished</h6>
-          </v-card-row>
-        </div>
-      </v-card>
-      <v-container>
-        <v-card>
-          <v-card-row class="yellow">
-            <v-card-title>
-              <span>Introduction</span>
-            </v-card-title>
-          </v-card-row>
-          <v-card-row class="pt-4 pb-2 pl-4 pr-4">
-            <p>{{ data.introduction }}</p>
-          </v-card-row>
-        </v-card>
-        <guide-step :data="data" edit="false"></guide-step>
-      </v-container>
-    </div>
-  </div>
+<template lang="pug">
+  #guide
+    toolbar(title='<i class="material-icons icon icon--light">arrow_back</i>')
+    .portrait
+      v-card(:img="data.image.original" height="300px")
+        .transparent-image
+          v-card-row.image--banner
+            p.datatype.card__title.yellow {{ data.type }}
+            v-card-title.white--text
+              h4.white--text {{ data.title }}
+            h6.text-xs-center.yellow(v-if="data.published") Published: {{ data.published }}
+      v-container
+        v-card
+          v-card-row.yellow
+            v-card-title
+              span Introduction
+          v-card-row.pt-4.pb-2.pl-4.pr-4
+            p {{ data.introduction }}
+        guide-step(:data="data" v-bind:edit="false")
 </template>
 
 <script>
@@ -44,14 +32,11 @@
       axios.get('/api/v1/guides/' + this.$route.params.id)
           .then(r => {
             this.data = r.data;
-            this.image = r.data.image[0].original
           })
     },
     data() {
       return {
         data: {},
-        image: '',
-        icon: '<i class="material-icons icon icon--light">arrow_back</i>'
       }
     }
   }

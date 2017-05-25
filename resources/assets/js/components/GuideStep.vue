@@ -1,14 +1,16 @@
-<template>
-  <v-card id="guide-step" v-if="!edit">
-    <v-card-row class="yellow">
-      <v-card-title>
-        <span>Introduction</span>
-      </v-card-title>
-    </v-card-row>
-    <v-card-row class="pt-4 pb-2 pl-4 pr-4">
-      <p>{{ data.introduction }}</p>
-    </v-card-row>
-  </v-card>
+<template lang="pug">
+  #guide-step.mt-4(v-if="!edit")
+    v-card
+      v-card-row.yellow
+        v-card-title
+          span Introduction
+      v-card-row.pt-4.pb-2.pl-4.pr-4
+        p {{ data.introduction }}
+  #guide-step-edit.mt-4(v-else)
+    v-card
+      v-card-row.yellow
+        v-card-title
+          span TODO...
 </template>
 
 <script>

@@ -1,10 +1,8 @@
-<template>
-  <v-toolbar primary>
-    <v-toolbar-title v-html="title" @click="goHome()"></v-toolbar-title>
-    <v-toolbar-items @click="goToLogin()">
-      <v-btn primary light>Login</v-btn>
-    </v-toolbar-items>
-  </v-toolbar>
+<template lang="pug">
+  v-toolbar(primary)
+    v-toolbar-title(v-html="title" v-on:click="goHome()")
+    v-toolbar-items(v-on:click="goToLogin()")
+      v-btn(primary light) Login
 </template>
 
 <script>
