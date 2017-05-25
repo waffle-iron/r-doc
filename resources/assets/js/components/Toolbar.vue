@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar class="grey darken-4">
+  <v-toolbar primary>
     <v-toolbar-title>{{ title }}</v-toolbar-title>
     <v-toolbar-items @click="goToLogin()">
       <v-btn primary light>Login</v-btn>

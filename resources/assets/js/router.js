@@ -15,14 +15,14 @@ const routes = [
     component: Home,
     name: 'home'
   },
-    {
+  {
     path: '/login',
     component: Login
   },
   {
     path: '/dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true }
+    meta: {requiresAuth: true}
   }
 ];
 
@@ -33,11 +33,11 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(m => m.meta.requiresAuth))
-    if(!Laravel.user) {
-      return next({ path: '/login' })
+  if (to.matched.some(m => m.meta.requiresAuth))
+    if (!Laravel.user) {
+      return next({path: '/login'})
     }
-    return next();
+  return next();
 });
 
 export default router;
