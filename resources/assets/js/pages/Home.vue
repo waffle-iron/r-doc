@@ -8,8 +8,8 @@
                            :size="50"></v-progress-circular>
       <v-layout row v-if="!loading">
         <v-flex sm10 offset-sm1 lg6 offset-lg3>
-          <v-card hover raised height="75px" class="mb-3">
-            <v-card-row>
+          <v-card hover raised height="90px" class="mb-3">
+            <v-card-row class="pt-2">
               <v-text-field name="search-input"
                             label="Search documentation"
                             id="search-documentation-temp"

@@ -1,5 +1,5 @@
 <template>
-  <v-card :img="data.image" height="200px" @click="goToGuide(data.url)">
+  <v-card :img="data.image" height="200px" @click="goToGuide(data.id)">
     <div class="transparent-image">
       <v-card-row>
         <v-card-title>
@@ -20,8 +20,8 @@
   export default {
     props: ['data'],
     methods: {
-      goToGuide(url) {
-        this.$router.push(url)
+      goToGuide(guideid) {
+        this.$router.push({name: 'guide', params: { id: guideid }})
       }
     }
   }
