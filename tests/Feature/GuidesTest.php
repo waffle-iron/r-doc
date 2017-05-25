@@ -105,7 +105,7 @@ class GuidesTest extends TestCase
   /** @test */
   public function has_the_correct_guide_url()
   {
-    $this->guideHas(['url' => 'http://r-doc.dev/guide/1']);
+    $this->guideHas(['url' => '/guide/1']);
   }
 
   /** @test */
