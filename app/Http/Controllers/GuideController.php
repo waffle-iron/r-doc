@@ -13,7 +13,7 @@ class GuideController extends Controller
   /**
    * Display a listing of the resource.
    *
-   * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Http\Response
+   * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Http\Response|\Illuminate\Support\Collection
    */
   public function index()
   {
