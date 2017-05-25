@@ -17,3 +17,4 @@ _ide_helper.php
 .phpstorm.meta.php
 .env.travis
 local-gitignore
+fortrabbit-deploy.sh

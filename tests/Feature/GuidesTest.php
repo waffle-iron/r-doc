@@ -24,20 +24,6 @@ class GuidesTest extends TestCase
   }
 
   /** @test */
-  public function redirects_to_login_page_when_trying_to_visit_non_mockup_related_urls()
-  {
-    $this->withExceptionHandling();
-    $response1 = $this->get('/mockups');
-    $response1->assertRedirect('/login');
-    $response2 = $this->get('/mockups/guide');
-    $response2->assertRedirect('/login');
-    $response3 = $this->get('/mockups/guide/1');
-    $response3->assertRedirect('/login');
-    $response4 = $this->get('/adfasdfasd');
-    $response4->assertRedirect('/login');
-  }
-
-  /** @test */
   public function guides_table_is_configured()
   {
     $guide = create('App\Guide');
@@ -285,35 +271,25 @@ class GuidesTest extends TestCase
   {
     $guides = $this->createCompleteGuide(2);
     $response = $this->get('/api/v1/guides');
+    $response->assertStatus(200);
     $response->assertJson([
-        'total' => count($guides),
-        'per_page' => 25,
-        'current_page' => 1,
-        'last_page' => 1,
-        'next_page_url' => null,
-        'prev_page_url' => null,
-        'from' => 1,
-        'to' => 2,
-        'data' => [
-            [
-                'id' => (string)$guides[0]->id,
-                'title' => $guides[0]->title,
-                'url' => $guides[0]->url,
-                'image' => $guides[0]->image[0]->original,
-                'modified_date' => $guides[0]->updated_at->toFormattedDateString(),
-                'category' => $guides[0]->category,
-            ],
-            [
-                'id' => (string)$guides[1]->id,
-                'title' => $guides[1]->title,
-                'url' => $guides[1]->url,
-                'image' => $guides[1]->image[0]->original,
-                'modified_date' => $guides[1]->updated_at->toFormattedDateString(),
-                'category' => $guides[1]->category,
-            ],
+        [
+            'id' => (string)$guides[0]->id,
+            'title' => $guides[0]->title,
+            'url' => $guides[0]->url,
+            'image' => $guides[0]->image[0]->original,
+            'modified_date' => $guides[0]->updated_at->toFormattedDateString(),
+            'category' => $guides[0]->category,
+        ],
+        [
+            'id' => (string)$guides[1]->id,
+            'title' => $guides[1]->title,
+            'url' => $guides[1]->url,
+            'image' => $guides[1]->image[0]->original,
+            'modified_date' => $guides[1]->updated_at->toFormattedDateString(),
+            'category' => $guides[1]->category,
         ],
     ]);
-
   }
 
   /**
