@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Guide from './pages/Guide.vue';
-import EditGuide from './pages/EditGuide.vue';
 import Home from './pages/Home.vue';
 import Login from './pages/Login.vue';
 import Dashboard from './pages/Dashboard.vue';
@@ -34,8 +32,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(m => m.meta.requiresAuth))
-    if (!Laravel.user) {
-      return next({path: '/login'})
+    if (!window.Laravel.user) {
+      return next({ path: '/login' })
     }
   return next();
 });

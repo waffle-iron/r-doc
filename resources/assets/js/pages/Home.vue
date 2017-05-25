@@ -8,6 +8,7 @@
                            :size="50"></v-progress-circular>
       <v-layout row v-if="!loading">
         <v-flex sm10 offset-sm1 lg6 offset-lg3>
+          <guide-search></guide-search>
           <v-card>
             <h2 class="text-xs-center">Documentation Index</h2>
             <v-divider class="grey lighten-2"></v-divider>
@@ -39,24 +40,26 @@
 <script>
   import Toolbar from '../components/Toolbar.vue'
   import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
+  import GuideSearch from '../components/GuideSearch.vue';
   import IndexCard from '../components/IndexCard.vue';
-  import VueTypeahead from 'vue-typeahead';
 
   export default {
-    components: {Toolbar, PaginateLinks, IndexCard},
-    mixins: [VueTypeahead],
+    components: {
+      Toolbar,
+      PaginateLinks,
+      GuideSearch,
+      IndexCard
+    },
     created () {
       axios.get('/api/v1/guides')
           .then(({data}) => {
             this.query = data;
-            data.forEach(d => this.data.push(d.title));
             this.loading = false
           });
     },
     data () {
       return {
         query: [],
-        data: [],
         paginate: ['guides'],
         loading: true,
         paginateClasses: {
@@ -65,10 +68,6 @@
           'li > a': 'pagination__item'
         }
       }
-    },
-    methods: {
-
-
     }
   }
 </script>
