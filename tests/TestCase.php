@@ -70,12 +70,11 @@ abstract class TestCase extends BaseTestCase
    */
   protected function createCompleteGuide($qty = 1)
   {
-    $url = env('APP_URL');
     $guide = factory('App\Guide', $qty)->states('complete')->create();
-    $guide->each(function ($g) use ($url) {
+    $guide->each(function ($g) {
       $datatype = factory('App\Datatype')->create();
       $datatype->guides()->save($g);
-      $g->update(['url' => "{$url}/guide/{$g->id}"]);
+      $g->update(['url' => "/guide/{$g->id}"]);
       $category = create('App\Category');
       $category->guides()->save($g);
       $device = factory('App\Device')->create();
