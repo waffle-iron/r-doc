@@ -45,20 +45,9 @@
 
 <hr />
 
-<h3 id="daily-todo">Daily Todo</h3>
-
-<ul>
-  <li class="box task-list-item">
-  <input type="checkbox" class="task-list-item-checkbox" disabled> <del>configure laravel-fractal and use current tests to ensure correct implementation</del></li>
-  <li class="box_done task-list-item">
-  <input type="checkbox" class="task-list-item-checkbox" value="on" disabled checked> finish <code class="highlighter-rouge">api/v1/guides/{guideid}</code></li>
-</ul>
-
-<hr />
-
 <h3 id="progress">Progress</h3>
 
-<p>I attempted to use a package called <code class="highlighter-rouge">laraevel-fractal</code> to handle my transformers. Transformers are when you query the database, you receive all of the db columns by name. But sometimes you would want the <code class="highlighter-rouge">id</code> column to say <code class="highlighter-rouge">guideid</code> instead. Transformers handle this and it looked like the package would handle this nicely. The only problem is that it broke a majority of my tests. I was getting a very nondescript error that did not allow me to isolate the problem to fix it. I decided to undo my progress (about an hour and a half) and implement using native Laravel methods. I was then able to write tests to support all of the data that I was expecting to see from the endpoint. This took a lot longer than I expected, but the end result is what I had originally planned. This, I believe, is also the biggest (and most data-heavy) piece of data that will be needed as far as site functionality is concerned. I do believe that the rest of the pieces will be a little easier to implement.</p>
+<p>I attempted to use a package called <code class="highlighter-rouge">laraevel-fractal</code> to handle my transformers. Transformers are when you query the database, you receive all of the db columns by name. But sometimes you would want the <code class="highlighter-rouge">id</code> column to say <code class="highlighter-rouge">guideid</code> instead. Transformers handle this and it looked like the <code class="highlighter-rouge">laravel-fractal</code> package would handle this nicely. The only problem is that it broke a majority of my tests. I was getting a very nondescript error that did not allow me to isolate the problem to fix it. I decided to undo my progress (about an hour and a half) and implement using native Laravel methods. I was then able to write tests to support all of the data that I was expecting to see from the endpoint. This took a lot longer than I expected, but the end result is what I had originally planned. This, I believe, is also the biggest (and most data-heavy) piece of data that will be needed as far as site functionality is concerned. I do believe that the rest of the pieces will be a little easier to implement.</p>
 
 <hr />
 

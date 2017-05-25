@@ -1,0 +1,40 @@
+---
+layout: post
+title:  "Tuesday May 23"
+date:   2017-05-23 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Screenshots
+
+[![Front Page Data]({{site.baseurl}}/images/week3/05-24-front-page-data.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week3/05-24-front-page-data.png){:target="_blank"}
+[![Front Page]({{site.baseurl}}/images/week3/05-24-front-page.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week3/05-24-front-page.png){:target="_blank"}
+[![Login Page]({{site.baseurl}}/images/week3/05-24-login-page.png){:width="200" class="img-responsive img-border"}]({{site.baseurl}}/images/week3/05-24-login-page.png){:target="_blank"}
+
+### Progress
+
+I recreated the login page (functionality is not currently working, but is on my todo list), and created a home page. I was able to utilize some VueJS specific plugins that allowed me to add a nice front-end pagination to the home page. Implemented `vue-router` so the front-end is not a single-page application. That means that the client is completely separated from the server. When you click on a link on the page, JavaScript is handling the page redirect and page generation. This is a new, modern approach to building web applications.
+
+---
+
+### Thoughts 
+
+I believe that I have figured out a path forward with my site structure and design. It did take a few hours of thought. A little bit of trial and error was needed as well. I've noticed recently that I will decide on an approach, try it out, find out that it is not ideal for my goals and then do a reset back to the prior commit, which erases any trace of me trying that idea. On paper, once again, this makes it look like I am not making any progress. There is a way for me to revert a commit and place it ahead of the attempted changes. I need to look into that when I encounter that situation again.
+
+I have provided screenshots today of the new look of my pages. I'm not entirely sure on the black and white theme at the moment, but I am still in the stage of molding the look and feel to my tasted. I suppose that storyboards would have been more appropriate at this stage. I like to create my storyboards with HTML, but I am going to look into some third-party tools that will help me to accomplish this instead of simply hacking away at HTML.
+
+---
+
+### Daily Commits
+
+- [Make index page work again](https://github.com/roberthamel/r-doc/commit/68e6a5a6244719009297484c6987bf7c0fc5a665){:target="_blank"}
+- [Remove some packages](https://github.com/roberthamel/r-doc/commit/a932cc271baaf281cbe942d59c14d81d294fd4d2){:target="_blank"}
+- [Install vuetify](https://github.com/roberthamel/r-doc/commit/4625b8cb7378e2090e8294cbc8bacbd6111d1925){:target="_blank"}
+- [Login page redesign](https://github.com/roberthamel/r-doc/commit/cd2b76d670ebf44bea421d1750e467944b554918){:target="_blank"}
+- [Vue-router installed](https://github.com/roberthamel/r-doc/commit/10fc0dd940254380a37f88fb5f2ea1b2d698fd01){:target="_blank"}
+- [Started a dashboard page](https://github.com/roberthamel/r-doc/commit/7ccf1d324e929d2f48d72adbae46c7dcae3ecb7d){:target="_blank"}
+- [Front page is coming along](https://github.com/roberthamel/r-doc/commit/950fa249a449a18626ee8bb37361a78195fb534f){:target="_blank"}
+- [Reformatted html; added spinner](https://github.com/roberthamel/r-doc/commit/1d7dbd505359520bb6450aaa0c5dbc1a09519d12){:target="_blank"}
+- [Toolbar is in place](https://github.com/roberthamel/r-doc/commit/cf563a4890649e2a028d635d31e615a325331d1b){:target="_blank"}

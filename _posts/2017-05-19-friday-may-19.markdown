@@ -25,16 +25,8 @@ I like the idea of separating the front-end from the back-end more and more. In 
 
 ### Daily Commits
 
----
-
-#### Master Branch
 
 - [Configure dusk to use different database](https://github.com/roberthamel/r-doc/commit/f43f8d62f95ea3523ad8c7fbc1db9b479b19bf39){:target="_blank"}
-
----
-
-#### create-crud Branch
-
 - [Create guides helper test function created](https://github.com/roberthamel/r-doc/commit/e4a79236dee0ccb82aef826e0acf0a15faeadf48){:target="_blank"}
 - [my_test_guide_algorithm_is_generating_data_for_the_correct_tables](https://github.com/roberthamel/r-doc/commit/f0925bfc696111bd6b0a38bc274b2aa8b07835bf){:target="_blank"}
 - [3 tests written](https://github.com/roberthamel/r-doc/commit/13482d0578f18acaef4ef0ea6be08d8e55f8536b){:target="_blank"}

@@ -14,16 +14,9 @@ categories: r-doc log entry
 
 ---
 
-### Daily Todo
-
-- [ ] ~~configure laravel-fractal and use current tests to ensure correct implementation~~
-- [x] finish `api/v1/guides/{guideid}`
-
----
-
 ### Progress
 
-I attempted to use a package called `laraevel-fractal` to handle my transformers. Transformers are when you query the database, you receive all of the db columns by name. But sometimes you would want the `id` column to say `guideid` instead. Transformers handle this and it looked like the package would handle this nicely. The only problem is that it broke a majority of my tests. I was getting a very nondescript error that did not allow me to isolate the problem to fix it. I decided to undo my progress (about an hour and a half) and implement using native Laravel methods. I was then able to write tests to support all of the data that I was expecting to see from the endpoint. This took a lot longer than I expected, but the end result is what I had originally planned. This, I believe, is also the biggest (and most data-heavy) piece of data that will be needed as far as site functionality is concerned. I do believe that the rest of the pieces will be a little easier to implement.
+I attempted to use a package called `laraevel-fractal` to handle my transformers. Transformers are when you query the database, you receive all of the db columns by name. But sometimes you would want the `id` column to say `guideid` instead. Transformers handle this and it looked like the `laravel-fractal` package would handle this nicely. The only problem is that it broke a majority of my tests. I was getting a very nondescript error that did not allow me to isolate the problem to fix it. I decided to undo my progress (about an hour and a half) and implement using native Laravel methods. I was then able to write tests to support all of the data that I was expecting to see from the endpoint. This took a lot longer than I expected, but the end result is what I had originally planned. This, I believe, is also the biggest (and most data-heavy) piece of data that will be needed as far as site functionality is concerned. I do believe that the rest of the pieces will be a little easier to implement.
 
 ---
 

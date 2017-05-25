@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="t-brown">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Wednesday May 24</title>
+  <meta name="description" content="back">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700|Roboto+Mono:400,500' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/r-doc/css/main.css">
+</head>
+
+  <body>
+    <nav class="c-navigation is-fixed">
+  <div class="c-navigation__container u-container">
+    <a class="c-navigation__item " href="/r-doc/">Home</a>
+    <a class="c-navigation__item " href="/r-doc/front-stories/">Front End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/back-stories/">Back End User Stories</a>
+    <a class="c-navigation__item " href="/r-doc/summaries/">Weekly Summaries</a>
+    <a class="c-navigation__item " href="/r-doc/logs/">Log Index</a>
+  </div>
+</nav>
+
+
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <article class="c-article">
+  <header class="c-header c-article__header">
+    <div class="u-container">
+      <h1 class="c-header__title">Wednesday May 24</h1>
+    </div>
+  </header>
+
+  <div class="c-article__main">
+    <div class="post-content markdown-body" itemprop="articleBody">
+      <div class="post-content markdown-body" itemprop="articleBody">
+  <p><a href="/r-doc/summaries">back</a></p>
+
+<h3 id="progress">Progress</h3>
+
+<p>I spent a bit of time with my web host <a href="https://www.fortrabbit.com/" target="_blank">Fortrabbit</a> trying to resolve the issue I was having with not being able to update my files on the host. After almost two hours, we were able to resolve it. Sadly, the problem was extremely unique and was being caused on my end. Normally, I would type <code class="highlighter-rouge">git push fortrabbit master</code> on the command line and all of the files would be beamed up to the server and updated. The solution is for me to append a flag onto the command, so now I type <code class="highlighter-rouge">git push fortrabbit master --no-verify</code> and I am able to proceed with my work. I created a shell script to handle preventing certain files and directories to be uploaded to my host (directories like <code class="highlighter-rouge">docs</code>, which houses these log pages; I do not need to store these on the production server). Because of this, you will now see a pattern of commits: the first will say <code class="highlighter-rouge">deploy to fortrabbit</code>, and the second will say <code class="highlighter-rouge">post fortrabbit deploy</code>. I like this approach and will continue to use it.</p>
+
+<hr />
+
+<h3 id="thoughts">Thoughts</h3>
+
+<p>It was my birthday so not a lot of time devoted to this project. I am happy that I was able to resolve the issue with my host. I also fell behind updating these logs but sure enough, I have a stable foundation to retrace the steps that I have taken in terms of progress.</p>
+
+<p>Something I am becoming more and more concerned about is the amount of fiddling with broken tests. These tests are breaking because of small changes that I am making to the implementation and I now have to consider just how much more time I want to spend writing these tests, or at least the depth in which I consider a passing test. It is important to have a safeguard for any unanticipated consequences to changes I make in the code base, but is it worth my time to have to maintain these test? I’m starting the believe that answer is no. But since this is my first time actually using the process of test-driven development, I am learning the ins and outs of the process. I think my next step is to write the simplest assertions possible (or even skip writing them) to see what effect this will have on my progress moving forward.</p>
+
+<hr />
+
+<h3 id="daily-commits">Daily Commits</h3>
+
+<ul>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/79b8e62bf08997d44f4be98afa6281985afc3d80" target="_blank">Changed results to sort by latest</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/38f7b0b19ef778f0b38cc3c8546ae3668de02c89" target="_blank">add vue-typeahead; remove unnecessary files</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/f0bd816ceda96913d3d94c211f26ceb54726203f" target="_blank">Changed migrations</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/fbf1a02391174522ad926342e3dcffa6d5aa5fff" target="_blank">Change gitignore</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/5b7b8fd708d1f79f961a56c1f906496fa76ff1c5" target="_blank">fortrabbit issue solved; add deploy script</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/116ad17ed06e6ff4d940522037f6bcdcf78012ee" target="_blank">Fixed all tests</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/effafa65b6d3eac4165c314db6058ccceb08157c" target="_blank">Merge branch ‘master’ into theme-guides-pages</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/567b9e5901a278d147c4701d6838be2dd065acc0" target="_blank">Travis fix?</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/3e1e9053de36ad57f36c41a9b60c244c64e9bb57" target="_blank">Merge pull request #5 from roberthamel/theme-guides-pages</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/68408ad6fcb771a5356d69c85c78c6945945fe9d" target="_blank">deploy to fortrabbit</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/69205f1335d9af9d17860d7f7ab53fa3ad1f3319" target="_blank">post fortrabbit deploy</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/112dc57011658b24286a1954f737b7c3fc83a7f6" target="_blank">deploy to fortrabbit</a></li>
+  <li><a href="https://github.com/roberthamel/r-doc/commit/74c9a383d40c27e5e8baf79c68b11766f462a0c4" target="_blank">post fortrabbit deploy</a></li>
+</ul>
+
+</div>
+
+    </div>
+  </div>
+</article>
+
+    </div>
+
+  </body>
+</html>

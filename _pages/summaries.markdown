@@ -10,10 +10,19 @@ permalink: /summaries/
 
 ---
 
+### Projects Status
+
+- [Projects](https://github.com/roberthamel/r-doc/projects/1){:target="_blank"}
+
+---
+
 ### Log Entries
 
 - [Sunday](/r-doc/2017/05/sunday-may-21)
 - [Monday](/r-doc/2017/05/monday-may-22)
+- [Tuesday](/r-doc/2017/05/tuesday-may-23)
+- [Wednesday](/r-doc/2017/05/wednesday-may-24)
+- [Thursday](/r-doc/2017/15/thursday-may-25)
 
 ---
 
