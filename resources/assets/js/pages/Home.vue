@@ -3,7 +3,7 @@
     <v-toolbar class="grey darken-4">
       <v-toolbar-title>r-doc</v-toolbar-title>
       <v-toolbar-items @click="goToLogin()">
-        <v-btn primary light >Login</v-btn>
+        <v-btn primary light>Login</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-container>
@@ -12,7 +12,7 @@
                            class="center-on-page"
                            :size="50"></v-progress-circular>
       <v-layout row v-if="show">
-        <v-flex md10 offset-md1 lg6 offset-lg3>
+        <v-flex sm10 offset-sm1 lg6 offset-lg3>
           <v-card>
             <h2 class="text-xs-center">Documentation Index</h2>
             <v-divider class="grey lighten-2"></v-divider>
@@ -20,21 +20,25 @@
                       :list="query"
                       :per="10"
                       class="pr-4">
-              <v-list two-line>
-                <v-list-item v-for="guide in paginated('guides')"
-                             :key="guide.id"
-                             @click="goToGuide(guide.url)">
-                  <v-list-tile ripple>
-                    <v-list-tile-content class="mr-3">
-                      <v-list-tile-title>{{ guide.title }}</v-list-tile-title>
-                      <v-list-tile-sub-title>
-                        <v-chip>{{ guide.category }}</v-chip>
-                      </v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <v-divider class="grey lighten-3"></v-divider>
-                </v-list-item>
-              </v-list>
+              <div class="portrait mt-3"
+                   v-for="guide in paginated('guides')"
+                   :key="guide.id">
+                <v-card :img="guide.image" height="200px" @click="goToGuide(guide.url)">
+                  <div class="transparent-image">
+                    <v-card-row>
+                      <v-card-title>
+                        <h4 class="white--text mt-2 ml-2 mb-2">{{ guide.title }}</h4> <br>
+                      </v-card-title>
+                    </v-card-row>
+                    <v-card-row actions>
+                      <v-chip>{{ guide.category }}</v-chip>
+                      <v-spacer></v-spacer>
+                      <v-btn flat class="white--text">{{ guide.modified_date }}</v-btn>
+                      <v-icon class="white--text">event</v-icon>
+                    </v-card-row>
+                  </div>
+                </v-card>
+              </div>
             </paginate>
             <div class="pa-3">
               <div class="text-xs-center">
@@ -54,7 +58,7 @@
 <script>
   import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
   import VueTypeahead from 'vue-typeahead';
-  
+
   export default {
     components: {PaginateLinks},
     mixins: [VueTypeahead],
@@ -124,4 +128,14 @@
       opacity .6
       pointer-events: none
 
+  .transparent-image
+    position absolute
+    z-index 1
+    width 100%
+    height 100%
+    background-color rgba(0, 0, 0, .5)
+
+    .card__row.card__row--actions
+      position absolute
+      bottom 0
 </style>
