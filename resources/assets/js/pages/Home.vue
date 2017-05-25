@@ -23,21 +23,7 @@
               <div class="portrait mt-3"
                    v-for="guide in paginated('guides')"
                    :key="guide.id">
-                <v-card :img="guide.image" height="200px" @click="goToGuide(guide.url)">
-                  <div class="transparent-image">
-                    <v-card-row>
-                      <v-card-title>
-                        <h4 class="white--text mt-2 ml-2 mb-2">{{ guide.title }}</h4> <br>
-                      </v-card-title>
-                    </v-card-row>
-                    <v-card-row actions>
-                      <v-chip>{{ guide.category }}</v-chip>
-                      <v-spacer></v-spacer>
-                      <v-btn flat class="white--text">{{ guide.modified_date }}</v-btn>
-                      <v-icon class="white--text">event</v-icon>
-                    </v-card-row>
-                  </div>
-                </v-card>
+                <index-card :data="guide"></index-card>
               </div>
             </paginate>
             <div class="pa-3">
@@ -57,10 +43,11 @@
 
 <script>
   import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
+  import IndexCard from '../components/IndexCard.vue';
   import VueTypeahead from 'vue-typeahead';
 
   export default {
-    components: {PaginateLinks},
+    components: {PaginateLinks, IndexCard},
     mixins: [VueTypeahead],
     created () {
       axios.get('/api/v1/guides')
@@ -127,15 +114,4 @@
     .disabled
       opacity .6
       pointer-events: none
-
-  .transparent-image
-    position absolute
-    z-index 1
-    width 100%
-    height 100%
-    background-color rgba(0, 0, 0, .5)
-
-    .card__row.card__row--actions
-      position absolute
-      bottom 0
 </style>
