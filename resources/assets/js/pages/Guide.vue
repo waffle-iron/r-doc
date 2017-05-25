@@ -1,6 +1,6 @@
 <template>
   <div id="guide">
-    <toolbar :title="data.title"></toolbar>
+    <toolbar :title="icon"></toolbar>
     <div class="portrait">
       <v-card :img="image" height="300px">
         <div class="transparent-image">
@@ -35,36 +35,35 @@
     data() {
       return {
         data: {},
-        image: ''
+        image: '',
+        icon: '<i class="material-icons icon icon--light">arrow_back</i>'
       }
     }
   }
 </script>
 
 <style lang="stylus">
-  .transparent-image
+  .card__row
+    display flex
+    flex-direction column
+    padding-top 0
+    height 100% !important
 
-    .card__row
-      display flex
-      flex-direction column
-      padding-top 0
-      height 100% !important
+    .datatype
+      padding 0 36px
+      position absolute
+      top 0
+      height 35px
+      border-radius 0 0 4px 4px
+      font-weight 600
 
-      .datatype
-        padding 0 36px
-        position absolute
-        top 0
-        height 40px
-        border-radius 0 0 4px 4px
-        font-weight 600
+    h4
+      align-self center
+      padding-top 36px
 
-      h4
-        align-self center
-        padding-top 36px
-
-      h6
-        width 100%
-        height 30px
-        line-height 30px
-        margin-bottom 0
+    h6
+      width 100%
+      height 30px
+      line-height 30px
+      margin-bottom 0
 </style>
