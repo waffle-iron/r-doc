@@ -1,17 +1,12 @@
 <template>
   <div id="home">
-    <v-toolbar class="grey darken-4">
-      <v-toolbar-title>r-doc</v-toolbar-title>
-      <v-toolbar-items @click="goToLogin()">
-        <v-btn primary light>Login</v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
+    <toolbar title="Home"></toolbar>
     <v-container>
       <v-progress-circular indeterminate
-                           v-if="!show"
+                           v-if="loading"
                            class="center-on-page"
                            :size="50"></v-progress-circular>
-      <v-layout row v-if="show">
+      <v-layout row v-if="!loading">
         <v-flex sm10 offset-sm1 lg6 offset-lg3>
           <v-card>
             <h2 class="text-xs-center">Documentation Index</h2>
@@ -42,19 +37,20 @@
 </template>
 
 <script>
+  import Toolbar from '../components/Toolbar.vue'
   import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
   import IndexCard from '../components/IndexCard.vue';
   import VueTypeahead from 'vue-typeahead';
 
   export default {
-    components: {PaginateLinks, IndexCard},
+    components: {Toolbar, PaginateLinks, IndexCard},
     mixins: [VueTypeahead],
     created () {
       axios.get('/api/v1/guides')
           .then(({data}) => {
             this.query = data;
             data.forEach(d => this.data.push(d.title));
-            this.show = true
+            this.loading = false
           });
     },
     data () {
@@ -62,22 +58,17 @@
         query: [],
         data: [],
         paginate: ['guides'],
-        shown: false,
+        loading: true,
         paginateClasses: {
           'li.left-arrow > a': 'pagination__navigation',
           'li.active > a': ['pagination_item--active', 'pagination__item'],
           'li > a': 'pagination__item'
-        },
-        show: false
+        }
       }
     },
     methods: {
-      goToGuide(url) {
-        this.$router.push(url)
-      },
-      goToLogin() {
-        this.$router.push('/login')
-      }
+
+
     }
   }
 </script>

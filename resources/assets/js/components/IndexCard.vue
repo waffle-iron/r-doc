@@ -18,7 +18,12 @@
 
 <script>
   export default {
-    props: ['data']
+    props: ['data'],
+    methods: {
+      goToGuide(url) {
+        this.$router.push(url)
+      }
+    }
   }
 </script>
 
