@@ -13,13 +13,14 @@ class GuideController extends Controller
   /**
    * Display a listing of the resource.
    *
-   * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Http\Response
+   * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Http\Response|\Illuminate\Support\Collection
    */
   public function index()
   {
     $guide = DB::table('guides')
         ->select('id', 'title', 'url')
-        ->paginate(25);
+        ->orderBy('updated_at', 'desc')
+        ->get();
 
     $guide->map(function($g) {
       $g->image = Guide::find($g->id)->image()->get(['original']);

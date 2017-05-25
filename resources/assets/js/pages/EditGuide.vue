@@ -13,7 +13,6 @@
 </template>
 
 <script>
-  import GuideData from './../testdb';
   import EditContainer from '../components/Guides/EditContainer.vue';
   import EditNavbar from '../components/Guides/EditNavbar.vue';
   import EditLeft from '../components/Guides/EditLeft.vue';

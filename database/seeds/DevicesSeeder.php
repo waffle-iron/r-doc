@@ -11,6 +11,6 @@ class DevicesSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Device::class, 50)->create();
+        factory(App\Device::class, 2)->create();
     }
 }

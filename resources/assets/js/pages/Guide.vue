@@ -8,7 +8,6 @@
 </template>
 
 <script>
-  import GuideData from './../testdb.js';
   import GuideHeaderNavigation from '../components/Guides/GuideHeaderNavigation.vue';
   import GuideImage from '../components/Guides/GuideImage.vue';
   import GuideStep from '../components/Guides/GuideStep.vue';
