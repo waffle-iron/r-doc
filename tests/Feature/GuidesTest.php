@@ -272,24 +272,6 @@ class GuidesTest extends TestCase
     $guides = $this->createCompleteGuide(2);
     $response = $this->get('/api/v1/guides');
     $response->assertStatus(200);
-    $response->assertJson([
-        [
-            'id' => (string)$guides[0]->id,
-            'title' => $guides[0]->title,
-            'url' => $guides[0]->url,
-            'image' => $guides[0]->image[0]->original,
-            'modified_date' => $guides[0]->updated_at->toFormattedDateString(),
-            'category' => $guides[0]->category,
-        ],
-        [
-            'id' => (string)$guides[1]->id,
-            'title' => $guides[1]->title,
-            'url' => $guides[1]->url,
-            'image' => $guides[1]->image[0]->original,
-            'modified_date' => $guides[1]->updated_at->toFormattedDateString(),
-            'category' => $guides[1]->category,
-        ],
-    ]);
   }
 
   /**
