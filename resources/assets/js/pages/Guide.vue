@@ -4,7 +4,7 @@
     <div class="portrait">
       <v-card :img="image" height="300px">
         <div class="transparent-image">
-          <v-card-row>
+          <v-card-row class="image--banner">
             <p class="datatype card__title yellow">{{ data.type }}</p>
             <v-card-title class="white--text">
               <h4 class="white--text">{{ data.title }}</h4>
@@ -14,16 +14,31 @@
           </v-card-row>
         </div>
       </v-card>
+      <v-container>
+        <v-card>
+          <v-card-row class="yellow">
+            <v-card-title>
+              <span>Introduction</span>
+            </v-card-title>
+          </v-card-row>
+          <v-card-row class="pt-4 pb-2 pl-4 pr-4">
+            <p>{{ data.introduction }}</p>
+          </v-card-row>
+        </v-card>
+        <guide-step :data="data" edit="false"></guide-step>
+      </v-container>
     </div>
   </div>
 </template>
 
 <script>
   import Toolbar from '../components/Toolbar.vue';
+  import GuideStep from '../components/GuideStep.vue';
 
   export default {
     components: {
-      Toolbar
+      Toolbar,
+      GuideStep
     },
     created(){
       axios.get('/api/v1/guides/' + this.$route.params.id)
@@ -43,7 +58,7 @@
 </script>
 
 <style lang="stylus">
-  .card__row
+  .card__row.image--banner
     display flex
     flex-direction column
     padding-top 0
