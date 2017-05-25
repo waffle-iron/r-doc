@@ -8,12 +8,21 @@
                            :size="50"></v-progress-circular>
       <v-layout row v-if="!loading">
         <v-flex sm10 offset-sm1 lg6 offset-lg3>
-          <guide-search></guide-search>
+          <v-card hover raised height="75px" class="mb-3">
+            <v-card-row>
+              <v-text-field name="search-input"
+                            label="Search documentation"
+                            id="search-documentation-temp"
+                            v-model="search"
+                            class="ml-5 mr-5">
+              </v-text-field>
+            </v-card-row>
+          </v-card>
           <v-card>
             <h2 class="text-xs-center">Documentation Index</h2>
             <v-divider class="grey lighten-2"></v-divider>
             <paginate name="guides"
-                      :list="query"
+                      :list="filteredList"
                       :per="10"
                       class="pr-4">
               <div class="portrait mt-3"
@@ -40,14 +49,12 @@
 <script>
   import Toolbar from '../components/Toolbar.vue'
   import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
-  import GuideSearch from '../components/GuideSearch.vue';
   import IndexCard from '../components/IndexCard.vue';
 
   export default {
     components: {
       Toolbar,
       PaginateLinks,
-      GuideSearch,
       IndexCard
     },
     created () {
@@ -66,7 +73,15 @@
           'li.left-arrow > a': 'pagination__navigation',
           'li.active > a': ['pagination_item--active', 'pagination__item'],
           'li > a': 'pagination__item'
-        }
+        },
+        search: ''
+      }
+    },
+    computed: {
+      filteredList() {
+        return this.query.filter(post => {
+          return post.title.toLowerCase().includes(this.search.toLowerCase())
+        })
       }
     }
   }
