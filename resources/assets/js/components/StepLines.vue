@@ -40,7 +40,8 @@
           'blue--text': bullet === 'blue',
           'amber--text': bullet === 'caution',
           'indigo--text': bullet === 'info',
-          'lime--text': bullet === 'reminder'
+          'lime--text': bullet === 'reminder',
+          'light-blue--text': bullet === 'light-blue'
         }
       },
       getIcon(bullet) {
