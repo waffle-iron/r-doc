@@ -11,3 +11,10 @@ npm-debug.log
 .env
 .env.dusk.local
 /docs
+_ide_helper.php
+.travis-tests
+.travis.yml
+.phpstorm.meta.php
+.env.travis
+local-gitignore
+fortrabbit-deploy.sh
