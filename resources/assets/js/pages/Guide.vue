@@ -1,6 +1,6 @@
 <template lang="pug">
   #guide
-    toolbar(title='<i class="material-icons icon icon--light">arrow_back</i>')
+    toolbar(title='<i class="material-icons icon icon--light">arrow_back</i>&nbsp;HOME')
     .portrait
       v-card(:img="image" height="300px")
         .transparent-image

@@ -1,6 +1,6 @@
 <template lang="pug">
   #login-page
-    toolbar(title="<i class='material-icons icon icon--light'>arrow_back</i>")
+    toolbar(title="<i class='material-icons icon icon--light'>arrow_back</i> HOME")
     v-container
       v-layout(row)
         v-flex(md8 xs12 offset-md2)
@@ -11,11 +11,11 @@
             v-card-text
               v-layout.pt-3(row wrap)
                 v-flex(md8 offset-md2)
-                  v-text-field.input-group--focused(name="Email"
+                  v-text-field(name="Email"
                   label="Email Address"
                       :value="email")
                 v-flex(md8 offset-md2)
-                  v-text-field.input-group--focused(name="Password"
+                  v-text-field(name="Password"
                   label="Password"
                   type="password"
                       :value="password")
@@ -31,8 +31,8 @@
     },
     data () {
       return {
-        email: 'michaela.morar@example.com',
-        password: 'secret'
+        email: '',
+        password: ''
       }
     },
     methods: {

@@ -6,6 +6,8 @@ import Login from './pages/Login.vue';
 import Dashboard from './pages/Dashboard.vue';
 import Guide from './pages/Guide.vue';
 import GuideEdit from './pages/GuideEdit.vue';
+import GuideStepEdit from './components/GuideStepEdit.vue';
+import GuideHistory from './pages/GuideHistory.vue';
 
 Vue.use(VueRouter);
 
@@ -21,13 +23,24 @@ const routes = [
     name: 'guide'
   },
   {
-    path: '/guide/:id/edit/:stepid',
+    path: '/guide/:id/history',
+    component: GuideHistory,
+    name: 'guide-history'
+  },
+  {
+    path: '/guide/:id/edit',
     component: GuideEdit,
-    name: 'edit-guide'
+    name: 'guide-edit'
+  },
+  {
+    path: '/guide/:id/edit/:stepid',
+    component: GuideStepEdit,
+    name: 'edit-guide-step'
   },
   {
     path: '/login',
-    component: Login
+    component: Login,
+    name: 'login'
   },
   {
     path: '/dashboard',

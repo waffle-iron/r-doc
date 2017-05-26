@@ -1,6 +1,6 @@
 <template lang="pug">
   #home
-    toolbar(title="Home")
+    toolbar(title="")
     v-container
       v-progress-circular(
         indeterminate

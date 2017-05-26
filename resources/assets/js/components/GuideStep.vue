@@ -8,8 +8,9 @@
             strong.ml-2 Step {{ index + 1 }}
             span.ml-2(v-if="index+1 === 1") {{ data.title }}
           v-spacer(v-on:click="goEditStep(step.id)")
-            v-btn(dark flat) Edit
-              v-icon(dark right) mode_edit
+            div(v-if="canEdit()")
+              v-btn(dark flat) Edit
+                v-icon(dark right) mode_edit
       v-card-row
         v-container.pb-0
           div(v-if="data.editable")
@@ -40,6 +41,9 @@
       },
       goEditStep(id) {
         this.$router.push(this.$route.path + '/edit/' + id);
+      },
+      canEdit() {
+        return window.Laravel.user;
       }
     }
   }

@@ -1,5 +1,5 @@
 <template lang="pug">
-  h3 Guide Edit Page...
+  h3 Guide History Page...
 </template>
 
 <script>
