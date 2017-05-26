@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/r-doc/</link>
     <atom:link href="http://localhost:4000/r-doc/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 25 May 2017 13:04:28 -0500</pubDate>
-    <lastBuildDate>Thu, 25 May 2017 13:04:28 -0500</lastBuildDate>
+    <pubDate>Fri, 26 May 2017 12:30:15 -0500</pubDate>
+    <lastBuildDate>Fri, 26 May 2017 12:30:15 -0500</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
@@ -17,20 +17,40 @@
 &lt;h3 id=&quot;tasks&quot;&gt;Tasks&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;issue #6&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/issues/6&quot; target=&quot;_blank&quot;&gt;Issue #6&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/r-doc/images/week3/05-25-new-theme.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week3/05-25-new-theme.png&quot; alt=&quot;New Theme&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week3/05-25-pug-template.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week3/05-25-pug-template.png&quot; alt=&quot;Pug Template&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/r-doc/images/week3/05-25-rendered-html.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/r-doc/images/week3/05-25-rendered-html.png&quot; alt=&quot;Rendered HTML&quot; width=&quot;200&quot; class=&quot;img-responsive img-border&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;h3 id=&quot;progress&quot;&gt;Progress&lt;/h3&gt;
 
-&lt;p&gt;…&lt;/p&gt;
+&lt;p&gt;I spent the morning catching up on these logs. This helped me get a bit more grounded, which has helped me plow an ideal path forward. I also made great progress on the re-themeing of the front-end pages. The new material design theme looks really nice and I’m getting the hang of using their Vue components to build pages. I figured out a way to filter the list of guides on the front page. This is really nice, I think. In the search bar, when you begin typing, matching document titles will be the only ones displayed. It plays really nicely with the pagination that I implemented too.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h3&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;added projects and tasks&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;I devised a new workflow for managing tasks and workflow. GitHub offers both issues and projects. I can open an issue
+ for the short-term tasks that I hope to accomplish. The issues allow Markdown so I am able to create lists with 
+ checkboxes that I can check when I have completed them. A link is provided above if you want to see… Projects are 
+ a Kanban style board where I can place issues and categorize them as Pending, In Process, and Complete. This will 
+ help me to determine what I want to work on next. Over the next week or so, I will be able to refine this process as
+  I am not sure how much detail to put into these issues or how to incorporate it into the existing user stories that
+   I have on this site. I’m confident that I will be able to find a balance.&lt;/p&gt;
+
+&lt;p&gt;Another interesting programming technique I found was to begin using the &lt;code class=&quot;highlighter-rouge&quot;&gt;pug&lt;/code&gt; templating language. It’s not 
+necessarily a language, per se, but preprocessor for HTML. I have already decided to use &lt;code class=&quot;highlighter-rouge&quot;&gt;stylus&lt;/code&gt; for my CSS 
+preprocessor (if you aren’t aware, it’s much like &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;scss&lt;/code&gt;). The screenshots above show what the code looks 
+like versus what gets rendered when I compile all of the Vue files together. I think it’s pretty neat. There is also 
+a screenshot of the new theme I am implementing.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -39,6 +59,26 @@
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/2c5e551383c08ecb7d6a89c6c550537616700201&quot; target=&quot;_blank&quot;&gt;Fix test bug&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/65c359343690feef4d093ffac3b35a04f5fd2d96&quot; target=&quot;_blank&quot;&gt;Guides test tweak&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/463bd1957f0959a5d1a22b3ba61bf7e5bd55d251&quot; target=&quot;_blank&quot;&gt;Test fix&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/2c5e551383c08ecb7d6a89c6c550537616700201&quot; target=&quot;_blank&quot;&gt;Fix test bug&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/65c359343690feef4d093ffac3b35a04f5fd2d96&quot; target=&quot;_blank&quot;&gt;Guides test tweak&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/463bd1957f0959a5d1a22b3ba61bf7e5bd55d251&quot; target=&quot;_blank&quot;&gt;Test fix&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/17e1abe192ac564767613dce1dbfb7b7ab0c3015&quot; target=&quot;_blank&quot;&gt;re-theme search results&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/e0c1d4b7a3eeda6918a8175ba231d7bbb389a4a5&quot; target=&quot;_blank&quot;&gt;Refactor index card&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/c1112410e6b934a6387b5e7a998d15e59c0266e6&quot; target=&quot;_blank&quot;&gt;Refactor toolbar&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ab32a13dc4c4e36b3a1b6452d86678c6aec77e85&quot; target=&quot;_blank&quot;&gt;Small toolbar refactor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/f3ef7dde52192262d342aa1bba09f746bc8edab9&quot; target=&quot;_blank&quot;&gt;Add guide search endpoint&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/647cb3492b80da3c93dad7b2d65d13f53a8190eb&quot; target=&quot;_blank&quot;&gt;Create search component; remove npm packages&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/3f72f4561a940005c45959e19940b4585763e499&quot; target=&quot;_blank&quot;&gt;Begin autocomplete implement&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/13384181cb1806d9ce24502bb9c6c81d2d6eb1f3&quot; target=&quot;_blank&quot;&gt;Search filter implemented&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/2488fdef1abdab860eb941c903a586bc4e2260e0&quot; target=&quot;_blank&quot;&gt;finish guide page banner&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/26c782cfac9cdbac5268cf726c576c0a5b58ca21&quot; target=&quot;_blank&quot;&gt;Minor tweaks&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/ebbc22251d00a5445e587405f5214dcd44a0dc13&quot; target=&quot;_blank&quot;&gt;Add GuideStep component&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/44226450b0b0738f2b95552d0dfef0cb09a95f7d&quot; target=&quot;_blank&quot;&gt;Refactor all html to pug&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/42b461796cc834268991624160be030b2f7f07f7&quot; target=&quot;_blank&quot;&gt;Test fix&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/0e3f585e4852cb9f8e71177770d3bb4d8e8cbed1&quot; target=&quot;_blank&quot;&gt;Add component I created a couple of weeks ago&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/b0a08d0b5efeff5248f250bd2cc6b221352af90b&quot; target=&quot;_blank&quot;&gt;Ran yarn upgrade&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/roberthamel/r-doc/commit/98beed0363e991af18bc1ddeb1bfef09f1b5709d&quot; target=&quot;_blank&quot;&gt;Update component&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Thu, 25 May 2017 13:00:00 -0500</pubDate>

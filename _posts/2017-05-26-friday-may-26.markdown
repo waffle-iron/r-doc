@@ -1,0 +1,24 @@
+---
+layout: post
+title:  "Friday May 26"
+date:   2017-05-26 18:00:00
+categories: r-doc log entry
+---
+
+[back](/r-doc/summaries)
+
+### Progress
+
+...
+
+---
+
+### Thoughts 
+
+...
+
+---
+
+### Daily Commits
+
+- [...](){:target="_blank"}

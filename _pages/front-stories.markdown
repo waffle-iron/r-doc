@@ -6,10 +6,9 @@ permalink: /front-stories/
 
 ## After Server API is implemented
 
- - [ ] ~~implement vue-router~~
- - [ ] document index page
+ - [x] implement vue-router
+ - [x] documentation index page
  - [ ] rebuild current views with new theme
- - [ ] implement `vuex`
  
 ---
 
