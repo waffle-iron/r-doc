@@ -12,11 +12,9 @@
               v-icon(dark right) mode_edit
       v-card-row
         v-container.pb-0
-          v-layout(row)
-            v-flex(xs7)
-              image-hover-select(v-bind:data="step.media")
-            v-flex(xs5)
-              step-lines(v-bind:lines="step.lines")
+          v-layout(row-md column child-flex-md)
+            image-hover-select(v-bind:data="step.media")
+            step-lines(v-bind:lines="step.lines")
 </template>
 
 <script>

@@ -9,14 +9,17 @@
             v-card-title.white--text
               h4.white--text {{ data.title }}
             h6.text-xs-center.yellow(v-if="data.published") Published: {{ data.published }}
+            h6.text-xs-center.yellow(v-if="!data.published") Unpublished
       v-container
-        v-card
-          v-card-row.yellow
-            v-card-title
-              span Introduction
-          v-card-row.pt-4.pb-2.pl-4.pr-4
-            p {{ data.introduction }}
-        guide-step(:data="data" v-bind:edit="false")
+        v-layout(row-md column child-flex-md)
+          v-flex(sm12 md8 offset-md2)
+            v-card
+              v-card-row.yellow
+                v-card-title
+                  span Introduction
+              v-card-row.pt-4.pb-2.pl-4.pr-4
+                p {{ data.introduction }}
+            guide-step(:data="data" v-bind:edit="false")
 </template>
 
 <script>
