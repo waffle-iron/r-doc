@@ -44,13 +44,11 @@
 
 <script>
   import Toolbar from '../components/Toolbar.vue'
-  import PaginateLinks from "vue-paginate/src/components/PaginateLinks";
   import IndexCard from '../components/IndexCard.vue';
 
   export default {
     components: {
       Toolbar,
-      PaginateLinks,
       IndexCard
     },
     created () {

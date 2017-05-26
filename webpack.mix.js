@@ -13,4 +13,24 @@ const { mix } = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .stylus('resources/assets/stylus/app.styl', 'public/css')
+    .extract([
+        'axios',
+        'jquery',
+        'vue',
+        'vue-router',
+        'vue-paginate',
+        'lodash',
+        'moment',
+        'showdown',
+        'simplemde',
+        'vue-simplemde',
+        'vuetify'
+    ])
    .disableNotifications();
+
+if(mix.config.inProduction) {
+  mix.version()
+      .options({
+        purifyCss: true
+      })
+}
