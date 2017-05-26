@@ -2,7 +2,7 @@
   #guide
     toolbar(title='<i class="material-icons icon icon--light">arrow_back</i>')
     .portrait
-      v-card(:img="data.image.original" height="300px")
+      v-card(:img="image" height="300px")
         .transparent-image
           v-card-row.image--banner
             p.datatype.card__title.yellow {{ data.type }}
@@ -32,11 +32,13 @@
       axios.get('/api/v1/guides/' + this.$route.params.id)
           .then(r => {
             this.data = r.data;
+            this.image = r.data.image.original
           })
     },
     data() {
       return {
         data: {},
+        image: ''
       }
     }
   }

@@ -1,17 +1,6 @@
 <template lang="pug">
-  .image-hover-select
-    div(v-if="position === 'left'" v-bind:class="positionSmallClasses")
-      .step-thumbnails.row
-        .col.col--sm-4(v-for="(media, index) in images")
-          div(:class="{'step-thumbnail-container': true, 'active': shouldBeVisible(media)}")
-            .step-thumbnail-inner
-              img(:src="media.src" class="responsive step-thumbnail" v-on:mouseover="makeVisible(media, images)")
+  #image-hover-select
     div(:class="positionBigClasses")
-      .step-thumbnails.row(v-if="position === 'top'")
-        .col.col--sm-4(v-for="(media, index) in images")
-          div(:class="{'step-thumbnail-container': true, 'active': shouldBeVisible(media)}")
-            .step-thumbnail-inner
-              img(:src="media.src" class="responsive step-thumbnail" v-on:mouseover="makeVisible(media, images)")
       .step-media.step-main-media(v-for="(media, index) in images")
         img(
         :src="media.src"
@@ -36,11 +25,10 @@
     props: {
       data: {
         type: Array,
-        default: () => ['src/assets/cat1.jpg', 'src/assets/cat2.jpg', 'src/assets/cat3.jpg']
       },
       position: {
         type: String,
-        default: 'top'
+        default: 'right'
       }
     },
     created () {
