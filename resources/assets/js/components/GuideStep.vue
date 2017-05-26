@@ -29,9 +29,6 @@
       ImageHoverSelect,
       StepLines
     },
-    created() {
-      console.log($(document).width())
-    },
     methods: {
       getStepId(stepid) {
         return `s${stepid}`;

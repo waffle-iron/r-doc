@@ -1,15 +1,20 @@
 <template lang="pug">
   v-toolbar(primary)
     v-toolbar-title
-      div(primary light v-html="title" v-on:click="goHome()")
+      div(v-html="title" v-on:click="goHome()")
     v-spacer
-    v-toolbar-items
-      div(v-if="isGuidePage" v-on:click.prevent="goToGuideEdit()")
-        v-btn(primary light) Edit Guide
-      div(v-if="isGuidePage" v-on:click.prevent="goToGuideHistory()")
-        v-btn(primary light) History
-      div(v-if="notLoggedIn" v-on:click="goToLogin()")
-        v-btn(primary light) Login
+    v-toolbar-items(v-if="notOnLoginPage")
+      v-menu(transition="v-slide-x-transition" bottom left)
+        v-btn(primary light slot="activator" icon="icon")
+          v-icon more_vert
+        v-list
+          v-list-item
+            v-list-tile(v-if="notLoggedIn")
+              v-list-tile-title(v-on:click="goToLogin()") Login
+            v-list-tile(v-if="isGuidePage")
+              v-list-tile-title(v-on:click.prevent="goToGuideEdit()") Edit Guide
+            v-list-tile(v-if="isGuidePage")
+              v-list-tile-title(v-on:click.prevent="goToGuideHistory()") History
 </template>
 
 <script>
@@ -22,6 +27,9 @@
       },
       notLoggedIn() {
         return !window.Laravel.user && this.$route.name !== 'login';
+      },
+      notOnLoginPage() {
+        return this.$route.name !== 'login';
       }
     },
     methods: {
