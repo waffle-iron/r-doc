@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Guide;
-use App\Image;
 use DB;
 use Illuminate\Http\Request;
 
@@ -95,5 +94,13 @@ class GuideController extends Controller
   public function destroy(Guide $guide)
   {
     //
+  }
+
+  public function search() {
+    $query = DB::table('guides')
+        ->select('title', 'url')
+        ->get();
+
+    return $query;
   }
 }

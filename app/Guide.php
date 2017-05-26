@@ -115,8 +115,8 @@ class Guide extends Model
 
   public function getImageAttribute()
   {
-    $image = $this->image()->get(['id', 'original']);
-    return $image;
+    $image = $this->image()->get(['original']);
+    return $image[0];
   }
 
   public function getCreatedDateAttribute()
