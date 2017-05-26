@@ -5,6 +5,7 @@ import Home from './pages/Home.vue';
 import Login from './pages/Login.vue';
 import Dashboard from './pages/Dashboard.vue';
 import Guide from './pages/Guide.vue';
+import GuideEdit from './pages/GuideEdit.vue';
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,11 @@ const routes = [
     path: '/guide/:id',
     component: Guide,
     name: 'guide'
+  },
+  {
+    path: '/guide/:id/edit/:stepid',
+    component: GuideEdit,
+    name: 'edit-guide'
   },
   {
     path: '/login',
@@ -39,7 +45,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(m => m.meta.requiresAuth))
     if (!window.Laravel.user) {
-      return next({ path: '/login' })
+      return next({path: '/login'})
     }
   return next();
 });
