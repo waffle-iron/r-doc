@@ -36,9 +36,6 @@
 
 <script>
   export default {
-    created () {
-      console.log(Laravel.user)
-    },
     data () {
       return {
         drawer: true,
@@ -56,7 +53,7 @@
         this.$router.push('/')
       },
       logout() {
-        axios.post('/logout').then(response => console.log(Laravel.user))
+        axios.post('/logout').then(response => this.$router.push({ name: 'home'}))
       }
     }
   }

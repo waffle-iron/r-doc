@@ -13,12 +13,12 @@
                 v-flex(md8 offset-md2)
                   v-text-field(name="Email"
                   label="Email Address"
-                      :value="email")
+                  v-model="email")
                 v-flex(md8 offset-md2)
                   v-text-field(name="Password"
                   label="Password"
                   type="password"
-                      :value="password")
+                  v-model="password")
                 v-flex(md8 offset-md2 v-on:click.prevent="login()")
                   v-btn.grey.darken-4.white--text(block) Login
 </template>
@@ -31,21 +31,20 @@
     },
     data () {
       return {
-        email: '',
-        password: ''
+        email: 'sauer.angel@example.com',
+        password: 'secret'
       }
     },
     methods: {
       login () {
-        axios.post('http://r-doc.dev/login', {
+        axios.post('/login', {
           email: this.email,
           password: this.password
-        }).then(response => {
-          window.location = response.responseURL;
         })
-      },
-      test() {
-        console.log('fired')
+            .then(r => {
+              console.log(Laravel.user);
+              this.$router.push({name: 'dashboard'})
+            })
       }
     }
   }

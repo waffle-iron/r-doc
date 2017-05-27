@@ -45,6 +45,7 @@ const routes = [
   {
     path: '/dashboard',
     component: Dashboard,
+    name: 'dashboard',
     meta: {requiresAuth: true}
   }
 ];
@@ -58,7 +59,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(m => m.meta.requiresAuth))
     if (!window.Laravel.user) {
-      return next({path: '/login'})
+      return next({ path: '/login' })
     }
   return next();
 });
