@@ -45,6 +45,7 @@ const routes = [
   {
     path: '/dashboard',
     component: Dashboard,
+    name: 'dashboard',
     meta: {requiresAuth: true}
   }
 ];
@@ -56,10 +57,12 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(m => m.meta.requiresAuth))
-    if (!window.Laravel.user) {
+  if (to.matched.some(m => m.meta.requiresAuth)) {
+    const authUser = window.localStorage.getItem('authUser');
+    if (!authUser) {
       return next({path: '/login'})
     }
+  }
   return next();
 });
 

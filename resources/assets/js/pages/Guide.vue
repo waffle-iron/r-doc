@@ -7,7 +7,9 @@
           v-card-row.image--banner
             p.datatype.card__title.yellow {{ data.type }}
             v-card-title.white--text
-              h4.white--text {{ data.title }}
+              v-flex(column)
+                h4.white--text.mb-0 {{ data.title }}
+                h6.white--text.text-xs-center Revision {{ data.revision }}
             h6.text-xs-center.yellow(v-if="data.published") Published: {{ data.published }}
             h6.text-xs-center.yellow(v-if="!data.published") Unpublished
       v-container

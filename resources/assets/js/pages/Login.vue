@@ -13,39 +13,57 @@
                 v-flex(md8 offset-md2)
                   v-text-field(name="Email"
                   label="Email Address"
-                      :value="email")
+                  v-model="email")
                 v-flex(md8 offset-md2)
                   v-text-field(name="Password"
                   label="Password"
                   type="password"
-                      :value="password")
+                  v-model="password")
                 v-flex(md8 offset-md2 v-on:click.prevent="login()")
                   v-btn.grey.darken-4.white--text(block) Login
 </template>
 
 <script>
+  import {LOGIN_URL, USER_URL, getHeader} from '../config'
+  import {CLIENT_ID, CLIENT_SECRET} from '../env'
   import Toolbar from '../components/Toolbar.vue'
+
   export default {
     components: {
       Toolbar
     },
     data () {
       return {
-        email: '',
-        password: ''
+        email: 'sauer.angel@example.com',
+        password: 'secret'
       }
     },
     methods: {
       login () {
-        axios.post('http://r-doc.dev/login', {
-          email: this.email,
-          password: this.password
-        }).then(response => {
-          window.location = response.responseURL;
-        })
-      },
-      test() {
-        console.log('fired')
+        const postData = {
+          grant_type: 'password',
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET,
+          username: this.email,
+          password: this.password,
+          scope: ''
+        };
+        const authUser = {};
+        axios.post(LOGIN_URL, postData)
+            .then(response => {
+              if (response.status === 200) {
+                authUser.access_token = response.data.access_token;
+                authUser.refresh_token = response.data.refresh_token;
+                localStorage.setItem('authUser', JSON.stringify(authUser));
+                axios.get(USER_URL, {headers: getHeader()})
+                    .then(response => {
+                      authUser.email = response.data.email;
+                      authUser.name = response.data.name;
+                      localStorage.setItem('authUser', JSON.stringify(authUser));
+                    });
+              }
+              this.$router.push({name: 'dashboard'})
+            })
       }
     }
   }

@@ -1,6 +1,6 @@
 <template lang="pug">
   v-app
-    v-navigation-drawer(persistent light :mini-variant.sync="mini" v-model="drawer")
+    v-navigation-drawer(persistent light v-model="drawer")
       v-list.pa-0
         v-list-item
           v-list-tile(avatar tag="div")
@@ -9,8 +9,6 @@
             v-list-tile-content
               v-list-tile-title John Leider
             v-list-tile-action
-              v-btn(icon @click.native.stop="mini = !mini")
-                v-icon chevron_left
       v-list.pt-0(dense)
         v-divider
         v-list-item(@click.prevent="goHome()")
@@ -25,7 +23,7 @@
               v-icon exit_to_app
             v-list-tile-content
               v-list-tile-title Logout
-    v-toolbar.indigo.darken-4(fixed)
+    v-toolbar(primary fixed)
       v-toolbar-side-icon(light @click.native.stop="drawer = !drawer")
       v-toolbar-title Toolbar
     main
@@ -36,9 +34,6 @@
 
 <script>
   export default {
-    created () {
-      console.log(Laravel.user)
-    },
     data () {
       return {
         drawer: true,
@@ -47,7 +42,6 @@
           { title: 'About', icon: 'question_answer' },
           { title: 'Logout', icon: 'exit_to_app' }
         ],
-        mini: false,
         right: null
       }
     },
@@ -56,7 +50,8 @@
         this.$router.push('/')
       },
       logout() {
-        axios.post('/logout').then(response => console.log(Laravel.user))
+        window.localStorage.clear('authUser');
+        this.goHome()
       }
     }
   }
