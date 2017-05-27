@@ -95,12 +95,4 @@ class GuideController extends Controller
   {
     //
   }
-
-  public function search() {
-    $query = DB::table('guides')
-        ->select('title', 'url')
-        ->get();
-
-    return $query;
-  }
 }
