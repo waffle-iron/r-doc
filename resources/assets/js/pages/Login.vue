@@ -24,7 +24,9 @@
 </template>
 
 <script>
+  import { LOGIN_URL } from '../config'
   import Toolbar from '../components/Toolbar.vue'
+
   export default {
     components: {
       Toolbar
@@ -37,13 +39,26 @@
     },
     methods: {
       login () {
-        axios.post('/login', {
-          email: this.email,
-          password: this.password
-        })
+        const postData = {
+          grant_type: 'password',
+          client_id: '',
+          client_secret: '',
+          username: this.email,
+          password: this.password,
+          scope: ''
+        };
+        axios.post(LOGIN_URL, postData)
             .then(r => {
-              console.log(Laravel.user);
-              this.$router.push({name: 'dashboard'})
+              console.log(r);
+//              this.$router.push({name: 'dashboard'})
+              const header = {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + r.data.access_token
+              };
+              axios.get('/api/user', {headers: header})
+                  .then(r => {
+                    console.log(r)
+                  })
             })
       }
     }
