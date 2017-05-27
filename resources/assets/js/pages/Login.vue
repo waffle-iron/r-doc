@@ -24,8 +24,8 @@
 </template>
 
 <script>
-  import { LOGIN_URL } from '../config'
-  import { CLIENT_ID, CLIENT_SECRET } from '../env'
+  import {LOGIN_URL, USER_URL, getHeader} from '../config'
+  import {CLIENT_ID, CLIENT_SECRET} from '../env'
   import Toolbar from '../components/Toolbar.vue'
 
   export default {
@@ -48,18 +48,21 @@
           password: this.password,
           scope: ''
         };
+        const authUser = {};
         axios.post(LOGIN_URL, postData)
-            .then(r => {
-              console.log(r);
-//              this.$router.push({name: 'dashboard'})
-              const header = {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + r.data.access_token
-              };
-              axios.get('/api/user', {headers: header})
-                  .then(r => {
-                    console.log(r)
-                  })
+            .then(response => {
+              if (response.status === 200) {
+                authUser.access_token = response.data.access_token;
+                authUser.refresh_token = response.data.refresh_token;
+                localStorage.setItem('authUser', JSON.stringify(authUser));
+                axios.get(USER_URL, {headers: getHeader()})
+                    .then(response => {
+                      authUser.email = response.data.email;
+                      authUser.name = response.data.name;
+                      localStorage.setItem('authUser', JSON.stringify(authUser));
+                    });
+              }
+              this.$router.push({name: 'dashboard'})
             })
       }
     }

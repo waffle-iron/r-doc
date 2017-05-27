@@ -51,11 +51,7 @@
         this.$router.push({ name: 'guide-history' })
       },
       logout() {
-        axios.post('/logout')
-            .then(r => {
-              console.log(Laravel.user);
-              location.reload();
-            });
+        window.localStorage.clear();
       }
     }
   }

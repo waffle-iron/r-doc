@@ -57,10 +57,12 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(m => m.meta.requiresAuth))
-    if (!window.Laravel.user) {
-      return next({ path: '/login' })
+  if (to.matched.some(m => m.meta.requiresAuth)) {
+    const authUser = window.localStorage.getItem('authUser');
+    if (!authUser) {
+      return next({path: '/login'})
     }
+  }
   return next();
 });
 

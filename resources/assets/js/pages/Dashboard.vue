@@ -53,7 +53,8 @@
         this.$router.push('/')
       },
       logout() {
-        axios.post('/logout').then(response => this.$router.push({ name: 'home'}))
+        window.localStorage.clear('authUser');
+        this.goHome()
       }
     }
   }
