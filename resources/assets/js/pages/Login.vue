@@ -13,19 +13,18 @@
                 v-flex(md8 offset-md2)
                   v-text-field(name="Email"
                   label="Email Address"
-                  v-model="email")
+                  v-model="credentials.username")
                 v-flex(md8 offset-md2)
                   v-text-field(name="Password"
                   label="Password"
                   type="password"
-                  v-model="password")
+                  v-model="credentials.password")
                 v-flex(md8 offset-md2 v-on:click.prevent="login()")
                   v-btn.grey.darken-4.white--text(block) Login
 </template>
 
 <script>
   import {LOGIN_URL, USER_URL, getHeader} from '../config'
-  import {CLIENT_ID, CLIENT_SECRET} from '../env'
   import Toolbar from '../components/Toolbar.vue'
 
   export default {
@@ -34,22 +33,16 @@
     },
     data () {
       return {
-        email: 'sauer.angel@example.com',
-        password: 'secret'
+        credentials: {
+          username: 'sauer.angel@example.com',
+          password: 'secret'
+        }
       }
     },
     methods: {
       login () {
-        const postData = {
-          grant_type: 'password',
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          username: this.email,
-          password: this.password,
-          scope: ''
-        };
         const authUser = {};
-        axios.post(LOGIN_URL, postData)
+        axios.post(LOGIN_URL, this.credentials)
             .then(response => {
               if (response.status === 200) {
                 authUser.access_token = response.data.access_token;
@@ -63,7 +56,7 @@
                     });
               }
               this.$router.push({name: 'dashboard'})
-            })
+            }).catch(err => console.log(err))
       }
     }
   }

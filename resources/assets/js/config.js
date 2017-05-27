@@ -1,5 +1,5 @@
-export const API_DOMAIN = location.origin;
-export const LOGIN_URL = API_DOMAIN + '/oauth/token';
+export const API_DOMAIN = window.origin;
+export const LOGIN_URL = '/api/auth/token';
 export const USER_URL = API_DOMAIN + '/api/user';
 
 export const getHeader = function() {
