@@ -25,6 +25,7 @@
 
 <script>
   import { LOGIN_URL } from '../config'
+  import { CLIENT_ID, CLIENT_SECRET } from '../env'
   import Toolbar from '../components/Toolbar.vue'
 
   export default {
@@ -41,8 +42,8 @@
       login () {
         const postData = {
           grant_type: 'password',
-          client_id: '',
-          client_secret: '',
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET,
           username: this.email,
           password: this.password,
           scope: ''
