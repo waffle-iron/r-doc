@@ -13,18 +13,18 @@
                 v-flex(md8 offset-md2)
                   v-text-field(name="Email"
                   label="Email Address"
-                  v-model="credentials.username")
+                  v-model="username")
                 v-flex(md8 offset-md2)
                   v-text-field(name="Password"
                   label="Password"
                   type="password"
-                  v-model="credentials.password")
+                  v-model="password")
                 v-flex(md8 offset-md2 v-on:click.prevent="login()")
                   v-btn.grey.darken-4.white--text(block) Login
 </template>
 
 <script>
-  import {LOGIN_URL, USER_URL, getHeader} from '../config'
+  import auth from '../auth'
   import Toolbar from '../components/Toolbar.vue'
 
   export default {
@@ -33,30 +33,37 @@
     },
     data () {
       return {
-        credentials: {
-          username: 'sauer.angel@example.com',
-          password: 'secret'
-        }
+        username: 'sauer.angel@example.com',
+        password: 'secret'
       }
     },
     methods: {
+//      login () {
+//        const authUser = {}
+//        window.axios.post(LOGIN_URL, this.credentials)
+//            .then(response => {
+//              if (response.status === 200) {
+//                authUser.access_token = response.data.access_token
+//                authUser.refresh_token = response.data.refresh_token
+//                localStorage.setItem('authUser', JSON.stringify(authUser))
+//                window.axios.get(USER_URL, {headers: getHeader()})
+//                    .then(response => {
+//                      authUser.email = response.data.email
+//                      authUser.name = response.data.name
+//                      localStorage.setItem('authUser', JSON.stringify(authUser))
+//                    })
+//              }
+//              this.$router.push({name: 'dashboard'})
+//            }).catch(err => console.log(err))
+//      }
       login () {
-        const authUser = {}
-        window.axios.post(LOGIN_URL, this.credentials)
-            .then(response => {
-              if (response.status === 200) {
-                authUser.access_token = response.data.access_token
-                authUser.refresh_token = response.data.refresh_token
-                localStorage.setItem('authUser', JSON.stringify(authUser))
-                window.axios.get(USER_URL, {headers: getHeader()})
-                    .then(response => {
-                      authUser.email = response.data.email
-                      authUser.name = response.data.name
-                      localStorage.setItem('authUser', JSON.stringify(authUser))
-                    })
-              }
-              this.$router.push({name: 'dashboard'})
-            }).catch(err => console.log(err))
+        auth.login(this.username, this.password, loggedIn => {
+          if (!loggedIn) {
+            this.error = true
+          } else {
+            this.$router.replace(this.$route.query.redirect || '/')
+          }
+        })
       }
     }
   }

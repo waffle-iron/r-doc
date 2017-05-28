@@ -46,12 +46,8 @@
       }
     },
     methods: {
-      goHome () {
-        this.$router.push('/')
-      },
       logout () {
-        window.localStorage.clear('authUser')
-        this.goHome()
+        this.$router.push('/logout')
       }
     }
   }

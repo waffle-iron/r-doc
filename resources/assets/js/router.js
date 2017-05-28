@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import auth from './auth'
 
 import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
@@ -10,6 +11,22 @@ import GuideStepEdit from './components/GuideStepEdit.vue'
 import GuideHistory from './pages/GuideHistory.vue'
 
 Vue.use(VueRouter)
+
+function authenticate (to, from, next) {
+  if (!auth.loggedIn()) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    next()
+  }
+}
+
+function logout (to, from, next) {
+  auth.logout()
+  next({ name: 'home' })
+}
 
 const routes = [
   {
@@ -43,10 +60,14 @@ const routes = [
     name: 'login'
   },
   {
+    path: '/logout',
+    beforeEnter: logout
+  },
+  {
     path: '/dashboard',
     component: Dashboard,
     name: 'dashboard',
-    meta: {requiresAuth: true}
+    beforeEnter: authenticate
   }
 ]
 
@@ -57,7 +78,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(m => m.meta.requiresAuth)) {
+  if (to.matched.some(m => m.meta.auth)) {
     const authUser = window.localStorage.getItem('authUser')
     if (!authUser) {
       return next({path: '/login'})
