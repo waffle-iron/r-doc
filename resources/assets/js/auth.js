@@ -1,17 +1,17 @@
-import { requestLogin } from './api'
+import api from './api'
 
 export default {
   login (username, password, cb) {
     cb = arguments[arguments.length - 1]
-    if (localStorage.token) {
+    if (api.get('token')) {
       if (cb) cb(true)
       this.onChange(true)
       return
     }
-    requestLogin(username, password, (res) => {
+    api.requestLogin(username, password, (res) => {
       if (res.authenticated) {
-        localStorage.token = res.token
-        localStorage.refresh = res.refresh
+        api.set('token', res.token)
+        api.set('refresh', res.refresh)
         if (cb) cb(true)
         this.onChange(true)
       } else {
@@ -22,20 +22,20 @@ export default {
   },
 
   getToken () {
-    return localStorage.token
+    return api.get('token')
   },
 
   getRefreshToken () {
-    return localStorage.refresh
+    return api.get('refresh')
   },
 
   loggedIn () {
-    return !!localStorage.token
+    return !!api.get('token')
   },
 
   logout (cb) {
-    delete localStorage.token
-    delete localStorage.refresh
+    delete api.remove('token')
+    delete api.remove('refresh')
     if (cb) cb()
     this.onChange(false)
   },

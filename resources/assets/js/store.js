@@ -1,26 +1,29 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { fetchUser } from './api'
+import api from './api'
 
 Vue.use(Vuex)
 
 const state = {
-  user: JSON.parse(localStorage.authUser) || {}
+  user: {}
 }
 
 const mutations = {
-  setUser (state) {
-    state.user = fetchUser()
-  },
-  removeUser (state) {
-    delete localStorage.authUser
-    state.user = {}
-  }
+  SET_USER (state, payload) { state.user = payload },
+  REMOVE_USER (state) { state.user = {} }
 }
 
 const actions = {
-  setUser: ({ commit }, data) => { commit('setUser', data) },
-  removeUser: ({ commit }) => commit('removeUser')
+  setUser: ({ commit }) => {
+    api.saveUser().then(data => {
+      api.set('user', data.data)
+      commit('SET_USER', data.data)
+    })
+  },
+  removeUser: ({ commit }) => {
+    api.remove('user')
+    commit('REMOVE_USER')
+  }
 }
 
 const getters = {
