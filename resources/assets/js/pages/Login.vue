@@ -9,7 +9,7 @@
               v-card-title
                 span.white--text Login
             v-card-text
-              v-layout.pt-3(row wrap)
+              v-layout.pt-3(row wrap column)
                 v-flex(md8 offset-md2)
                   v-text-field(name="Email"
                   label="Email Address"
@@ -41,19 +41,19 @@
     },
     methods: {
       login () {
-        const authUser = {};
-        axios.post(LOGIN_URL, this.credentials)
+        const authUser = {}
+        window.axios.post(LOGIN_URL, this.credentials)
             .then(response => {
               if (response.status === 200) {
-                authUser.access_token = response.data.access_token;
-                authUser.refresh_token = response.data.refresh_token;
-                localStorage.setItem('authUser', JSON.stringify(authUser));
-                axios.get(USER_URL, {headers: getHeader()})
+                authUser.access_token = response.data.access_token
+                authUser.refresh_token = response.data.refresh_token
+                localStorage.setItem('authUser', JSON.stringify(authUser))
+                window.axios.get(USER_URL, {headers: getHeader()})
                     .then(response => {
-                      authUser.email = response.data.email;
-                      authUser.name = response.data.name;
-                      localStorage.setItem('authUser', JSON.stringify(authUser));
-                    });
+                      authUser.email = response.data.email
+                      authUser.name = response.data.name
+                      localStorage.setItem('authUser', JSON.stringify(authUser))
+                    })
               }
               this.$router.push({name: 'dashboard'})
             }).catch(err => console.log(err))

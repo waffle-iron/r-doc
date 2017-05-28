@@ -24,34 +24,34 @@
   export default {
     props: ['title'],
     computed: {
-      isGuidePage() {
-        return this.$route.name === 'guide' && Laravel.user;
+      isGuidePage () {
+        return this.$route.name === 'guide' && window.Laravel.user
       },
-      notLoggedIn() {
-        return !window.Laravel.user;
+      notLoggedIn () {
+        return !window.Laravel.user
       },
-      notLoggedInOnHome() {
-        return !Laravel.user && this.$route.name !== 'home';
+      notLoggedInOnHome () {
+        return !window.Laravel.user && this.$route.name !== 'home'
       },
-      notOnLoginPage() {
-        return this.$route.name !== 'login';
+      notOnLoginPage () {
+        return this.$route.name !== 'login'
       }
     },
     methods: {
-      goToLogin() {
-        this.$router.push({ name: 'login'})
+      goToLogin () {
+        this.$router.push({ name: 'login' })
       },
-      goHome() {
-        this.$router.push({ name: 'home'})
+      goHome () {
+        this.$router.push({ name: 'home' })
       },
-      goToGuideEdit(){
+      goToGuideEdit () {
         this.$router.push({ name: 'guide-edit' })
       },
-      goToGuideHistory() {
+      goToGuideHistory () {
         this.$router.push({ name: 'guide-history' })
       },
-      logout() {
-        window.localStorage.clear();
+      logout () {
+        window.localStorage.clear()
       }
     }
   }

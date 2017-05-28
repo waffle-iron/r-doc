@@ -31,22 +31,22 @@
 </template>
 
 <script>
-  import Toolbar from '../components/Toolbar.vue';
-  import GuideStep from '../components/GuideStep.vue';
+  import Toolbar from '../components/Toolbar.vue'
+  import GuideStep from '../components/GuideStep.vue'
 
   export default {
     components: {
       Toolbar,
       GuideStep
     },
-    created(){
-      axios.get('/api/v1/guides/' + this.$route.params.id)
+    created () {
+      window.axios.get('/api/v1/guides/' + this.$route.params.id)
           .then(r => {
-            this.data = r.data;
+            this.data = r.data
             this.image = r.data.image.original
           })
     },
-    data() {
+    data () {
       return {
         data: {},
         image: ''

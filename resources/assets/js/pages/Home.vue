@@ -25,7 +25,7 @@
               name="guides"
               v-bind:list="filteredList"
               v-bind:per="10"
-              class="pr-4"
+              v-bind:class="{'pr-4': true}"
             )
               .portrait.mt-3(
                 v-for="guide in paginated('guides')"
@@ -44,7 +44,7 @@
 
 <script>
   import Toolbar from '../components/Toolbar.vue'
-  import IndexCard from '../components/IndexCard.vue';
+  import IndexCard from '../components/IndexCard.vue'
 
   export default {
     components: {
@@ -52,11 +52,11 @@
       IndexCard
     },
     created () {
-      axios.get('/api/v1/guides')
+      window.axios.get('/api/v1/guides')
           .then(({data}) => {
-            this.query = data;
+            this.query = data
             this.loading = false
-          });
+          })
     },
     data () {
       return {
@@ -72,7 +72,7 @@
       }
     },
     computed: {
-      filteredList() {
+      filteredList () {
         return this.query.filter(post => {
           return post.title.toLowerCase().includes(this.search.toLowerCase())
         })

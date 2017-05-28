@@ -15,7 +15,7 @@
   export default {
     props: ['data'],
     methods: {
-      goToGuide(guideid) {
+      goToGuide (guideid) {
         this.$router.push({name: 'guide', params: { id: guideid }})
       }
     }

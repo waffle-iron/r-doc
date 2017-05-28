@@ -49,8 +49,8 @@
       goHome () {
         this.$router.push('/')
       },
-      logout() {
-        window.localStorage.clear('authUser');
+      logout () {
+        window.localStorage.clear('authUser')
         this.goHome()
       }
     }

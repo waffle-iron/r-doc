@@ -1,14 +1,14 @@
-require('./bootstrap');
+import './bootstrap'
+import Vue from 'vue'
+import router from './router.js'
+import Vuetify from 'vuetify'
+import VuePaginate from 'vue-paginate'
 
-import Vue from 'vue';
-import router from './router.js';
-import Vuetify from 'vuetify';
-import VuePaginate from 'vue-paginate';
+Vue.use(Vuetify)
+Vue.use(VuePaginate)
 
-Vue.use(Vuetify);
-Vue.use(VuePaginate);
-
-const app = new Vue({
+/* eslint-disable no-new */
+new Vue({
   el: '#app',
   router
-});
+})
