@@ -25,6 +25,7 @@
 
 <script>
   import auth from '../auth'
+  import { mapActions } from 'vuex'
   import Toolbar from '../components/Toolbar.vue'
 
   export default {
@@ -38,32 +39,25 @@
       }
     },
     methods: {
-//      login () {
-//        const authUser = {}
-//        window.axios.post(LOGIN_URL, this.credentials)
-//            .then(response => {
-//              if (response.status === 200) {
-//                authUser.access_token = response.data.access_token
-//                authUser.refresh_token = response.data.refresh_token
-//                localStorage.setItem('authUser', JSON.stringify(authUser))
-//                window.axios.get(USER_URL, {headers: getHeader()})
-//                    .then(response => {
-//                      authUser.email = response.data.email
-//                      authUser.name = response.data.name
-//                      localStorage.setItem('authUser', JSON.stringify(authUser))
-//                    })
-//              }
-//              this.$router.push({name: 'dashboard'})
-//            }).catch(err => console.log(err))
-//      }
+      ...mapActions([
+        'setUser'
+      ]),
       login () {
         auth.login(this.username, this.password, loggedIn => {
           if (!loggedIn) {
-            this.error = true
+            // handle error display
           } else {
-            this.$router.replace(this.$route.query.redirect || '/')
+            this.setUser()
+            this.gotoUrl('dashboard')
           }
         })
+      },
+      gotoUrl (name) {
+        if (!this.$route.query.length) {
+          this.$router.push({ name })
+        } else {
+          this.$router.replace(this.$route.query.redirect || '/')
+        }
       }
     }
   }

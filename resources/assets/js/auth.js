@@ -1,4 +1,4 @@
-import { LOGIN_URL } from './config'
+import { requestLogin } from './api'
 
 export default {
   login (username, password, cb) {
@@ -8,7 +8,7 @@ export default {
       this.onChange(true)
       return
     }
-    loginRequest(username, password, (res) => {
+    requestLogin(username, password, (res) => {
       if (res.authenticated) {
         localStorage.token = res.token
         localStorage.refresh = res.refresh
@@ -26,7 +26,7 @@ export default {
   },
 
   getRefreshToken () {
-    return loginRequest.refresh
+    return localStorage.refresh
   },
 
   loggedIn () {
@@ -35,23 +35,10 @@ export default {
 
   logout (cb) {
     delete localStorage.token
+    delete localStorage.refresh
     if (cb) cb()
     this.onChange(false)
   },
 
   onChange () {}
-}
-
-function loginRequest (username, password, cb) {
-  axios.post(LOGIN_URL, { username, password }).then(res => {
-    if (res.status === 200) {
-      cb({
-        authenticated: true,
-        token: res.data.access_token,
-        refresh: res.data.refresh_token
-      })
-    } else {
-      cb({ authenticated: false })
-    }
-  })
 }
