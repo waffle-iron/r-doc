@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/roberthamel/r-doc.png?label=ready&title=Ready)](https://waffle.io/roberthamel/r-doc?utm_source=badge)
 [![Build Status](https://travis-ci.org/roberthamel/r-doc.svg?branch=master)](https://travis-ci.org/roberthamel/r-doc)
 
 ---
