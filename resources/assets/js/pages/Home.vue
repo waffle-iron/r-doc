@@ -43,8 +43,10 @@
 </template>
 
 <script>
+  import { mapActions, mapState } from 'vuex'
   import Toolbar from '../components/Toolbar.vue'
   import IndexCard from '../components/IndexCard.vue'
+  import api from '../api'
 
   export default {
     components: {
@@ -52,15 +54,15 @@
       IndexCard
     },
     created () {
-      window.axios.get('/api/v1/guides')
-          .then(({data}) => {
-            this.query = data
-            this.loading = false
-          })
+      if (!api.get('documentIndex')) {
+        this.fetchDocumentIndex()
+      } else {
+        this.loadDocumentIndex()
+      }
+      this.loading = false
     },
     data () {
       return {
-        query: [],
         paginate: ['guides'],
         loading: true,
         paginateClasses: {
@@ -72,11 +74,20 @@
       }
     },
     computed: {
+      ...mapState({
+        query: state => state.documentList
+      }),
       filteredList () {
         return this.query.filter(post => {
           return post.title.toLowerCase().includes(this.search.toLowerCase())
         })
       }
+    },
+    methods: {
+      ...mapActions([
+        'fetchDocumentIndex',
+        'loadDocumentIndex'
+      ])
     }
   }
 </script>

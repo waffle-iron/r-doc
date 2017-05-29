@@ -26,6 +26,10 @@ export default {
     })
   },
 
+  fetch (url) {
+    return axios.get(url, { headers: this.getHeader() })
+  },
+
   set (key, data) { localStorage.setItem(NS + key, JSON.stringify(data)) },
 
   get (key) { return JSON.parse(localStorage.getItem(NS + key)) },

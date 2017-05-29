@@ -15046,7 +15046,7 @@ module.exports = Vue$3;
 
 "use strict";
 /* unused harmony export Store */
-/* unused harmony export mapState */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapState; });
 /* unused harmony export mapMutations */
 /* unused harmony export mapGetters */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapActions; });
@@ -16148,6 +16148,10 @@ const NS = 'RDOC-';
         cb({ authenticated: false });
       }
     });
+  },
+
+  fetch(url) {
+    return axios.get(url, { headers: this.getHeader() });
   },
 
   set(key, data) {
@@ -28566,10 +28570,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_GuideStep_vue__ = __webpack_require__(191);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_GuideStep_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_GuideStep_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Toolbar_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Toolbar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_Toolbar_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_GuideStep_vue__ = __webpack_require__(191);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_GuideStep_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_GuideStep_vue__);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -28602,27 +28610,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Toolbar: __WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue___default.a,
-    GuideStep: __WEBPACK_IMPORTED_MODULE_1__components_GuideStep_vue___default.a
+    Toolbar: __WEBPACK_IMPORTED_MODULE_2__components_Toolbar_vue___default.a,
+    GuideStep: __WEBPACK_IMPORTED_MODULE_3__components_GuideStep_vue___default.a
   },
   created() {
-    window.axios.get('/api/v1/guides/' + this.$route.params.id).then(r => {
-      this.data = r.data;
-      this.image = r.data.image.original;
-    });
+    this.checkCurrentDocument();
   },
-  data() {
-    return {
-      data: {},
-      image: ''
-    };
-  }
+  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])({
+    data: state => state.currentDocument
+  })),
+  methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['fetchCurrentDocument', 'loadCurrentDocument']), {
+    checkCurrentDocument() {
+      const doc = __WEBPACK_IMPORTED_MODULE_1__api__["a" /* default */].get('currentDocument');
+      console.log(doc !== null && doc.guideid === parseInt(this.$route.params.id));
+      if (doc !== null && doc.guideid === parseInt(this.$route.params.id)) {
+        console.log('load from storage');
+        this.loadCurrentDocument();
+      } else {
+        console.log('load from server');
+        this.fetchCurrentDocument(this.$route.params);
+      }
+    }
+  })
 });
 
 /***/ }),
@@ -28659,10 +28676,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_IndexCard_vue__ = __webpack_require__(194);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_IndexCard_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_IndexCard_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Toolbar_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Toolbar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Toolbar_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_IndexCard_vue__ = __webpack_require__(194);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_IndexCard_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_IndexCard_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api__ = __webpack_require__(15);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -28707,24 +28728,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Toolbar: __WEBPACK_IMPORTED_MODULE_0__components_Toolbar_vue___default.a,
-    IndexCard: __WEBPACK_IMPORTED_MODULE_1__components_IndexCard_vue___default.a
+    Toolbar: __WEBPACK_IMPORTED_MODULE_1__components_Toolbar_vue___default.a,
+    IndexCard: __WEBPACK_IMPORTED_MODULE_2__components_IndexCard_vue___default.a
   },
   created() {
-    window.axios.get('/api/v1/guides').then(({ data }) => {
-      this.query = data;
-      this.loading = false;
-    });
+    if (!__WEBPACK_IMPORTED_MODULE_3__api__["a" /* default */].get('documentIndex')) {
+      this.fetchDocumentIndex();
+    } else {
+      this.loadDocumentIndex();
+    }
+    this.loading = false;
   },
   data() {
     return {
-      query: [],
       paginate: ['guides'],
       loading: true,
       paginateClasses: {
@@ -28735,13 +28759,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       search: ''
     };
   },
-  computed: {
+  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])({
+    query: state => state.documentList
+  }), {
     filteredList() {
       return this.query.filter(post => {
         return post.title.toLowerCase().includes(this.search.toLowerCase());
       });
     }
-  }
+  }),
+  methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['fetchDocumentIndex', 'loadDocumentIndex']))
 });
 
 /***/ }),
@@ -28962,7 +28989,9 @@ router.beforeEach((to, from, next) => {
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
 const state = {
-  user: {}
+  user: {},
+  documentList: [],
+  currentDocument: {}
 };
 
 const mutations = {
@@ -28971,6 +29000,15 @@ const mutations = {
   },
   REMOVE_USER(state) {
     state.user = {};
+  },
+  SET_DOCUMENT_INDEX(state, payload) {
+    state.documentList = payload;
+  },
+  SET_CURRENT_DOCUMENT(state, payload) {
+    state.currentDocument = payload;
+  },
+  REMOVE_CURRENT_DOCUMENT(state) {
+    state.currentDocument = {};
   }
 };
 
@@ -28984,6 +29022,28 @@ const actions = {
   removeUser: ({ commit }) => {
     __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].remove('user');
     commit('REMOVE_USER');
+  },
+  fetchDocumentIndex: ({ commit }) => {
+    __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].fetch('/api/v1/guides').then(data => {
+      __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].set('documentIndex', data.data);
+      commit('SET_DOCUMENT_INDEX', data.data);
+    });
+  },
+  loadDocumentIndex: ({ commit }) => {
+    commit('SET_DOCUMENT_INDEX', __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].get('documentIndex'));
+  },
+  resetCurrentDocument: ({ commit }) => {
+    __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].remove('currentDocument');
+    commit('REMOVE_CURRENT_DOCUMENT');
+  },
+  fetchCurrentDocument: (context, guide) => {
+    __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].fetch(`/api/v1/guides/${guide.id}`).then(data => {
+      __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].set('currentDocument', data.data);
+      context.commit('SET_CURRENT_DOCUMENT', data.data);
+    });
+  },
+  loadCurrentDocument: ({ commit }) => {
+    commit('SET_CURRENT_DOCUMENT', __WEBPACK_IMPORTED_MODULE_2__api__["a" /* default */].get('currentDocument'));
   }
 };
 
@@ -60911,7 +60971,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "portrait"
   }, [_c('v-card', {
     attrs: {
-      "img": _vm.image,
+      "img": this.data.image,
       "height": "300px"
     }
   }, [_c('div', {

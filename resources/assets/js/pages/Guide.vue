@@ -2,7 +2,7 @@
   #guide
     toolbar(title='<i class="material-icons icon icon--light">arrow_back</i>&nbsp;HOME')
     .portrait
-      v-card(:img="image" height="300px")
+      v-card(v-bind:img="this.data.image" height="300px")
         .transparent-image
           v-card-row.image--banner
             p.datatype.card__title.yellow {{ data.type }}
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+  import { mapActions, mapState } from 'vuex'
+  import api from '../api'
   import Toolbar from '../components/Toolbar.vue'
   import GuideStep from '../components/GuideStep.vue'
 
@@ -40,16 +42,28 @@
       GuideStep
     },
     created () {
-      window.axios.get('/api/v1/guides/' + this.$route.params.id)
-          .then(r => {
-            this.data = r.data
-            this.image = r.data.image.original
-          })
+      this.checkCurrentDocument()
     },
-    data () {
-      return {
-        data: {},
-        image: ''
+    computed: {
+      ...mapState({
+        data: state => state.currentDocument
+      })
+    },
+    methods: {
+      ...mapActions([
+        'fetchCurrentDocument',
+        'loadCurrentDocument'
+      ]),
+      checkCurrentDocument () {
+        const doc = api.get('currentDocument')
+        console.log(doc !== null && doc.guideid === parseInt(this.$route.params.id))
+        if (doc !== null && doc.guideid === parseInt(this.$route.params.id)) {
+          console.log('load from storage')
+          this.loadCurrentDocument()
+        } else {
+          console.log('load from server')
+          this.fetchCurrentDocument(this.$route.params)
+        }
       }
     }
   }
