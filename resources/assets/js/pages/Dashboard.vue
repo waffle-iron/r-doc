@@ -33,6 +33,8 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
   export default {
     data () {
       return {
@@ -46,12 +48,15 @@
       }
     },
     methods: {
-      goHome () {
-        this.$router.push('/')
+      ...mapActions([
+        'removeUser'
+      ]),
+      logout () {
+        this.removeUser()
+        this.$router.push('/logout')
       },
-      logout() {
-        window.localStorage.clear('authUser');
-        this.goHome()
+      goHome () {
+        this.$router.push({ name: 'home' })
       }
     }
   }

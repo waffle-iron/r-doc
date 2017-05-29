@@ -25,7 +25,7 @@
               name="guides"
               v-bind:list="filteredList"
               v-bind:per="10"
-              class="pr-4"
+              v-bind:class="{'pr-4': true}"
             )
               .portrait.mt-3(
                 v-for="guide in paginated('guides')"
@@ -43,8 +43,10 @@
 </template>
 
 <script>
+  import { mapActions, mapState } from 'vuex'
   import Toolbar from '../components/Toolbar.vue'
-  import IndexCard from '../components/IndexCard.vue';
+  import IndexCard from '../components/IndexCard.vue'
+  import api from '../api'
 
   export default {
     components: {
@@ -52,15 +54,15 @@
       IndexCard
     },
     created () {
-      axios.get('/api/v1/guides')
-          .then(({data}) => {
-            this.query = data;
-            this.loading = false
-          });
+      if (!api.get('documentIndex')) {
+        this.fetchDocumentIndex()
+      } else {
+        this.loadDocumentIndex()
+      }
+      this.loading = false
     },
     data () {
       return {
-        query: [],
         paginate: ['guides'],
         loading: true,
         paginateClasses: {
@@ -72,11 +74,20 @@
       }
     },
     computed: {
-      filteredList() {
+      ...mapState({
+        query: state => state.documentList
+      }),
+      filteredList () {
         return this.query.filter(post => {
           return post.title.toLowerCase().includes(this.search.toLowerCase())
         })
       }
+    },
+    methods: {
+      ...mapActions([
+        'fetchDocumentIndex',
+        'loadDocumentIndex'
+      ])
     }
   }
 </script>

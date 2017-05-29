@@ -26,14 +26,14 @@
     },
     methods: {
       buildData (data) {
-        let img = [];
+        let img = []
         data.forEach((image, index) => {
-          let p = {};
-          p.id = index;
-          p.src = image;
-          index === 0 ? p.visible = true : p.visible = false;
+          let p = {}
+          p.id = index
+          p.src = image
+          index === 0 ? p.visible = true : p.visible = false
           img.push(p)
-        });
+        })
         return img
       },
       shouldBeVisible (obj) {
@@ -42,7 +42,7 @@
       makeVisible (obj, arr) {
         arr.forEach((image, index) => {
           if (image[index] !== obj.id && image.visible) {
-            image.visible = false;
+            image.visible = false
             obj.visible = true
           }
         })

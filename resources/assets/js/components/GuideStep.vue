@@ -20,8 +20,8 @@
 </template>
 
 <script>
-  import ImageHoverSelect from '../components/ImageHoverSelect.vue';
-  import StepLines from '../components/StepLines.vue';
+  import ImageHoverSelect from '../components/ImageHoverSelect.vue'
+  import StepLines from '../components/StepLines.vue'
 
   export default {
     props: ['data', 'edit'],
@@ -30,17 +30,17 @@
       StepLines
     },
     methods: {
-      getStepId(stepid) {
-        return `s${stepid}`;
+      getStepId (stepid) {
+        return `s${stepid}`
       },
-      getStepHref(stepid) {
-        return `#s${stepid}`;
+      getStepHref (stepid) {
+        return `#s${stepid}`
       },
-      goEditStep(id) {
-        this.$router.push(this.$route.path + '/edit/' + id);
+      goEditStep (id) {
+        this.$router.push(this.$route.path + '/edit/' + id)
       },
-      canEdit() {
-        return window.Laravel.user;
+      canEdit () {
+        return window.Laravel.user
       }
     }
   }

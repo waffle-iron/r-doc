@@ -256,9 +256,7 @@ class GuidesTest extends TestCase
   {
     $guide = $this->createCompleteGuide();
     $response = $this->get('/api/v1/guides/1');
-    $response->assertJson(['image' => [
-        'original' => $guide[0]->image->original,
-    ]]);
+    $response->assertJson(['image' => $guide[0]->image]);
   }
 
 //  GUIDE LISTS '/API/V1/GUIDES'

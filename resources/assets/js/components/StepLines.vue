@@ -30,7 +30,7 @@
   export default {
     props: ['lines'],
     methods: {
-      getBulletColor(bullet) {
+      getBulletColor (bullet) {
         return {
           'black--text': bullet === 'black',
           'red--text': bullet === 'red',
@@ -44,7 +44,7 @@
           'light-blue--text': bullet === 'light-blue'
         }
       },
-      getIcon(bullet) {
+      getIcon (bullet) {
         if (bullet === 'caution' || bullet === 'info' || bullet === 'reminder') {
           if (bullet === 'caution') {
             return 'warning'

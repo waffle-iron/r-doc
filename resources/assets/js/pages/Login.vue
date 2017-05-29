@@ -9,11 +9,11 @@
               v-card-title
                 span.white--text Login
             v-card-text
-              v-layout.pt-3(row wrap)
+              v-layout.pt-3(row wrap column)
                 v-flex(md8 offset-md2)
                   v-text-field(name="Email"
                   label="Email Address"
-                  v-model="email")
+                  v-model="username")
                 v-flex(md8 offset-md2)
                   v-text-field(name="Password"
                   label="Password"
@@ -24,8 +24,8 @@
 </template>
 
 <script>
-  import {LOGIN_URL, USER_URL, getHeader} from '../config'
-  import {CLIENT_ID, CLIENT_SECRET} from '../env'
+  import auth from '../auth'
+  import { mapActions } from 'vuex'
   import Toolbar from '../components/Toolbar.vue'
 
   export default {
@@ -34,36 +34,30 @@
     },
     data () {
       return {
-        email: 'sauer.angel@example.com',
+        username: 'sauer.angel@example.com',
         password: 'secret'
       }
     },
     methods: {
+      ...mapActions([
+        'setUser'
+      ]),
       login () {
-        const postData = {
-          grant_type: 'password',
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          username: this.email,
-          password: this.password,
-          scope: ''
-        };
-        const authUser = {};
-        axios.post(LOGIN_URL, postData)
-            .then(response => {
-              if (response.status === 200) {
-                authUser.access_token = response.data.access_token;
-                authUser.refresh_token = response.data.refresh_token;
-                localStorage.setItem('authUser', JSON.stringify(authUser));
-                axios.get(USER_URL, {headers: getHeader()})
-                    .then(response => {
-                      authUser.email = response.data.email;
-                      authUser.name = response.data.name;
-                      localStorage.setItem('authUser', JSON.stringify(authUser));
-                    });
-              }
-              this.$router.push({name: 'dashboard'})
-            })
+        auth.login(this.username, this.password, loggedIn => {
+          if (!loggedIn) {
+            // handle error display
+          } else {
+            this.setUser()
+            this.gotoUrl('dashboard')
+          }
+        })
+      },
+      gotoUrl (name) {
+        if (!this.$route.query.length) {
+          this.$router.push({ name })
+        } else {
+          this.$router.replace(this.$route.query.redirect || '/')
+        }
       }
     }
   }
