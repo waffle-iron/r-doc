@@ -28630,12 +28630,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['fetchCurrentDocument', 'loadCurrentDocument']), {
     checkCurrentDocument() {
       const doc = __WEBPACK_IMPORTED_MODULE_1__api__["a" /* default */].get('currentDocument');
-      console.log(doc !== null && doc.guideid === parseInt(this.$route.params.id));
       if (doc !== null && doc.guideid === parseInt(this.$route.params.id)) {
-        console.log('load from storage');
         this.loadCurrentDocument();
       } else {
-        console.log('load from server');
         this.fetchCurrentDocument(this.$route.params);
       }
     }

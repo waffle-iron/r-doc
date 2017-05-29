@@ -56,12 +56,9 @@
       ]),
       checkCurrentDocument () {
         const doc = api.get('currentDocument')
-        console.log(doc !== null && doc.guideid === parseInt(this.$route.params.id))
         if (doc !== null && doc.guideid === parseInt(this.$route.params.id)) {
-          console.log('load from storage')
           this.loadCurrentDocument()
         } else {
-          console.log('load from server')
           this.fetchCurrentDocument(this.$route.params)
         }
       }
